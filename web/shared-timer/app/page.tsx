@@ -1,6 +1,45 @@
+"use client" // Indicating client side
+
 import Image from "next/image";
+import { useState, useEffect } from 'react'
+import { createClient } from '@supabase/supabase-js'
+import { Auth } from '@supabase/auth-ui-react'
+import { ThemeSupa } from '@supabase/auth-ui-shared'
+import type { Session } from '@supabase/supabase-js'
+
+const projectName = "epcycnjzqdavtqbzpoxa";
+const anon = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVwY3ljbmp6cWRhdnRxYnpwb3hhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTU4MzA1NzMsImV4cCI6MjA3MTQwNjU3M30.PHKtmv4VKYV8CHAJlfgCnj-hpsusngeLIcK55--Mb4w";
+
+const supabase = createClient(`https://${projectName}.supabase.co`, `${anon}`);
+
 
 export default function Home() {
+  const [session, setSession] = useState<Session | null>(null);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session)
+    })
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session)
+    })
+    return () => subscription.unsubscribe()
+  }, [])
+
+  // If not logged in
+  if (!session) {
+    // Use the pre-defined Auth UI from Supabase
+    return (<Auth supabaseClient={supabase} appearance={{ theme: ThemeSupa }} />)
+  }
+  else {
+    return (
+      <div>Logged in!</div>
+      
+    )
+  }
+
   return (
     <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
       <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
