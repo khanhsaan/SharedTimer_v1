@@ -7,13 +7,17 @@ import { Auth } from '@supabase/auth-ui-react'
 import { ThemeSupa } from '@supabase/auth-ui-shared'
 import type { Session } from '@supabase/supabase-js'
 
-const projectName = "epcycnjzqdavtqbzpoxa";
-const anon = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVwY3ljbmp6cWRhdnRxYnpwb3hhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTU4MzA1NzMsImV4cCI6MjA3MTQwNjU3M30.PHKtmv4VKYV8CHAJlfgCnj-hpsusngeLIcK55--Mb4w";
+const projectID = process.env.NEXT_PUBLIC_SUPABASE_ID;
+const anon = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
-const supabase = createClient(`https://${projectName}.supabase.co`, `${anon}`);
+const supabase = createClient(`https://${projectID}.supabase.co`, `${anon}`);
 
 
 export default function Home() {
+  // DEBUG
+  console.log("projectID: ", projectID);
+  console.log("anon: ", anon);
+
   const [session, setSession] = useState<Session | null>(null);
 
   useEffect(() => {
@@ -35,13 +39,7 @@ export default function Home() {
   }
   else {
     return (
-      <div>Logged in!</div>
-      
-    )
-  }
-
-  return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
+      <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
       <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
         <Image
           className="dark:invert"
@@ -138,5 +136,6 @@ export default function Home() {
         </a>
       </footer>
     </div>
-  );
+    )
+  }
 }
