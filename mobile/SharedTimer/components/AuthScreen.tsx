@@ -1,8 +1,7 @@
 import React, { useState } from 'react'
-import { Alert, Button, KeyboardAvoidingView, Platform, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { Alert, Button, KeyboardAvoidingView, Platform, StyleSheet, Text, TextInput, TouchableOpacity, View, ScrollView } from 'react-native'
 import { supabase } from '../lib/supabase'
 import { authHandle } from '@/app/handle/AuthHandle'
-import { ScrollView } from 'react-native-reanimated/lib/typescript/Animated'
 
 // Custom hook
 export default function Auth() {
@@ -66,10 +65,36 @@ export default function Auth() {
     <KeyboardAvoidingView
       style = {styles.auth}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-
+        
+        {/* Create a Scroll View */}
         <ScrollView
           contentContainerStyle={styles.authScrollContainer}>
+            {/* Title */}
             <Text style={styles.authTitle}>SharedTimer</Text>
+
+            <View style={styles.authCard}>
+              {/* Email input field */}
+              <TextInput
+                style={styles.authInput}
+                placeholder='Email'
+                value={email}
+                onChangeText={(newText) => setEmail(newText)}
+                keyboardType='email-address'
+                autoCapitalize='none'
+                autoCorrect={false}
+                placeholderTextColor={"rgba(45, 55, 72, 0.5)"}>  
+              </TextInput>
+
+              <TextInput
+                style={styles.authInput}
+                placeholder='Password'
+                value={password}
+                onChangeText={(newText) => setPassword(newText)}
+                secureTextEntry
+                placeholderTextColor={"rgba(45, 55, 72, 0.5)"}>
+
+              </TextInput>
+            </View>
         </ScrollView>
 
     </KeyboardAvoidingView>
