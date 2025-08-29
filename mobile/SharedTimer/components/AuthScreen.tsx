@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Alert, Button, KeyboardAvoidingView, Platform, StyleSheet, Text, TextInput, TouchableOpacity, View, ScrollView } from 'react-native'
 import { supabase } from '../lib/supabase'
 import { authHandle } from '@/app/handle/AuthHandle'
+import { isLoading } from 'expo-font'
 
 // Custom hook
 export default function Auth() {
@@ -85,6 +86,7 @@ export default function Auth() {
                 placeholderTextColor={"rgba(45, 55, 72, 0.5)"}>  
               </TextInput>
 
+              {/* Password input field */}
               <TextInput
                 style={styles.authInput}
                 placeholder='Password'
@@ -92,8 +94,24 @@ export default function Auth() {
                 onChangeText={(newText) => setPassword(newText)}
                 secureTextEntry
                 placeholderTextColor={"rgba(45, 55, 72, 0.5)"}>
-
               </TextInput>
+
+              {/* Sign In / Sign Up button */}
+              <TouchableOpacity
+                // Conditional styling: styles.authButton is always applied
+                // If loading = true -> styles.authButtonDisabled is applied, else -> nothing applied
+                style={[styles.authButton, loading && styles.authButtonDisabled]}
+                onPress={signInHandle}
+                // disabled mode of the button depends on true/false state of loading
+                disabled={loading}
+                activeOpacity={0.8}>
+
+                  <Text
+                    style={styles.authButtonText}>
+                      {/* If loading, display please wait, else if sign in display sign in, else display sign up */}
+                      {loading ? 'Please wait...' : (isSignIn ? 'Sign in' : 'Sign Up')}
+                  </Text>
+              </TouchableOpacity>
             </View>
         </ScrollView>
 
