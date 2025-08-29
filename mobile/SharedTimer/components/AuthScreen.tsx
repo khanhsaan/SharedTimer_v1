@@ -112,6 +112,19 @@ export default function Auth() {
                       {loading ? 'Please wait...' : (isSignIn ? 'Sign in' : 'Sign Up')}
                   </Text>
               </TouchableOpacity>
+
+              {/* Button used to switch between sign in or sign up */}
+              <TouchableOpacity
+                style={styles.linkButton}
+                onPress={() => {
+                  setIsSignIn(!isSignIn);
+                }}
+                activeOpacity={0.8}>
+                  <Text
+                    style={styles.linkButtonText}>
+                      {isSignIn ? 'Create account' : 'Already have an account? Sign in' }
+                  </Text>
+              </TouchableOpacity>
             </View>
         </ScrollView>
 
