@@ -119,6 +119,8 @@ export default function Auth() {
                 onPress={() => {
                   setIsSignIn(!isSignIn);
                 }}
+                // disabled when loading = true
+                disabled={loading}
                 activeOpacity={0.8}>
                   <Text
                     style={styles.linkButtonText}>
