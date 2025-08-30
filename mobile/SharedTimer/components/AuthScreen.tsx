@@ -6,8 +6,8 @@ import { configRegExp } from 'expo-router/build/fork/getStateFromPath-forks'
 
 // Custom hook
 export default function Auth() {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+  const [userEmail, setUserEmail] = useState('')
+  const [userPassword, setUserPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [loading, setLoading] = useState(false)
   const[errorMsg, setErrorMsg] = useState('');
@@ -16,17 +16,21 @@ export default function Auth() {
 
   // Sign in handling component
   const signInHandle = async() => {
+    // Pass userEmail and userPassword to supabase.auth
+    const {data, error} = await supabase.auth.signInWithPassword({
+      email: userEmail,
+      password: userPassword,
+    }) 
     // Email and password must not be empty
-    if(!email || !password ) {
+    if(!userEmail || !userPassword ) {
       setErrorMsg("Email or password is empty");
       console.warn(errorMsg);
       return;
     }
     // Retrieve the data and error from AuthHandle
-    let {data, error} = await authHandle({user_email: email, user_password: password});
     // If there is error, set error message and print it
     if(error){
-      setErrorMsg(error.message);
+      setErrorMsg(error.toString());
       console.error(`Sign-in FAILED!`, errorMsg);
     } 
     // Else, the sign in process is successful, reset the error message, print the data
@@ -36,16 +40,16 @@ export default function Auth() {
     }
   }
 
-  async function signInWithEmail() {
-    setLoading(true)
-    const { error } = await supabase.auth.signInWithPassword({
-      email: email,
-      password: password,
-    })
+  // async function signInWithEmail() {
+  //   setLoading(true)
+  //   const { error } = await supabase.auth.signInWithPassword({
+  //     email: email,
+  //     password: password,
+  //   })
 
-    if (error) Alert.alert(error.message)
-    setLoading(false)
-  }
+  //   if (error) Alert.alert(error.message)
+  //   setLoading(false)
+  // }
 
   async function signUpWithEmail() {
     setLoading(true)
@@ -53,8 +57,8 @@ export default function Auth() {
       data: { session },
       error,
     } = await supabase.auth.signUp({
-      email: email,
-      password: password,
+      email: userEmail,
+      password: userPassword,
     })
 
     if (error) Alert.alert(error.message)
@@ -77,8 +81,8 @@ export default function Auth() {
               <TextInput
                 style={styles.authInput}
                 placeholder='Email'
-                value={email}
-                onChangeText={(newText) => setEmail(newText)}
+                value={userEmail}
+                onChangeText={(newText) => setUserEmail(newText)}
                 keyboardType='email-address'
                 autoCapitalize='none'
                 autoCorrect={false}
@@ -88,8 +92,8 @@ export default function Auth() {
               <TextInput
                 style={styles.authInput}
                 placeholder='Password'
-                value={password}
-                onChangeText={(newText) => setPassword(newText)}
+                value={userPassword}
+                onChangeText={(newText) => setUserPassword(newText)}
                 secureTextEntry
                 placeholderTextColor={"rgba(45, 55, 72, 0.5)"}>
               </TextInput>
@@ -103,6 +107,16 @@ export default function Auth() {
                   secureTextEntry
                   placeholderTextColor="rgba(45, 55, 72, 0.5)">
                 </TextInput>
+              )}
+
+              {errorMsg && (
+                <View
+                  style={styles.banner}>
+                  <Text
+                    style={styles.bannerText}>
+                      Wrong email or password!
+                  </Text>    
+                </View>
               )}
 
               <TouchableOpacity
