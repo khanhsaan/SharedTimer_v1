@@ -25,7 +25,7 @@ export default function HomeScreen() {
   }, [])
   return (
     <View>
-      <Text>Home screen</Text>
+      <Text style={{color: 'white'}}>Home screen</Text>
     </View>
   )
 }

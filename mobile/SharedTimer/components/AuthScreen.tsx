@@ -5,7 +5,7 @@ import { authHandle } from '@/app/handle/AuthHandle'
 import { configRegExp } from 'expo-router/build/fork/getStateFromPath-forks'
 
 // Custom hook
-export default function Auth() {
+export function Auth() {
   const [userEmail, setUserEmail] = useState('')
   const [userPassword, setUserPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
