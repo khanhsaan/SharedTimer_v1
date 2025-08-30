@@ -78,6 +78,7 @@ export default function Auth() {
             <Text style={styles.authTitle}>SharedTimer</Text>
 
             <View style={styles.authCard}>
+              {/* Email input field */}
               <TextInput
                 style={styles.authInput}
                 placeholder='Email'
@@ -88,7 +89,8 @@ export default function Auth() {
                 autoCorrect={false}
                 placeholderTextColor={"rgba(45, 55, 72, 0.5)"}>  
               </TextInput>
-
+              
+              {/* Password input field */}
               <TextInput
                 style={styles.authInput}
                 placeholder='Password'
@@ -98,6 +100,7 @@ export default function Auth() {
                 placeholderTextColor={"rgba(45, 55, 72, 0.5)"}>
               </TextInput>
 
+              {/* Extra input field appears to confirm password when in Sign Up mode */}
               {!isSignIn && (
                 <TextInput
                   style={styles.authInput}
@@ -109,6 +112,7 @@ export default function Auth() {
                 </TextInput>
               )}
 
+              {/* Banner appears when wrong email or password */}
               {errorMsg && (
                 <View
                   style={styles.banner}>
