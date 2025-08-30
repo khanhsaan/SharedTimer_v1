@@ -9,20 +9,11 @@ import { ThemedView } from '@/components/ThemedView';
 import 'react-native-url-polyfill/auto'
 import { useState, useEffect } from 'react'
 import { supabase } from '../../lib/supabase'
-import Auth from '../../components/AuthScreen'
+import {Auth as AuthScreen} from './AuthScreen'
 import { View, Text } from 'react-native'
 import { Session } from '@supabase/supabase-js'
 
 export default function HomeScreen() {
-  const [session, setSession] = useState<Session | null>(null)
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session)
-    })
-    supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session)
-    })
-  }, [])
   return (
     <View>
       <Text style={{color: 'white'}}>Home screen</Text>

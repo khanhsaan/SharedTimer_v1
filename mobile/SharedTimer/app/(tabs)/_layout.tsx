@@ -7,10 +7,11 @@ import { IconSymbol } from '@/components/ui/IconSymbol';
 import TabBarBackground from '@/components/ui/TabBarBackground';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
-import { Auth as AuthScreen} from '../../components/AuthScreen';
+import { Auth as AuthScreen} from './AuthScreen';
 import HomeScreen from './index';
 import { Session } from '@supabase/supabase-js';
 import { supabase } from '@/lib/supabase';
+import { ProfileGate } from './ProfileGate';
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
@@ -47,6 +48,6 @@ export default function RootLayout() {
   }
   console.log("THE USER SESSION IS NOT NULL");
   return (
-    <HomeScreen></HomeScreen>
+    <ProfileGate></ProfileGate>
   )
 }

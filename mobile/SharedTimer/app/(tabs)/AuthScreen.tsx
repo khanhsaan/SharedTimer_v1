@@ -1,6 +1,6 @@
 import React, { use, useState } from 'react'
 import { Alert, Button, KeyboardAvoidingView, Platform, StyleSheet, Text, TextInput, TouchableOpacity, View, ScrollView, SafeAreaView } from 'react-native'
-import { supabase } from '../lib/supabase'
+import { supabase } from '../../lib/supabase'
 import { authHandle } from '@/app/handle/AuthHandle'
 import { configRegExp } from 'expo-router/build/fork/getStateFromPath-forks'
 
