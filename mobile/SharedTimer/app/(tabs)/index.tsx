@@ -25,7 +25,7 @@ export default function HomeScreen() {
   }, [])
   return (
     <View>
-      <Auth />
+      <Text>Home screen</Text>
     </View>
   )
 }

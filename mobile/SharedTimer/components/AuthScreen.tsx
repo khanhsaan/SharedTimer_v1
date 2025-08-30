@@ -35,21 +35,11 @@ export default function Auth() {
     } 
     // Else, the sign in process is successful, reset the error message, print the data
     else{
+      // Reset error message if there is any from the previous stage
       setErrorMsg('');
       console.log(`Sign-in successfully! `, data);
     }
   }
-
-  // async function signInWithEmail() {
-  //   setLoading(true)
-  //   const { error } = await supabase.auth.signInWithPassword({
-  //     email: email,
-  //     password: password,
-  //   })
-
-  //   if (error) Alert.alert(error.message)
-  //   setLoading(false)
-  // }
 
   async function signUpWithEmail() {
     setLoading(true)
