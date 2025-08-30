@@ -1,13 +1,14 @@
-import React, { useState } from 'react'
-import { Alert, Button, KeyboardAvoidingView, Platform, StyleSheet, Text, TextInput, TouchableOpacity, View, ScrollView } from 'react-native'
+import React, { use, useState } from 'react'
+import { Alert, Button, KeyboardAvoidingView, Platform, StyleSheet, Text, TextInput, TouchableOpacity, View, ScrollView, SafeAreaView } from 'react-native'
 import { supabase } from '../lib/supabase'
 import { authHandle } from '@/app/handle/AuthHandle'
-import { isLoading } from 'expo-font'
+import { configRegExp } from 'expo-router/build/fork/getStateFromPath-forks'
 
 // Custom hook
 export default function Auth() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
   const [loading, setLoading] = useState(false)
   const[errorMsg, setErrorMsg] = useState('');
   // Check if the user wants to Sign in or Sign up
@@ -61,20 +62,18 @@ export default function Auth() {
     setLoading(false)
   }
 
-  // Provided supabase's sign in UI
   return (
-    <KeyboardAvoidingView
-      style = {styles.auth}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+    <SafeAreaView style={styles.container}>
+      <KeyboardAvoidingView
+        style={styles.auth}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
         
-        {/* Create a Scroll View */}
         <ScrollView
-          contentContainerStyle={styles.authScrollContainer}>
-            {/* Title */}
+          contentContainerStyle={styles.authScrollContainer}
+          showsVerticalScrollIndicator={false}>
             <Text style={styles.authTitle}>SharedTimer</Text>
 
             <View style={styles.authCard}>
-              {/* Email input field */}
               <TextInput
                 style={styles.authInput}
                 placeholder='Email'
@@ -86,7 +85,6 @@ export default function Auth() {
                 placeholderTextColor={"rgba(45, 55, 72, 0.5)"}>  
               </TextInput>
 
-              {/* Password input field */}
               <TextInput
                 style={styles.authInput}
                 placeholder='Password'
@@ -96,30 +94,34 @@ export default function Auth() {
                 placeholderTextColor={"rgba(45, 55, 72, 0.5)"}>
               </TextInput>
 
-              {/* Sign In / Sign Up button */}
+              {!isSignIn && (
+                <TextInput
+                  style={styles.authInput}
+                  placeholder='Confirm password'
+                  value={confirmPassword}
+                  onChangeText={(newText) => setConfirmPassword(newText)}
+                  secureTextEntry
+                  placeholderTextColor="rgba(45, 55, 72, 0.5)">
+                </TextInput>
+              )}
+
               <TouchableOpacity
-                // Conditional styling: styles.authButton is always applied
-                // If loading = true -> styles.authButtonDisabled is applied, else -> nothing applied
                 style={[styles.authButton, loading && styles.authButtonDisabled]}
                 onPress={signInHandle}
-                // disabled mode of the button depends on true/false state of loading
                 disabled={loading}
                 activeOpacity={0.8}>
 
                   <Text
                     style={styles.authButtonText}>
-                      {/* If loading, display please wait, else if sign in display sign in, else display sign up */}
                       {loading ? 'Please wait...' : (isSignIn ? 'Sign in' : 'Sign Up')}
                   </Text>
               </TouchableOpacity>
 
-              {/* Button used to switch between sign in or sign up */}
               <TouchableOpacity
                 style={styles.linkButton}
                 onPress={() => {
                   setIsSignIn(!isSignIn);
                 }}
-                // disabled when loading = true
                 disabled={loading}
                 activeOpacity={0.8}>
                   <Text
@@ -130,68 +132,21 @@ export default function Auth() {
             </View>
         </ScrollView>
 
-    </KeyboardAvoidingView>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   )
-  // return (
-  //   <View style={styles.container}>
-  //     <View style={[styles.verticallySpaced, styles.mt20]}>
-  //       <Text>Email</Text>
-  //       <TextInput
-  //         onChangeText={(text: string) => setEmail(text)}
-  //         value={email}
-  //         placeholder="email@address.com"
-  //         autoCapitalize={'none'}
-  //         style={styles.textInput}
-  //       />
-  //     </View>
-  //     <View style={styles.verticallySpaced}>
-  //       <Text>Password</Text>
-  //       <TextInput
-  //         onChangeText={(text: string) => setPassword(text)}
-  //         value={password}
-  //         secureTextEntry={true}
-  //         placeholder="Password"
-  //         autoCapitalize={'none'}
-  //         style={styles.textInput}
-  //       />
-  //     </View>
-  //     <View style={[styles.verticallySpaced, styles.mt20]}>
-  //       <Button title="Sign in" disabled={loading} onPress={() => signInHandle()} />
-  //     </View>
-  //     <View style={styles.verticallySpaced}>
-  //       <Button title="Sign up" disabled={loading} onPress={() => signInHandle()} />
-  //     </View>
-  //   </View>
-  // )
 }
 
 const styles = StyleSheet.create({
+  // STATIC LAYOUT - NO ADAPTIVE FEATURES - CONSISTENT ACROSS ALL DEVICES
   container: {
-    marginTop: 40,
-    padding: 12,
-  },
-  verticallySpaced: {
-    paddingTop: 4,
-    paddingBottom: 4,
-    alignSelf: 'stretch',
-  },
-  mt20: {
-    marginTop: 20,
-  },
-  textInput: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    padding: 10,
-    borderRadius: 5,
-    marginTop: 5,
-    color: 'white',
+    flex: 1,
+    backgroundColor: '#667eea', // Ensure background covers entire screen
   },
   auth: {
     flex: 1,
-    backgroundColor: '#667eea',
+    // backgroundColor: '#667eea',
     paddingHorizontal: 32,
-    justifyContent: 'center',
-    alignItems: 'center',
   },
   authScrollContainer: {
     flexGrow: 1,
@@ -286,4 +241,4 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
   },
-})
+});
