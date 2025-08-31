@@ -15,15 +15,7 @@ export function Auth() {
   // Check if the user wants to Sign in or Sign up
   const[isSignIn, setIsSignIn] = useState(false);
 
-  const{ signInHandle, authSignInData, authSignInError, signUpHandle, authSignUpData, authSignUpError } = useAuth({userEmail, userPassword, userConfirmPassword: confirmPassword});
-
-  // // Listen to isSignIn to re-render the page
-  // useEffect(() => {
-  //   setUserEmail('');
-  //   setUserPassword('');
-  //   setConfirmPassword('');
-  //   setLoading(false);
-  // }, [isSignIn]);
+  const{ signInHandle, signUpHandle } = useAuth({userEmail, userPassword, userConfirmPassword: confirmPassword});
 
   return (
     <SafeAreaView style={styles.container}>

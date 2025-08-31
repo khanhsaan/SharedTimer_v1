@@ -52,6 +52,10 @@ export function ProfileGate() {
     )
 }
 
+// Handle when create a new profile
+const handleCreateProfile = () => {
+    
+}
 const { width } = Dimensions.get('window');
 
 const styles = StyleSheet.create({

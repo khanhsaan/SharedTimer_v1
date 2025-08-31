@@ -52,6 +52,8 @@ export default function RootLayout() {
   // )
 
   return (
-    <AuthScreen></AuthScreen>
+    <ProfileGate>
+      
+    </ProfileGate>
   )
 }
