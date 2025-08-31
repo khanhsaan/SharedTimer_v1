@@ -7,7 +7,7 @@ import { IconSymbol } from '@/components/ui/IconSymbol';
 import TabBarBackground from '@/components/ui/TabBarBackground';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
-import { Auth as AuthScreen} from './AuthScreen';
+import { Auth, Auth as AuthScreen} from './AuthScreen';
 import HomeScreen from './index';
 import { Session } from '@supabase/supabase-js';
 import { supabase } from '@/lib/supabase';
@@ -17,6 +17,7 @@ export default function RootLayout() {
   const colorScheme = useColorScheme();
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const[user, setUser] = useState<any>(null);
 
   // Check the for the current use session from the local storage and listen for the authentication change once on start
   useEffect(() => {
@@ -40,20 +41,16 @@ export default function RootLayout() {
   }, []);
   
   // If the current user session is null return AuthScreen
-  // if(!session) {
-  //   console.log("THE USER SESSION IS NULL!");
-  //   return (
-  //     <AuthScreen></AuthScreen>
-  //   )
-  // }
-  // console.log("THE USER SESSION IS NOT NULL");
-  // return (
-  //   <ProfileGate></ProfileGate>
-  // )
+  if(!session) {
+    console.log("THE USER SESSION IS NULL!");
+    return (
+      <AuthScreen></AuthScreen>
+    )
+  }
 
+  console.log("THE USER SESSION IS NOT NULL");
   return (
-    <ProfileGate>
-      
-    </ProfileGate>
+    <ProfileGate user={session.user}></ProfileGate>
   )
+
 }

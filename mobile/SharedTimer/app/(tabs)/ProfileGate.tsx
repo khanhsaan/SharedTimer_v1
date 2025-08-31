@@ -2,10 +2,13 @@ import { useState } from "react";
 import { StyleSheet, Dimensions, Text, TextInput, TouchableOpacity } from "react-native";
 import { ScrollView, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useProfiles } from "../hooks/useProfiles";
 
-export function ProfileGate() {
-    const [isHighlighted, setIsHighLighted] = useState<boolean>(false);
+export function ProfileGate({user}:{user: any}) {
+    const[isHighlighted, setIsHighLighted] = useState<boolean>(false);
     const[newProfileName, setNewProfileName] = useState<string>('');
+
+    const createProfiles = useProfiles({user, newProfileName});
 
     return (
         <SafeAreaView
@@ -40,7 +43,8 @@ export function ProfileGate() {
                                 </TextInput>
                                 
                                 {/* Create new profile button */}
-                                <TouchableOpacity style={styles.createButton}>
+                                <TouchableOpacity style={styles.createButton}
+                                    onPress={createProfiles}>
                                     <Text style={styles.createButtonText}>Create</Text>
                                 </TouchableOpacity>
                             </View>
@@ -54,7 +58,7 @@ export function ProfileGate() {
 
 // Handle when create a new profile
 const handleCreateProfile = () => {
-    
+
 }
 const { width } = Dimensions.get('window');
 

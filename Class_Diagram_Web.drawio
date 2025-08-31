@@ -1,6 +1,6 @@
 <mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/28.0.6 Chrome/138.0.7204.100 Electron/37.2.3 Safari/537.36" version="28.0.6" pages="2">
   <diagram name="UML Class Diagram" id="nFiH9V4HMwu1DOd0Ung1">
-    <mxGraphModel dx="793" dy="639" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="1220" dy="983" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -24,19 +24,8 @@
         <mxCell id="eudkxECieCfS1o3uUdhF-9" value="+ useEffect()" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="5kL66GatBy4QELhhgdsX-1">
           <mxGeometry y="90" width="140" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="ZPwgUJczgAXjRSvhkvsr-31" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="ZPwgUJczgAXjRSvhkvsr-6" target="eudkxECieCfS1o3uUdhF-22">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint x="920" y="770" as="targetPoint" />
-            <Array as="points" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="ZPwgUJczgAXjRSvhkvsr-33" value="&lt;b&gt;Calls signInHandle() to handle sign in&lt;/b&gt;&lt;div&gt;&lt;b&gt;Calls signUpHandle() to handle sign up&lt;/b&gt;&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="ZPwgUJczgAXjRSvhkvsr-31">
-          <mxGeometry x="-0.32" y="1" relative="1" as="geometry">
-            <mxPoint x="-1" y="-1" as="offset" />
-          </mxGeometry>
-        </mxCell>
         <mxCell id="ZPwgUJczgAXjRSvhkvsr-6" value="Auth&lt;div&gt;(AuthScreen.tsx)&lt;/div&gt;" style="swimlane;fontStyle=1;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="850" y="490" width="140" height="180" as="geometry" />
+          <mxGeometry x="850" y="490" width="140" height="150" as="geometry" />
         </mxCell>
         <mxCell id="ZPwgUJczgAXjRSvhkvsr-7" value="- email" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="ZPwgUJczgAXjRSvhkvsr-6">
           <mxGeometry y="30" width="140" height="30" as="geometry" />
@@ -50,9 +39,6 @@
         <mxCell id="ZPwgUJczgAXjRSvhkvsr-13" value="- errorMsg" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="ZPwgUJczgAXjRSvhkvsr-6">
           <mxGeometry y="120" width="140" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="ZPwgUJczgAXjRSvhkvsr-18" value="+signInHandle()" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="ZPwgUJczgAXjRSvhkvsr-6">
-          <mxGeometry y="150" width="140" height="30" as="geometry" />
-        </mxCell>
         <mxCell id="eudkxECieCfS1o3uUdhF-11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="eudkxECieCfS1o3uUdhF-3" target="eudkxECieCfS1o3uUdhF-10">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
@@ -65,14 +51,22 @@
         <mxCell id="eudkxECieCfS1o3uUdhF-5" value="+ onAuthStateChange()" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="eudkxECieCfS1o3uUdhF-3">
           <mxGeometry y="60" width="140" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="eudkxECieCfS1o3uUdhF-14" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="eudkxECieCfS1o3uUdhF-10" target="eudkxECieCfS1o3uUdhF-16">
+        <mxCell id="eudkxECieCfS1o3uUdhF-14" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="eudkxECieCfS1o3uUdhF-10" target="eudkxECieCfS1o3uUdhF-45">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="555" y="670" as="targetPoint" />
+            <mxPoint x="557.5" y="670" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="555" y="690" />
+            </Array>
           </mxGeometry>
         </mxCell>
         <mxCell id="eudkxECieCfS1o3uUdhF-15" value="NO" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontStyle=1;fontSize=15;" vertex="1" connectable="0" parent="eudkxECieCfS1o3uUdhF-14">
           <mxGeometry x="0.1094" y="-5" relative="1" as="geometry">
-            <mxPoint as="offset" />
+            <mxPoint x="2" y="-35" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="eudkxECieCfS1o3uUdhF-44" value="- Pass session.user to ProfileGate" style="edgeLabel;html=1;align=left;verticalAlign=middle;resizable=0;points=[];fontStyle=1" vertex="1" connectable="0" parent="eudkxECieCfS1o3uUdhF-14">
+          <mxGeometry x="0.2895" y="-1" relative="1" as="geometry">
+            <mxPoint x="-86" y="-10" as="offset" />
           </mxGeometry>
         </mxCell>
         <mxCell id="eudkxECieCfS1o3uUdhF-10" value="Is the session NULL?" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
@@ -91,11 +85,8 @@
             <mxPoint as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="eudkxECieCfS1o3uUdhF-16" value="HomeScreen&lt;br&gt;&lt;div&gt;(index.tsx)&lt;/div&gt;" style="swimlane;fontStyle=1;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="485" y="680" width="140" height="60" as="geometry" />
-        </mxCell>
         <mxCell id="eudkxECieCfS1o3uUdhF-22" value="useAuth()" style="swimlane;fontStyle=1;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="850" y="790" width="140" height="210" as="geometry" />
+          <mxGeometry x="1350" y="540" width="140" height="210" as="geometry" />
         </mxCell>
         <mxCell id="eudkxECieCfS1o3uUdhF-23" value="- authSignInError" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="eudkxECieCfS1o3uUdhF-22">
           <mxGeometry y="30" width="140" height="30" as="geometry" />
@@ -114,6 +105,107 @@
         </mxCell>
         <mxCell id="eudkxECieCfS1o3uUdhF-29" value="+ signUpHandle()" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="eudkxECieCfS1o3uUdhF-22">
           <mxGeometry y="180" width="140" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="eudkxECieCfS1o3uUdhF-32" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" edge="1" parent="1" source="eudkxECieCfS1o3uUdhF-40" target="eudkxECieCfS1o3uUdhF-22">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1355" y="515" as="sourcePoint" />
+            <Array as="points">
+              <mxPoint x="1105" y="480" />
+              <mxPoint x="1420" y="480" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="eudkxECieCfS1o3uUdhF-34" value="&lt;b&gt;&lt;font style=&quot;font-size: 15px;&quot;&gt;YES&lt;/font&gt;&lt;/b&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="eudkxECieCfS1o3uUdhF-32">
+          <mxGeometry x="-0.1672" y="-4" relative="1" as="geometry">
+            <mxPoint x="-55" y="-4" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="eudkxECieCfS1o3uUdhF-38" value="&lt;b&gt;- Call signInHandle()&lt;/b&gt;&lt;div&gt;&lt;b&gt;- Render Sign in UI&lt;/b&gt;&lt;/div&gt;" style="edgeLabel;html=1;align=left;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="eudkxECieCfS1o3uUdhF-32">
+          <mxGeometry x="0.6103" y="3" relative="1" as="geometry">
+            <mxPoint x="-123" y="3" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="eudkxECieCfS1o3uUdhF-33" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1" source="eudkxECieCfS1o3uUdhF-40">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1355" y="615" as="sourcePoint" />
+            <mxPoint x="1350" y="630" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="1105" y="630" />
+              <mxPoint x="1350" y="630" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="eudkxECieCfS1o3uUdhF-37" value="NO" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=15;fontStyle=1" vertex="1" connectable="0" parent="eudkxECieCfS1o3uUdhF-33">
+          <mxGeometry x="0.248" relative="1" as="geometry">
+            <mxPoint x="-88" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="eudkxECieCfS1o3uUdhF-41" value="- Call signUpHandle()&lt;div&gt;- Render Sign Up UI&lt;/div&gt;" style="edgeLabel;html=1;align=left;verticalAlign=middle;resizable=0;points=[];fontStyle=1" vertex="1" connectable="0" parent="eudkxECieCfS1o3uUdhF-33">
+          <mxGeometry x="-0.0148" y="-2" relative="1" as="geometry">
+            <mxPoint x="-13" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="eudkxECieCfS1o3uUdhF-31" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="ZPwgUJczgAXjRSvhkvsr-8" target="eudkxECieCfS1o3uUdhF-40">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1060" y="565" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="eudkxECieCfS1o3uUdhF-40" value="Is Sign in?" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1060" y="525" width="90" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="eudkxECieCfS1o3uUdhF-45" value="ProfileGate&lt;div&gt;(ProfileGate.tsx)&lt;/div&gt;" style="swimlane;fontStyle=1;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="485" y="700" width="140" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="eudkxECieCfS1o3uUdhF-46" value="- isHighLighted" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="eudkxECieCfS1o3uUdhF-45">
+          <mxGeometry y="30" width="140" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="eudkxECieCfS1o3uUdhF-47" value="- newProfileName" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="eudkxECieCfS1o3uUdhF-45">
+          <mxGeometry y="60" width="140" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="eudkxECieCfS1o3uUdhF-48" value="+ createProfiles()" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="eudkxECieCfS1o3uUdhF-45">
+          <mxGeometry y="90" width="140" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="eudkxECieCfS1o3uUdhF-49" value="useProfiles.ts" style="swimlane;fontStyle=1;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="810" y="700" width="140" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="eudkxECieCfS1o3uUdhF-50" value="- user" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="eudkxECieCfS1o3uUdhF-49">
+          <mxGeometry y="30" width="140" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="eudkxECieCfS1o3uUdhF-51" value="- newProfileName" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="eudkxECieCfS1o3uUdhF-49">
+          <mxGeometry y="60" width="140" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="eudkxECieCfS1o3uUdhF-52" value="+ createProfiles()" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="eudkxECieCfS1o3uUdhF-49">
+          <mxGeometry y="90" width="140" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="eudkxECieCfS1o3uUdhF-53" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="eudkxECieCfS1o3uUdhF-46" target="eudkxECieCfS1o3uUdhF-50">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="eudkxECieCfS1o3uUdhF-54" value="&lt;b&gt;- Call createProfiles() when the Create button is pressed&lt;/b&gt;" style="edgeLabel;html=1;align=left;verticalAlign=middle;resizable=0;points=[];whiteSpace=wrap;" vertex="1" connectable="0" parent="eudkxECieCfS1o3uUdhF-53">
+          <mxGeometry x="-0.0731" y="2" relative="1" as="geometry">
+            <mxPoint x="-41" y="2" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="eudkxECieCfS1o3uUdhF-63" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.721;entryY=0;entryDx=0;entryDy=0;entryPerimeter=0;exitX=0;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1" source="eudkxECieCfS1o3uUdhF-60" target="eudkxECieCfS1o3uUdhF-22">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1560" y="360" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="1450" y="490" />
+              <mxPoint x="1450" y="537" />
+              <mxPoint x="1451" y="537" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="eudkxECieCfS1o3uUdhF-60" value="Is Sign up successfully?" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1590" y="450" width="110" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="eudkxECieCfS1o3uUdhF-61" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1.001;exitY=0.34;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1" source="eudkxECieCfS1o3uUdhF-27" target="eudkxECieCfS1o3uUdhF-60">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1550" y="610" as="targetPoint" />
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="eudkxECieCfS1o3uUdhF-65" value="&lt;b&gt;- Call signInHandle()&lt;/b&gt;&lt;div&gt;&lt;b&gt;- Render Sign in UI&lt;/b&gt;&lt;/div&gt;" style="edgeLabel;html=1;align=left;verticalAlign=middle;resizable=0;points=[];textShadow=0;" vertex="1" connectable="0" parent="1">
+          <mxGeometry x="1470" y="490" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>

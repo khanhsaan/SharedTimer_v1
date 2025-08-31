@@ -5,6 +5,8 @@ import { useStateForPath } from "@react-navigation/native";
 export const useAuth = ({userEmail, userPassword, userConfirmPassword}:{userEmail: string, userPassword: string, userConfirmPassword: string}) => {
     const[authSignInError, setAuthSignInError] = useState<any>(null);
     const[authSignInData, setAuthSignInData] = useState<any>(null); // Accept any variable type
+    // store and set the current signed in user
+    const[user, setUser] = useState<any>(null);
 
     const[authSignUpError, setAuthSignUpError] = useState<any>(null);
     const[authSignUpData, setAuthSignUpData] = useState<any>(null); // Accept any variable type
@@ -16,9 +18,6 @@ export const useAuth = ({userEmail, userPassword, userConfirmPassword}:{userEmai
       email: userEmail,
       password: userPassword,
     });
-
-    setAuthSignInData(data);
-    setAuthSignInError(error);
 
     // Email and password must not be empty
     if(!userEmail || !userPassword ) {
@@ -34,12 +33,11 @@ export const useAuth = ({userEmail, userPassword, userConfirmPassword}:{userEmai
     // Retrieve the data and error from AuthHandle
     // If there is error, set error message and print it
     if(error){
-        setAuthSignInError(error.toString());
         console.error(`Sign-in FAILED!`, authSignInError);
 
         return {
             authSignInData: null,
-            authSignInError
+            authSignInError: error.toString()
         }
     } 
     // Else, the sign in process is SUCCESSFUL, reset the error message, print the data
@@ -47,9 +45,10 @@ export const useAuth = ({userEmail, userPassword, userConfirmPassword}:{userEmai
       // Reset error message if there is any from the previous stage
       setAuthSignInError('');
       console.log(`Sign-in successfully! `, data);
-
+      setUser(data.user)
+      
       return {
-        authSignInData,
+        authSignInData: data,
         authSignInError: null
       }
     }
