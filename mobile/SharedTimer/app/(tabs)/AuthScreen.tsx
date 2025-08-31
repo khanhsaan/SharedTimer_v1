@@ -1,8 +1,9 @@
-import React, { use, useState } from 'react'
+import React, { use, useEffect, useState } from 'react'
 import { Alert, Button, KeyboardAvoidingView, Platform, StyleSheet, Text, TextInput, TouchableOpacity, View, ScrollView, SafeAreaView } from 'react-native'
 import { supabase } from '../../lib/supabase'
 import { authHandle } from '@/app/handle/AuthHandle'
 import { configRegExp } from 'expo-router/build/fork/getStateFromPath-forks'
+import { useAuth } from '../hooks/useAuth'
 
 // Custom hook
 export function Auth() {
@@ -14,47 +15,15 @@ export function Auth() {
   // Check if the user wants to Sign in or Sign up
   const[isSignIn, setIsSignIn] = useState(false);
 
-  // Sign in handling component
-  const signInHandle = async() => {
-    // Pass userEmail and userPassword to supabase.auth
-    const {data, error} = await supabase.auth.signInWithPassword({
-      email: userEmail,
-      password: userPassword,
-    }) 
-    // Email and password must not be empty
-    if(!userEmail || !userPassword ) {
-      setErrorMsg("Email or password is empty");
-      console.warn(errorMsg);
-      return;
-    }
-    // Retrieve the data and error from AuthHandle
-    // If there is error, set error message and print it
-    if(error){
-      setErrorMsg(error.toString());
-      console.error(`Sign-in FAILED!`, errorMsg);
-    } 
-    // Else, the sign in process is successful, reset the error message, print the data
-    else{
-      // Reset error message if there is any from the previous stage
-      setErrorMsg('');
-      console.log(`Sign-in successfully! `, data);
-    }
-  }
+  const{ signInHandle, authSignInData, authSignInError, signUpHandle, authSignUpData, authSignUpError } = useAuth({userEmail, userPassword, userConfirmPassword: confirmPassword});
 
-  async function signUpWithEmail() {
-    setLoading(true)
-    const {
-      data: { session },
-      error,
-    } = await supabase.auth.signUp({
-      email: userEmail,
-      password: userPassword,
-    })
-
-    if (error) Alert.alert(error.message)
-    if (!session) Alert.alert('Please check your inbox for email verification!')
-    setLoading(false)
-  }
+  // // Listen to isSignIn to re-render the page
+  // useEffect(() => {
+  //   setUserEmail('');
+  //   setUserPassword('');
+  //   setConfirmPassword('');
+  //   setLoading(false);
+  // }, [isSignIn]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -77,8 +46,8 @@ export function Auth() {
                 keyboardType='email-address'
                 autoCapitalize='none'
                 autoCorrect={false}
-                placeholderTextColor={"rgba(45, 55, 72, 0.5)"}>  
-              </TextInput>
+                placeholderTextColor={"rgba(45, 55, 72, 0.5)"}  
+              />
               
               {/* Password input field */}
               <TextInput
@@ -87,8 +56,8 @@ export function Auth() {
                 value={userPassword}
                 onChangeText={(newText) => setUserPassword(newText)}
                 secureTextEntry
-                placeholderTextColor={"rgba(45, 55, 72, 0.5)"}>
-              </TextInput>
+                placeholderTextColor={"rgba(45, 55, 72, 0.5)"}
+              />
 
               {/* Extra input field appears to confirm password when in Sign Up mode */}
               {!isSignIn && (
@@ -98,8 +67,8 @@ export function Auth() {
                   value={confirmPassword}
                   onChangeText={(newText) => setConfirmPassword(newText)}
                   secureTextEntry
-                  placeholderTextColor="rgba(45, 55, 72, 0.5)">
-                </TextInput>
+                  placeholderTextColor="rgba(45, 55, 72, 0.5)"
+                />
               )}
 
               {/* Banner appears when wrong email or password */}
@@ -113,9 +82,24 @@ export function Auth() {
                 </View>
               )}
 
+              {/* Sign In / Sign Up button */}
               <TouchableOpacity
                 style={[styles.authButton, loading && styles.authButtonDisabled]}
-                onPress={signInHandle}
+                onPress={async() => {
+                  // If the user is signing in 
+                  if(isSignIn === true){
+                    await signInHandle();
+                  // If the user is signing up
+                  } else {
+                    const success = await signUpHandle();
+                    // If there is no error from the sign up state, move to the sign in page
+                    if(success?.authSignUpError === null){
+                      setIsSignIn(true);
+                    } else {
+                      setIsSignIn(false);
+                    }
+                  }
+                }}
                 disabled={loading}
                 activeOpacity={0.8}>
 
@@ -125,6 +109,7 @@ export function Auth() {
                   </Text>
               </TouchableOpacity>
 
+              {/* Switch between Sign in / Sign Up */}
               <TouchableOpacity
                 style={styles.linkButton}
                 onPress={() => {

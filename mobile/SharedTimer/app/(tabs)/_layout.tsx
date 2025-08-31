@@ -40,14 +40,18 @@ export default function RootLayout() {
   }, []);
   
   // If the current user session is null return AuthScreen
-  if(!session) {
-    console.log("THE USER SESSION IS NULL!");
-    return (
-      <AuthScreen></AuthScreen>
-    )
-  }
-  console.log("THE USER SESSION IS NOT NULL");
+  // if(!session) {
+  //   console.log("THE USER SESSION IS NULL!");
+  //   return (
+  //     <AuthScreen></AuthScreen>
+  //   )
+  // }
+  // console.log("THE USER SESSION IS NOT NULL");
+  // return (
+  //   <ProfileGate></ProfileGate>
+  // )
+
   return (
-    <ProfileGate></ProfileGate>
+    <AuthScreen></AuthScreen>
   )
 }

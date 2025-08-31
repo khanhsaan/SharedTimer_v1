@@ -12,7 +12,7 @@ export function ProfileGate() {
             style={styles.container}>
                 <ScrollView
                     contentContainerStyle={styles.scrollContent}>
-                        {/* Header */}
+                    {/* Header */}
                     <View style={styles.header}>
                         <View>
                             <Text style={styles.title}>Shared Timers</Text>
@@ -38,7 +38,8 @@ export function ProfileGate() {
                                     onChangeText={(newText) => setNewProfileName(newText)}
                                     placeholderTextColor={"rgba(45, 55, 72, 0.5)"}>
                                 </TextInput>
-
+                                
+                                {/* Create new profile button */}
                                 <TouchableOpacity style={styles.createButton}>
                                     <Text style={styles.createButtonText}>Create</Text>
                                 </TouchableOpacity>
