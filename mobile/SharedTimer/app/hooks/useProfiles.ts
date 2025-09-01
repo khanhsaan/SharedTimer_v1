@@ -13,7 +13,7 @@ export const useProfiles = () => {
     
 
     // Create a method that listens for if the logged in user is change
-    const refresh = async(user: any) => {
+    const retrieveProfiles = async(user: any) => {
         const{ data, error } = await supabase
             .from('profiles')
             .select('id, name, created_at')
@@ -81,8 +81,36 @@ export const useProfiles = () => {
         }
     }
 
+    const handleDeleteProfile = async(profile_id: string, profileName: string, user_id: any) => {
+        if(!profile_id || !profileName || !user_id){
+            return {
+                data: null,
+                error: 'MISSING profile id, profile name or user id'
+            }
+        }
+        // Insert the new profile to supabase
+        const { data, error } = await supabase
+            .from('profiles')
+            .delete()
+            .eq('id', profile_id)
+            .eq('user_id', user_id)
+
+        if(error){
+            return {
+                data: null,
+                error: `ERROR deleting profile: ${error.message.toString()}`
+            }
+        }
+        return {
+            data,
+            error: null
+        }
+
+    }
+
     return {
         createProfiles,
-        refresh
+        retrieveProfiles,
+        handleDeleteProfile
     }   
 }

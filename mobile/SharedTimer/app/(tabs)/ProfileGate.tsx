@@ -15,7 +15,7 @@ export function ProfileGate({user}:{user: any}) {
     const[isHighlighted, setIsHighLighted] = useState<boolean>(false);
     const[newProfileName, setNewProfileName] = useState<string>('');
 
-    const {createProfiles, refresh} = useProfiles();
+    const {createProfiles, retrieveProfiles, handleDeleteProfile} = useProfiles();
     const[profilesArr, setProfilesArr] = useState<Profiles[]>([]);
 
     const [isNewProfile, setIsNewProfile] = useState<boolean>(false);
@@ -23,7 +23,7 @@ export function ProfileGate({user}:{user: any}) {
     // Listen for the user session changed, run refresh() to retrieve the corresponding profiles
     useEffect(() => {
         if(user?.id){
-            refresh(user)
+            retrieveProfiles(user)
                 .then(response => {
                     if(response?.data){
                         setProfilesArr(response.data);
@@ -34,7 +34,7 @@ export function ProfileGate({user}:{user: any}) {
 
     useEffect(() => {
         if(user?.id){
-            refresh(user)
+            retrieveProfiles(user)
                 .then(response => {
                     if(response?.data){
                         setProfilesArr(response.data);
@@ -84,7 +84,7 @@ export function ProfileGate({user}:{user: any}) {
                                         const response = await createProfiles(newProfileName, user)
                                         // If there is no error and there is data once the profile has been created
                                         if(!response?.error && response?.data){
-                                            const response = await refresh(user);
+                                            const response = await retrieveProfiles(user);
                                             // If there is no error and there is data once all of the profiles has been retrieved
                                             if(!response?.error && response?.data){
                                                 setProfilesArr(response.data);
@@ -109,7 +109,7 @@ export function ProfileGate({user}:{user: any}) {
                         ) : (
                             <View style={styles.profilesGrid}>
                                 {/*  */}
-                                {profilesArr?.map((p: any) => (
+                                {profilesArr?.map((p: Profiles) => (
                                     <TouchableOpacity
                                         key={p.id}
                                         style={[
@@ -118,7 +118,39 @@ export function ProfileGate({user}:{user: any}) {
                                             <Text style={styles.profileName}>
                                                 {p.name}
                                             </Text>
+
+                                            {/* Delete profile button */}
+                                            <TouchableOpacity style={styles.deleteButton}
+                                                onPress={async() => {
+                                                    // Waiting the response from deleting profile
+                                                    const response = await handleDeleteProfile(p.id, p.name, user.id)
+                                                    
+                                                    // If there is error
+                                                    if(response.error){
+                                                        console.error(response.error.toString());
+                                                
+                                                    }
+                                                    // If there is no error 
+                                                    else if (!response.error) {
+                                                        console.log(`Delete profile SUCCESSFULLY`, response.data);
+
+                                                        // Waiting for the response from retrieving profiles
+                                                        const response2 = await retrieveProfiles(user);
+                                                        
+                                                        // If there is no error and there is data once all of the profiles has been retrieved
+                                                        if(!response2?.error && response2?.data){
+                                                            setProfilesArr(response2.data);
+                                                        }
+                                                    }
+                                                    
+                                                }}>
+                                                    <Text style={styles.deleteButtonText}>
+                                                        Delete
+                                                    </Text>
+
+                                            </TouchableOpacity>
                                     </TouchableOpacity>
+
                                 ))}
 
                             </View>
