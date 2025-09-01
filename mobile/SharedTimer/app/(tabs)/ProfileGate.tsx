@@ -1,14 +1,49 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { StyleSheet, Dimensions, Text, TextInput, TouchableOpacity } from "react-native";
 import { ScrollView, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useProfiles } from "../hooks/useProfiles";
 
+// Create an array type to make sure the consistence
+interface Profiles {
+    id: string,
+    name: string,
+    created_at: string;
+}
+
 export function ProfileGate({user}:{user: any}) {
     const[isHighlighted, setIsHighLighted] = useState<boolean>(false);
     const[newProfileName, setNewProfileName] = useState<string>('');
 
-    const createProfiles = useProfiles({user, newProfileName});
+    const {createProfiles, refresh} = useProfiles();
+    const[profilesArr, setProfilesArr] = useState<Profiles[]>([]);
+
+    const [isNewProfile, setIsNewProfile] = useState<boolean>(false);
+
+    // Listen for the user session changed, run refresh() to retrieve the corresponding profiles
+    useEffect(() => {
+        if(user?.id){
+            refresh(user)
+                .then(response => {
+                    if(response?.data){
+                        setProfilesArr(response.data);
+                    }
+                })
+        }
+    }, [user?.id])
+
+    useEffect(() => {
+        if(user?.id){
+            refresh(user)
+                .then(response => {
+                    if(response?.data){
+                        setProfilesArr(response.data);
+                    }
+                })
+        }
+    }, [])
+
+
 
     return (
         <SafeAreaView
@@ -28,8 +63,9 @@ export function ProfileGate({user}:{user: any}) {
                         <Text style={styles.profileCardTitle}>Choose Your Profile</Text>
                     </View>
 
-                    {/* Profiles */}
+                    {/* Profiles management card */}
                     <View style={styles.card}>
+                        {/* HEADER */}
                         <View style={styles.cardHeader}>
                             <Text style={styles.cardTitle}>Your Profiles</Text>
 
@@ -44,11 +80,49 @@ export function ProfileGate({user}:{user: any}) {
                                 
                                 {/* Create new profile button */}
                                 <TouchableOpacity style={styles.createButton}
-                                    onPress={createProfiles}>
+                                    onPress={async() => { 
+                                        const response = await createProfiles(newProfileName, user)
+                                        // If there is no error and there is data once the profile has been created
+                                        if(!response?.error && response?.data){
+                                            const response = await refresh(user);
+                                            // If there is no error and there is data once all of the profiles has been retrieved
+                                            if(!response?.error && response?.data){
+                                                setProfilesArr(response.data);
+                                            }
+                                        }
+                                        setNewProfileName('');
+                                    }}>
                                     <Text style={styles.createButtonText}>Create</Text>
                                 </TouchableOpacity>
                             </View>
                         </View>
+
+                        {/* PROFILES */}
+
+                        {/* If there is no profile, display emtpy UI */}
+                        {profilesArr?.length === 0 ? (
+                            <View style={styles.emptyState}>
+                                <Text style={styles.emptyIcon}>🎭</Text>
+                                <Text style={styles.emptyText}>No profiles yet. Create your first profile above!</Text>
+                            </View>
+                        // Else, display profiles UI
+                        ) : (
+                            <View style={styles.profilesGrid}>
+                                {/*  */}
+                                {profilesArr?.map((p: any) => (
+                                    <TouchableOpacity
+                                        key={p.id}
+                                        style={[
+                                            styles.profileItem,
+                                        ]}>
+                                            <Text style={styles.profileName}>
+                                                {p.name}
+                                            </Text>
+                                    </TouchableOpacity>
+                                ))}
+
+                            </View>
+                        )}
                     </View>
                 </ScrollView>
 

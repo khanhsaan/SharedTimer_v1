@@ -1,8 +1,51 @@
 import { supabase } from "@/lib/supabase";
+import { useCallback, useEffect, useState } from "react";
 
-export const useProfiles = ({user, newProfileName}: {user: any, newProfileName: string}) => {
+// Create an array type to make sure the consistence
+interface Profiles {
+    id: string,
+    name: string,
+    created_at: string;
+}
+export const useProfiles = () => {
+    // Create array to store the created profiles which have any type of value
+    const[profilesArr, setProfilesArr] = useState<Profiles[]>([]);
     
-    const createProfiles = async() => {
+
+    // Create a method that listens for if the logged in user is change
+    const refresh = async(user: any) => {
+        const{ data, error } = await supabase
+            .from('profiles')
+            .select('id, name, created_at')
+            .eq('user_id', user.id)
+            .order('created_at', {ascending: true})
+
+        // If there is error while retrieving the profiles
+        if(error){
+            console.error('Error while retrieving profiles, ', error?.message.toString());
+            return {
+                data: null,
+                error
+            }
+        }
+        // If there is no error and there is data
+        if(!error && data) {
+            console.log('Retrieve profiles SUCCESSFULLY! ');
+            console.log('Profiles length: ', data.length);
+            // Add the new created profile to the array
+
+            console.log('Profiles type: ', data);
+            
+
+            return {
+                // Force the returned data have the type Profiles
+                data: data as Profiles[],
+                error: null
+            }
+        }
+    };
+
+    const createProfiles = async(newProfileName: string, user: any) => {
         if(!user){
             return {
                 data: null,
@@ -31,13 +74,15 @@ export const useProfiles = ({user, newProfileName}: {user: any, newProfileName: 
             }
         }
         console.log('Create profile SUCCESSFULLY!')
+
         return {
-            data,
+            data: data,
             error: null
         }
     }
 
-    return (
-        createProfiles
-    )
+    return {
+        createProfiles,
+        refresh
+    }   
 }
