@@ -12,6 +12,7 @@ import HomeScreen from './index';
 import { Session } from '@supabase/supabase-js';
 import { supabase } from '@/lib/supabase';
 import { ProfileGate } from './ProfileGate';
+import { TimerScreen } from './TimerScreen';
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
@@ -50,7 +51,8 @@ export default function RootLayout() {
 
   console.log("THE USER SESSION IS NOT NULL");
   return (
-    <ProfileGate user={session.user}></ProfileGate>
+    // <ProfileGate user={session.user}></ProfileGate>
+    <TimerScreen></TimerScreen>
     // <Auth></Auth>
   )
 

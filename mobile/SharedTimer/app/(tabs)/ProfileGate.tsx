@@ -32,6 +32,7 @@ export function ProfileGate({user}:{user: any}) {
         }
     }, [user?.id])
 
+    // Retrieve all of the profiles once on initiation
     useEffect(() => {
         if(user?.id){
             retrieveProfiles(user)
@@ -42,7 +43,6 @@ export function ProfileGate({user}:{user: any}) {
                 })
         }
     }, [])
-
 
 
     return (
@@ -108,13 +108,17 @@ export function ProfileGate({user}:{user: any}) {
                         // Else, display profiles UI
                         ) : (
                             <View style={styles.profilesGrid}>
-                                {/*  */}
+                                {/*  Profile Card */}
                                 {profilesArr?.map((p: Profiles) => (
                                     <TouchableOpacity
                                         key={p.id}
                                         style={[
                                             styles.profileItem,
-                                        ]}>
+                                        ]}
+                                        // When a profile is pressed
+                                        onPress={() => {
+                                            setIsHighLighted(true)
+                                        }}>
                                             <Text style={styles.profileName}>
                                                 {p.name}
                                             </Text>
