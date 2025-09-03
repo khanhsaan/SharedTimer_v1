@@ -1,13 +1,22 @@
-import { StyleSheet } from "react-native";
+import { Text } from "@react-navigation/elements";
+import { StyleSheet, TouchableOpacity } from "react-native";
 import { ScrollView, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-export function TimerScreen() {
-
+export function TimerScreen({user}: {user: any}) {
     return (
         <SafeAreaView style={styles.container}>
             <ScrollView style={styles.scrollContainer}>
-                <View style={styles.header}></View>
+                {/* HEADER */}
+                <View style={styles.header}>
+                    <View>
+                        <Text style={styles.title}>Household Timers</Text>
+                        <Text style={styles.subtitle}>Welcome, {user.email}</Text>
+                    </View>
+                    <TouchableOpacity style={styles.signOutButton}>
+                        <Text style={styles.signOutText}>Sign Out</Text>
+                    </TouchableOpacity>
+                </View>
             </ScrollView>
         </SafeAreaView>
     )

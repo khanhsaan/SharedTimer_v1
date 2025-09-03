@@ -54,6 +54,15 @@ export const useAuth = ({userEmail, userPassword, userConfirmPassword}:{userEmai
     }
   };
 
+  // Sign out handling component
+  const signOutHandle = async() => {
+    const{error} = await supabase.auth.signOut();
+
+    return {
+      error,
+    }
+  };
+
   // Sign Up handle
   const signUpHandle = async() => {
     const{ data, error } = await supabase.auth.signUp({
@@ -101,5 +110,6 @@ export const useAuth = ({userEmail, userPassword, userConfirmPassword}:{userEmai
   return {
     signInHandle,
     signUpHandle,
+    signOutHandle
   };
 }

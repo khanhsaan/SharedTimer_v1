@@ -52,7 +52,7 @@ export default function RootLayout() {
   console.log("THE USER SESSION IS NOT NULL");
   return (
     // <ProfileGate user={session.user}></ProfileGate>
-    <TimerScreen></TimerScreen>
+    <TimerScreen user={session.user}></TimerScreen>
     // <Auth></Auth>
   )
 
