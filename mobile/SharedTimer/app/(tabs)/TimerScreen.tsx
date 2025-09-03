@@ -2,8 +2,17 @@ import { Text } from "@react-navigation/elements";
 import { StyleSheet, TouchableOpacity } from "react-native";
 import { ScrollView, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useAuth } from "../hooks/useAuth";
+import { supabase } from "@/lib/supabase";
 
-export function TimerScreen({user}: {user: any}) {
+export function TimerScreen({user, selectedProfileID}: {user: any, selectedProfileID: any}) {
+    const passedUser = {
+        userEmail: "",
+        userPassword: "",
+        userConfirmPassword: "",
+    }
+    const {signOutHandle} = useAuth({userEmail: passedUser.userEmail, userPassword: passedUser.userPassword, userConfirmPassword: passedUser.userConfirmPassword});
+
     return (
         <SafeAreaView style={styles.container}>
             <ScrollView style={styles.scrollContainer}>
@@ -13,8 +22,10 @@ export function TimerScreen({user}: {user: any}) {
                         <Text style={styles.title}>Household Timers</Text>
                         <Text style={styles.subtitle}>Welcome, {user.email}</Text>
                     </View>
+                    {/* Sign out button */}
                     <TouchableOpacity style={styles.signOutButton}>
-                        <Text style={styles.signOutText}>Sign Out</Text>
+                        <Text style={styles.signOutText}
+                        onPress={signOutHandle}>Sign Out</Text>
                     </TouchableOpacity>
                 </View>
             </ScrollView>

@@ -11,8 +11,9 @@ interface Profiles {
     created_at: string;
 }
 
-export function ProfileGate({user}:{user: any}) {
+export function ProfileGate({user, returnedSelectedProfileID}:{user: any, returnedSelectedProfileID: (profileID: string) => void}) {
     const[isHighlighted, setIsHighLighted] = useState<boolean>(false);
+    const[selectedProfileID, setSelectedProfileID] = useState<string>('');
     const[newProfileName, setNewProfileName] = useState<string>('');
 
     const {createProfiles, retrieveProfiles, handleDeleteProfile} = useProfiles();
@@ -117,9 +118,11 @@ export function ProfileGate({user}:{user: any}) {
                                         ]}
                                         // When a profile is pressed
                                         onPress={() => {
-                                            setIsHighLighted(true)
+                                            setSelectedProfileID(p.id);
+                                            returnedSelectedProfileID(selectedProfileID);
+                                            console.log("Selected profile ID: ", selectedProfileID);
                                         }}>
-                                            <Text style={styles.profileName}>
+                                           <Text style={styles.profileName}>
                                                 {p.name}
                                             </Text>
 
@@ -161,7 +164,6 @@ export function ProfileGate({user}:{user: any}) {
                         )}
                     </View>
                 </ScrollView>
-
         </SafeAreaView>
     )
 }

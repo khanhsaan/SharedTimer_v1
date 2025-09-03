@@ -19,6 +19,7 @@ export default function RootLayout() {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const[user, setUser] = useState<any>(null);
+  const[selectedProfileID, setSelectedProfileID] = useState<string>('');
 
   // Check the for the current use session from the local storage and listen for the authentication change once on start
   useEffect(() => {
@@ -51,8 +52,11 @@ export default function RootLayout() {
 
   console.log("THE USER SESSION IS NOT NULL");
   return (
-    // <ProfileGate user={session.user}></ProfileGate>
-    <TimerScreen user={session.user}></TimerScreen>
+    <ProfileGate 
+      user={session.user} 
+      returnedSelectedProfileID={(profileID) => setSelectedProfileID(profileID)}>
+    </ProfileGate>
+    // <TimerScreen user={session.user}></TimerScreen>
     // <Auth></Auth>
   )
 
