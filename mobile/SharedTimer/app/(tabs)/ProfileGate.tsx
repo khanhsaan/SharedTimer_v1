@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { StyleSheet, Dimensions, Text, TextInput, TouchableOpacity } from "react-native";
+import { StyleSheet, Dimensions, Text, TextInput, TouchableOpacity, Animated } from "react-native";
 import { ScrollView, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useProfiles } from "../hooks/useProfiles";
@@ -20,6 +20,8 @@ export function ProfileGate({user, returnedSelectedProfileID}:{user: any, return
     const[profilesArr, setProfilesArr] = useState<Profiles[]>([]);
 
     const [isNewProfile, setIsNewProfile] = useState<boolean>(false);
+
+    const[buttonAnimation] = useState(new Animated.Value(0));
 
     // Listen for the user session changed, run refresh() to retrieve the corresponding profiles
     useEffect(() => {
@@ -119,8 +121,10 @@ export function ProfileGate({user, returnedSelectedProfileID}:{user: any, return
                                         // When a profile is pressed
                                         onPress={() => {
                                             setSelectedProfileID(p.id);
+                                            setIsHighLighted(true);
                                             returnedSelectedProfileID(selectedProfileID);
                                             console.log("Selected profile ID: ", selectedProfileID);
+                                            console.log("Is highlighted ", isHighlighted);
                                         }}>
                                            <Text style={styles.profileName}>
                                                 {p.name}
@@ -163,6 +167,35 @@ export function ProfileGate({user, returnedSelectedProfileID}:{user: any, return
                             </View>
                         )}
                     </View>
+                    
+                    {/* NEXT button */}
+                    <Animated.View  
+                        style={[
+                            styles.nextButtonContainer,
+                            {
+                            backgroundColor: buttonAnimation.interpolate({
+                                inputRange: [0, 1],
+                                outputRange: ['#9ca3af', '#10b981'], // grey to green
+                            }),
+                            transform: [{
+                                scale: buttonAnimation.interpolate({
+                                inputRange: [0, 1],
+                                outputRange: [1, 1.05],
+                                })
+                            }]
+                            }
+                        ]}
+                        pointerEvents="box-none"
+                        >
+                        <TouchableOpacity 
+                            style={styles.nextButton}
+                            // onPress={handleNext}
+                            disabled={!isHighlighted}
+                            activeOpacity={0.8}
+                        >
+                            <Text style={styles.nextButtonText}>NEXT</Text>
+                        </TouchableOpacity>
+                    </Animated.View>
                 </ScrollView>
         </SafeAreaView>
     )
