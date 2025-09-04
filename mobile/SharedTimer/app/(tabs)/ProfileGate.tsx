@@ -23,6 +23,16 @@ export function ProfileGate({user, returnedSelectedProfileID}:{user: any, return
 
     const[buttonAnimation] = useState(new Animated.Value(0));
 
+    const handleProfileClick = (profileID: string) => {
+        setSelectedProfileID(profileID);
+        setIsHighLighted(true);
+        returnedSelectedProfileID(selectedProfileID);
+
+        console.log("Selected profile ID: ", selectedProfileID);
+        console.log("Profile ID being returned: ", selectedProfileID);
+        console.log("Is profile highlighted: ", isHighlighted);
+    }
+
     // Listen for the user session changed, run refresh() to retrieve the corresponding profiles
     useEffect(() => {
         if(user?.id){
@@ -120,11 +130,7 @@ export function ProfileGate({user, returnedSelectedProfileID}:{user: any, return
                                         ]}
                                         // When a profile is pressed
                                         onPress={() => {
-                                            setSelectedProfileID(p.id);
-                                            setIsHighLighted(true);
-                                            returnedSelectedProfileID(selectedProfileID);
-                                            console.log("Selected profile ID: ", selectedProfileID);
-                                            console.log("Is highlighted ", isHighlighted);
+                                            handleProfileClick(p.id);
                                         }}>
                                            <Text style={styles.profileName}>
                                                 {p.name}
@@ -201,10 +207,6 @@ export function ProfileGate({user, returnedSelectedProfileID}:{user: any, return
     )
 }
 
-// Handle when create a new profile
-const handleCreateProfile = () => {
-
-}
 const { width } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
