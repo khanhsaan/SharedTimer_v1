@@ -51,13 +51,17 @@ export default function RootLayout() {
   }
 
   console.log("THE USER SESSION IS NOT NULL");
+  if(selectedProfileID === ''){
+    return (
+      <ProfileGate 
+        user={session.user} 
+        returnedSelectedProfileID={(profileID) => setSelectedProfileID(profileID)}>
+      </ProfileGate>
+      // <Auth></Auth>
+    )
+  }
   return (
-    <ProfileGate 
-      user={session.user} 
-      returnedSelectedProfileID={(profileID) => setSelectedProfileID(profileID)}>
-    </ProfileGate>
-    // <TimerScreen user={session.user}></TimerScreen>
-    // <Auth></Auth>
+    <TimerScreen user={session.user}></TimerScreen>
   )
 
 }

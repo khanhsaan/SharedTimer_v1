@@ -5,7 +5,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useAuth } from "../hooks/useAuth";
 import { supabase } from "@/lib/supabase";
 
-export function TimerScreen({user, selectedProfileID}: {user: any, selectedProfileID: any}) {
+export function TimerScreen({user}: {user: any}) {
     const passedUser = {
         userEmail: "",
         userPassword: "",

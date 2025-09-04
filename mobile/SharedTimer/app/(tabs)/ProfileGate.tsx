@@ -26,11 +26,21 @@ export function ProfileGate({user, returnedSelectedProfileID}:{user: any, return
     const handleProfileClick = (profileID: string) => {
         setSelectedProfileID(profileID);
         setIsHighLighted(true);
-        returnedSelectedProfileID(selectedProfileID);
 
         console.log("Selected profile ID: ", selectedProfileID);
-        console.log("Profile ID being returned: ", selectedProfileID);
         console.log("Is profile highlighted: ", isHighlighted);
+
+        // Animate button to green when profile is selected
+        Animated.timing(buttonAnimation, {
+            toValue: 1,
+            duration: 300,
+            useNativeDriver: false,
+        }).start();
+    }
+
+    const handleNext = () => {
+        returnedSelectedProfileID(selectedProfileID);
+        console.log("Profile ID being returned: ", selectedProfileID);
     }
 
     // Listen for the user session changed, run refresh() to retrieve the corresponding profiles
@@ -195,7 +205,7 @@ export function ProfileGate({user, returnedSelectedProfileID}:{user: any, return
                         >
                         <TouchableOpacity 
                             style={styles.nextButton}
-                            // onPress={handleNext}
+                            onPress={handleNext}
                             disabled={!isHighlighted}
                             activeOpacity={0.8}
                         >
