@@ -1,6 +1,6 @@
 <mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/28.1.2 Chrome/138.0.7204.243 Electron/37.4.0 Safari/537.36" version="28.1.2" pages="2">
   <diagram name="UML Class Diagram" id="nFiH9V4HMwu1DOd0Ung1">
-    <mxGraphModel dx="883" dy="825" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="1014" dy="543" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -153,7 +153,7 @@
         <mxCell id="eudkxECieCfS1o3uUdhF-40" value="Is Sign in?" style="rhombus;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="1060" y="525" width="90" height="80" as="geometry" />
         </mxCell>
-        <mxCell id="wUyEcWMNaGtnZdbMQFyq-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="eudkxECieCfS1o3uUdhF-45" target="ZPwgUJczgAXjRSvhkvsr-1">
+        <mxCell id="wUyEcWMNaGtnZdbMQFyq-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="eudkxECieCfS1o3uUdhF-45" target="ZPwgUJczgAXjRSvhkvsr-1" edge="1">
           <mxGeometry relative="1" as="geometry">
             <Array as="points">
               <mxPoint x="520" y="860" />
@@ -162,7 +162,7 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="wUyEcWMNaGtnZdbMQFyq-2" value="&lt;b&gt;Return selected profile ID back to Root Layout&lt;/b&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];whiteSpace=wrap;" vertex="1" connectable="0" parent="wUyEcWMNaGtnZdbMQFyq-1">
+        <mxCell id="wUyEcWMNaGtnZdbMQFyq-2" value="&lt;b&gt;Return selected profile ID back to Root Layout&lt;/b&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];whiteSpace=wrap;" parent="wUyEcWMNaGtnZdbMQFyq-1" vertex="1" connectable="0">
           <mxGeometry x="-0.591" y="4" relative="1" as="geometry">
             <mxPoint as="offset" />
           </mxGeometry>
@@ -179,10 +179,10 @@
         <mxCell id="eudkxECieCfS1o3uUdhF-48" value="+ createProfiles()" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" parent="eudkxECieCfS1o3uUdhF-45" vertex="1">
           <mxGeometry y="90" width="210" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="wUyEcWMNaGtnZdbMQFyq-3" value="+ handleProfileClick(profileID)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;html=1;" vertex="1" parent="eudkxECieCfS1o3uUdhF-45">
+        <mxCell id="wUyEcWMNaGtnZdbMQFyq-3" value="+ handleProfileClick(profileID)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;html=1;" parent="eudkxECieCfS1o3uUdhF-45" vertex="1">
           <mxGeometry y="120" width="210" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="wUyEcWMNaGtnZdbMQFyq-6" value="+ handleNext(): &lt;b&gt;returned the profile ID when the NEXT button is pressed&lt;/b&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="eudkxECieCfS1o3uUdhF-45">
+        <mxCell id="wUyEcWMNaGtnZdbMQFyq-6" value="+ handleNext(): &lt;b&gt;returned the profile ID when the NEXT button is pressed&lt;/b&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" parent="eudkxECieCfS1o3uUdhF-45" vertex="1">
           <mxGeometry y="150" width="210" height="30" as="geometry" />
         </mxCell>
         <mxCell id="eudkxECieCfS1o3uUdhF-49" value="useProfiles(user, newProfileName)" style="swimlane;fontStyle=1;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
@@ -200,7 +200,7 @@
         <mxCell id="bB4E4RR8OdKU1POEHprP-27" value="+ handleDeleteProfile()" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;" parent="eudkxECieCfS1o3uUdhF-49" vertex="1">
           <mxGeometry y="120" width="170" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="eudkxECieCfS1o3uUdhF-53" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="eudkxECieCfS1o3uUdhF-46" edge="1" target="bB4E4RR8OdKU1POEHprP-2">
+        <mxCell id="eudkxECieCfS1o3uUdhF-53" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="eudkxECieCfS1o3uUdhF-46" target="bB4E4RR8OdKU1POEHprP-2" edge="1">
           <mxGeometry relative="1" as="geometry">
             <mxPoint x="810" y="745" as="targetPoint" />
           </mxGeometry>
@@ -304,20 +304,25 @@
             <mxPoint x="9" y="-1" as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="wUyEcWMNaGtnZdbMQFyq-14" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="wUyEcWMNaGtnZdbMQFyq-8" target="wUyEcWMNaGtnZdbMQFyq-10">
+        <mxCell id="wUyEcWMNaGtnZdbMQFyq-14" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="wUyEcWMNaGtnZdbMQFyq-8" target="wUyEcWMNaGtnZdbMQFyq-10" edge="1">
           <mxGeometry relative="1" as="geometry">
             <Array as="points">
               <mxPoint x="595" y="120" />
-              <mxPoint x="820" y="120" />
+              <mxPoint x="825" y="120" />
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="wUyEcWMNaGtnZdbMQFyq-16" value="YES" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontStyle=1;fontSize=15;" vertex="1" connectable="0" parent="wUyEcWMNaGtnZdbMQFyq-14">
+        <mxCell id="wUyEcWMNaGtnZdbMQFyq-16" value="YES" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontStyle=1;fontSize=15;" parent="wUyEcWMNaGtnZdbMQFyq-14" vertex="1" connectable="0">
           <mxGeometry x="0.2797" y="-2" relative="1" as="geometry">
-            <mxPoint as="offset" />
+            <mxPoint x="58" y="-2" as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="wUyEcWMNaGtnZdbMQFyq-17" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.241;entryY=1.078;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="wUyEcWMNaGtnZdbMQFyq-8" target="wUyEcWMNaGtnZdbMQFyq-6">
+        <mxCell id="FJnJVzPvDunZ26d_qGg5-1" value="&lt;b&gt;Pass user, selectedProfileID&lt;/b&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];whiteSpace=wrap;" vertex="1" connectable="0" parent="wUyEcWMNaGtnZdbMQFyq-14">
+          <mxGeometry x="-0.2267" y="1" relative="1" as="geometry">
+            <mxPoint x="28" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="wUyEcWMNaGtnZdbMQFyq-17" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.241;entryY=1.078;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="wUyEcWMNaGtnZdbMQFyq-8" target="wUyEcWMNaGtnZdbMQFyq-6" edge="1">
           <mxGeometry relative="1" as="geometry">
             <mxPoint x="320" y="960" as="targetPoint" />
             <Array as="points">
@@ -328,27 +333,30 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="wUyEcWMNaGtnZdbMQFyq-19" value="NO" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontStyle=1;fontSize=15;" vertex="1" connectable="0" parent="wUyEcWMNaGtnZdbMQFyq-17">
+        <mxCell id="wUyEcWMNaGtnZdbMQFyq-19" value="NO" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontStyle=1;fontSize=15;" parent="wUyEcWMNaGtnZdbMQFyq-17" vertex="1" connectable="0">
           <mxGeometry x="-0.6423" y="-1" relative="1" as="geometry">
             <mxPoint as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="wUyEcWMNaGtnZdbMQFyq-21" value="Stay at the Profile Gate screen" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontStyle=1" vertex="1" connectable="0" parent="wUyEcWMNaGtnZdbMQFyq-17">
+        <mxCell id="wUyEcWMNaGtnZdbMQFyq-21" value="Stay at the Profile Gate screen" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontStyle=1" parent="wUyEcWMNaGtnZdbMQFyq-17" vertex="1" connectable="0">
           <mxGeometry x="-0.4667" y="-1" relative="1" as="geometry">
             <mxPoint x="9" y="1" as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="wUyEcWMNaGtnZdbMQFyq-8" value="Is there profile ID returned?" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="wUyEcWMNaGtnZdbMQFyq-8" value="Is there profile ID returned?" style="rhombus;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="500" y="185" width="190" height="100" as="geometry" />
         </mxCell>
-        <mxCell id="wUyEcWMNaGtnZdbMQFyq-9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="ZPwgUJczgAXjRSvhkvsr-1" target="wUyEcWMNaGtnZdbMQFyq-8">
+        <mxCell id="wUyEcWMNaGtnZdbMQFyq-9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="ZPwgUJczgAXjRSvhkvsr-1" target="wUyEcWMNaGtnZdbMQFyq-8" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="wUyEcWMNaGtnZdbMQFyq-10" value="TimerScreen" style="swimlane;fontStyle=1;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="730" y="140" width="180" height="70" as="geometry" />
+        <mxCell id="wUyEcWMNaGtnZdbMQFyq-10" value="TimerScreen(user, selectedProfileID)" style="swimlane;fontStyle=1;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="730" y="150" width="190" height="110" as="geometry" />
         </mxCell>
-        <mxCell id="wUyEcWMNaGtnZdbMQFyq-12" value="- signOutHandle: useAuth()" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="wUyEcWMNaGtnZdbMQFyq-10">
-          <mxGeometry y="30" width="180" height="40" as="geometry" />
+        <mxCell id="wUyEcWMNaGtnZdbMQFyq-12" value="+ signOutHandle: useAuth()" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" parent="wUyEcWMNaGtnZdbMQFyq-10" vertex="1">
+          <mxGeometry y="30" width="190" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="FJnJVzPvDunZ26d_qGg5-2" value="&lt;div&gt;+ retrieveProfiles: useProfiles()&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="wUyEcWMNaGtnZdbMQFyq-10">
+          <mxGeometry y="70" width="190" height="40" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>

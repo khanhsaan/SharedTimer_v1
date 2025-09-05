@@ -1,5 +1,5 @@
 import { Text } from "@react-navigation/elements";
-import { StyleSheet, TouchableOpacity } from "react-native";
+import { Modal, StyleSheet, TouchableOpacity } from "react-native";
 import { ScrollView, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useAuth } from "../hooks/useAuth";
@@ -23,9 +23,10 @@ export function TimerScreen({user, selectedProfileID}: {user: any, selectedProfi
         userConfirmPassword: "",
     }
     const {signOutHandle} = useAuth({userEmail: passedUser.userEmail, userPassword: passedUser.userPassword, userConfirmPassword: passedUser.userConfirmPassword});
-
-    const {createProfiles, retrieveProfiles, handleDeleteProfile} = useProfiles();
+    const {retrieveProfiles} = useProfiles();
     const[profilesArr, setProfilesArr] = useState<Profiles[]>([]);
+    const[showWashingMode, setShowWashingModes] = useState<boolean>(false);
+    const[expanded, setExpanded] = useState<string | null>(null);
 
     // Listen for the user session changed, run refresh() to retrieve the corresponding profiles
     useEffect(() => {
@@ -51,7 +52,7 @@ export function TimerScreen({user, selectedProfileID}: {user: any, selectedProfi
         }
     }, [])
 
-    // Define washing modes
+    // Array of washing modes
     const washingModes = {
       Cotton: [
         { label: 'Cold', minutes: 143 },        // 88 + 55
@@ -87,6 +88,14 @@ export function TimerScreen({user, selectedProfileID}: {user: any, selectedProfi
       ],
     };
 
+    // Array of apppliances
+    const appliances = [
+      { id: 'washingMachine', name: 'Washing Machine', icon: '🧺', color: '#4A90E2' },
+      { id: 'dryer', name: 'Dryer', icon: '🌪️', color: '#F5A623' },
+      { id: 'airFryer', name: 'Air Fryer', icon: '🍟', color: '#D0021B' },
+      { id: 'gasStove', name: 'Gas Stove', icon: '🔥', color: '#7ED321' },
+    ];
+
     return (
         <SafeAreaView style={styles.container}>
             <ScrollView style={styles.scrollContainer}>
@@ -105,6 +114,87 @@ export function TimerScreen({user, selectedProfileID}: {user: any, selectedProfi
                 {/* Display the information of selected profile */}
                 <ProfileBar profilesArr={profilesArr} selectedProfileID={selectedProfileID}></ProfileBar>
                 
+                <View style={styles.grid}>
+                  {appliances.map((a) => (
+                    <View key={a.id} style={[styles.card, { borderLeftWidth: 4, borderLeftColor: a.color}]}>
+                      {/* Types of interaction for each household appliances */}
+
+                      {/* WASHING MACHINE */}
+                      {a.id === 'washingMachine' && (
+                        <View style={styles.cardHeader}>
+                          {/* Choose mode button */}
+                          {/* If the user presses on Choose mode button, show UI of washing modes*/}
+                          <TouchableOpacity style={styles.purpleButton} onPress={() => setShowWashingModes(true)}>
+                            <Text style={styles.buttonText}>Choose Mode</Text>
+                          </TouchableOpacity>
+                        </View>
+                      )
+
+                      }
+
+                    </View>
+                  ))}
+                </View>
+                
+                {/* If the user presses on washing mode button, display the UI */}
+                {showWashingMode && (
+                    <Modal
+                      visible={true}
+                      transparent={true}
+                      animationType="fade"
+                      onRequestClose={() => setShowWashingModes(false)}>
+                      
+                      <TouchableOpacity
+                        style={styles.modalBg}
+                        activeOpacity={1}
+                        // If the use press the other part of the UI, close the UI
+                        onPress={() => setShowWashingModes(false)}>
+
+                          {/* Display the modal of washing modes */}
+                          <View style={styles.modal}>
+                              <View style={styles.modalHeader}>
+                                {/* UI title */}
+                                <Text style={styles.modalTitle}>Select Washing Mode</Text>
+                                {/* Close UI button */}
+                                <TouchableOpacity onPress={() => setShowWashingModes(false)}>
+                                  <Text style={styles.modalClose}>Close</Text>
+                                </TouchableOpacity>
+                              </View>
+
+                              {/* Scroll view of the washing modes */}
+                              <ScrollView style={styles.modalScroll}>
+                                {/* For every entry of the washing modes array */}
+                                {Object.entries(washingModes).map(([group, options]) => (
+                                  <View key={group} style={styles.modeGroup}>
+                                    {/* If the user presses on a mode, expand its corresponding options, close the expand if the user presses again */}
+                                    <TouchableOpacity style={styles.modeTitle}
+                                      onPress={() => setExpanded(expanded === group ? null: group)}>
+                                        {/* Display the title of each mode */}
+                                        <Text style={styles.modeTitleText}>{group}</Text>
+                                    </TouchableOpacity>
+
+                                    {/* If user expands a mode */}
+                                    {expanded === group && (
+                                      <View style={styles.options}>
+                                        {/* For every entry of the modes group's option */}
+                                        {options.map((opt) => (
+                                          <TouchableOpacity key={`${group}-${opt.label}`}
+                                            style={styles.option}
+                                            onPress={() => {
+                                              
+                                            }}>
+
+                                          </TouchableOpacity>
+                                        ))}
+                                      </View>
+                                    )}
+                                  </View>
+                                ))}
+                              </ScrollView>
+                          </View>
+                      </TouchableOpacity>
+                    </Modal>
+                )}
             </ScrollView>
         </SafeAreaView>
     )

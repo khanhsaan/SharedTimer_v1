@@ -63,5 +63,4 @@ export default function RootLayout() {
   return (
     <TimerScreen user={session.user} selectedProfileID={selectedProfileID}></TimerScreen>
   )
-
-}
+} 
