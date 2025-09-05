@@ -1,116 +1,43 @@
-import { Text } from "@react-navigation/elements";
-import { StyleSheet, TouchableOpacity } from "react-native";
-import { ScrollView, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { useAuth } from "../hooks/useAuth";
-import { supabase } from "@/lib/supabase";
-import { ProfileBar } from "@/components/ProfilesBar";
-import { useProfiles } from "../hooks/useProfiles";
-import { useEffect, useState } from "react";
+import { StyleSheet, Text, View } from "react-native";
 
 // Create an array type to make sure the consistence
 interface Profiles {
-  id: string,
-  name: string,
-  created_at: string;
+    id: string,
+    name: string,
+    created_at: string;
 }
 
-export function TimerScreen({user, selectedProfileID}: {user: any, selectedProfileID: string}) {
-
-    const passedUser = {
-        userEmail: "",
-        userPassword: "",
-        userConfirmPassword: "",
+// Display the active profile
+export const ProfileBar = ({profilesArr, selectedProfileID}: {profilesArr: any, selectedProfileID: string}) => {
+    if(profilesArr.length === 0) {
+        return null;
     }
-    const {signOutHandle} = useAuth({userEmail: passedUser.userEmail, userPassword: passedUser.userPassword, userConfirmPassword: passedUser.userConfirmPassword});
+    // If there is no passed profile ID
+    if(!selectedProfileID){
+        return null;
+    }
+    // Retrieve the actual profile from the passed selected profile ID
+    const selectedProfile = profilesArr.find((p: Profiles) => p.id === selectedProfileID);
 
-    const {createProfiles, retrieveProfiles, handleDeleteProfile} = useProfiles();
-    const[profilesArr, setProfilesArr] = useState<Profiles[]>([]);
-
-    // Listen for the user session changed, run refresh() to retrieve the corresponding profiles
-    useEffect(() => {
-      if(user?.id){
-          retrieveProfiles(user)
-              .then(response => {
-                  if(response?.data){
-                      setProfilesArr(response.data);
-                  }
-              })
-      }
-    }, [user?.id])
-
-    // Retrieve all of the profiles once on initiation
-    useEffect(() => {
-        if(user?.id){
-            retrieveProfiles(user)
-                .then(response => {
-                    if(response?.data){
-                        setProfilesArr(response.data);
-                    }
-                })
-        }
-    }, [])
-
-    // Define washing modes
-    const washingModes = {
-      Cotton: [
-        { label: 'Cold', minutes: 143 },        // 88 + 55
-        { label: '20°C', minutes: 148 },        // 93 + 55
-        { label: '40°C', minutes: 392 },        // 337 + 55
-        { label: '60°C', minutes: 350 },        // 295 + 55
-        { label: '90°C', minutes: 204 },        // 149 + 55
-      ],
-      Mix: [
-        { label: 'Cold', minutes: 121 },        // 66 + 55
-        { label: '40°C', minutes: 133 },        // 78 + 55
-        { label: '60°C', minutes: 150 },        // 95 + 55
-      ],
-      Synthetic: [
-        { label: 'Cold', minutes: 116 },        // 61 + 55
-        { label: '40°C', minutes: 128 },        // 73 + 55
-      ],
-      Delicate: [
-        { label: 'Cold', minutes: 111 },        // 56 + 55
-        { label: '20°C', minutes: 114 },        // 59 + 55
-      ],
-      'Tub Clean': [
-        { label: '60°C', minutes: 133 },        // 78 + 55
-      ],
-      Spin: [
-        { label: 'No temperature', minutes: 69 }, // 14 + 55
-      ],
-      "Quick 15'": [
-        { label: 'Cold', minutes: 70 },         // 15 + 55
-      ],
-      'Rinse+Spin': [
-        { label: 'Cold', minutes: 89 },         // 34 + 55
-      ],
-    };
+    // If the selected profile cannot be found
+    if(!selectedProfile) return null;
 
     return (
-        <SafeAreaView style={styles.container}>
-            <ScrollView style={styles.scrollContainer}>
-                {/* HEADER */}
-                <View style={styles.header}>
-                    <View>
-                        <Text style={styles.title}>Household Timers</Text>
-                        <Text style={styles.subtitle}>Welcome, {user.email}</Text>
-                    </View>
-                    {/* Sign out button */}
-                    <TouchableOpacity style={styles.signOutButton}>
-                        <Text style={styles.signOutText}
-                        onPress={signOutHandle}>Sign Out</Text>
-                    </TouchableOpacity>
-                </View>
-                {/* Display the information of selected profile */}
-                <ProfileBar profilesArr={profilesArr} selectedProfileID={selectedProfileID}></ProfileBar>
-                
-            </ScrollView>
-        </SafeAreaView>
+        <View style={styles.profilesCard}>
+            <View style={styles.profilesHeaderCenter}>
+                <Text style={styles.profilesTitle}>Active Profile</Text>
+                <Text style={styles.profilesSubtitle}>Currently using this profile</Text>
+            </View>
+            <View style={styles.activeProfileDisplay}>
+              <View style={styles.activeProfileBadge}>
+                <Text style={styles.activeProfileText}>
+                  {selectedProfile.name}
+                </Text>
+              </View>
+            </View>
+        </View>
     )
-
-    
-};
+}
 
 const styles = StyleSheet.create({
     container: {
@@ -555,5 +482,4 @@ const styles = StyleSheet.create({
       fontWeight: '500',
       marginTop: 2,
     },
-  
-  });
+});
