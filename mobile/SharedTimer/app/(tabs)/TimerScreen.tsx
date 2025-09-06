@@ -117,21 +117,70 @@ export function TimerScreen({user, selectedProfileID}: {user: any, selectedProfi
                 <View style={styles.grid}>
                   {appliances.map((a) => (
                     <View key={a.id} style={[styles.card, { borderLeftWidth: 4, borderLeftColor: a.color}]}>
-                      {/* Types of interaction for each household appliances */}
-
+                      {/* For every appliance, display the corresponding UI */}
                       {/* WASHING MACHINE */}
                       {a.id === 'washingMachine' && (
-                        <View style={styles.cardHeader}>
-                          {/* Choose mode button */}
-                          {/* If the user presses on Choose mode button, show UI of washing modes*/}
-                          <TouchableOpacity style={styles.purpleButton} onPress={() => setShowWashingModes(true)}>
-                            <Text style={styles.buttonText}>Choose Mode</Text>
-                          </TouchableOpacity>
-                        </View>
-                      )
-
+                          <View style={styles.cardHeader}>
+                            {/* Choose mode button */}
+                            {/* If the user presses on Choose mode button, show UI of washing modes*/}
+                            <TouchableOpacity style={styles.purpleButton} onPress={() => setShowWashingModes(true)}>
+                              <Text style={styles.buttonText}>Choose Mode</Text>
+                            </TouchableOpacity>
+                          </View>
+                        )
                       }
+                      
+                      {/* TIMER SECTION */}
+                      <View style={styles.timerSection}>
+                        <View style={styles.timerDisplay}>
+                          <Text style={styles.timerLabel}>Current Timer</Text>
+                          <Text style={styles.timerValue}>00</Text>
+                        </View>
+                      </View>
 
+                      {/* START AND FINISH TIME */}
+                      
+                      {/* START UI */}
+                      <View style={styles.hoursDisplay}>
+                        <View style={[
+                          styles.hourItem,
+                          {
+                            borderColor: `${a.color}40`,
+                            backgroundColor: `${a.color}15`
+                          }
+                        ]}>
+                          <Text style={[
+                            styles.hourLabel,
+                            {color: a.color}
+                          ]}>Started</Text>
+                          <Text style={[
+                            styles.hourValue,
+                            {color: "#2d3748"}
+                          ]}>00</Text>
+                        </View>
+                      </View>
+                      
+                      {/* FINISH UI */}
+                      <View style={[
+                        styles.hourItem,
+                        {
+                          borderColor: `${a.color}40`,
+                          backgroundColor: `${a.color}15`
+                        }
+                      ]}>
+                        <Text style={[
+                          styles.hourLabel,
+                          { color: a.color}
+                        ]}>Finish</Text>
+                        <Text style={[
+                          styles.hourValue,
+                          {
+                            color: '#2d3748'
+                          }
+                        ]}>
+                          00
+                        </Text>
+                      </View>
                     </View>
                   ))}
                 </View>
