@@ -16,7 +16,6 @@ export function useTimer(initialSeconds = 0){
         const seconds = remaining % 60;
     }
    
-
     // Start the timer
     // useCallback(): Reuse the const with the latest values of remaining, running
     const start = useCallback((remaining: number) => {
@@ -83,8 +82,8 @@ export function useTimer(initialSeconds = 0){
 
     return {
         remaining,
-        minutes,
-        seconds,
+        // minutes,
+        // seconds,
         running,
         start,
         pause,

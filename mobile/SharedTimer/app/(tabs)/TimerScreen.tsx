@@ -9,6 +9,7 @@ import { useProfiles } from "../hooks/useProfiles";
 import { useEffect, useState } from "react";
 import { useTimer } from "../hooks/useTimer";
 import { washingModes } from "@/components/washingModes";
+import { appliances } from "@/components/appliances";
 
 // Create an array type to make sure the consistence
 interface Profiles {
@@ -56,19 +57,13 @@ export function TimerScreen({user, selectedProfileID}: {user: any, selectedProfi
 
     
 
-    // Array of apppliances
-    const appliances = [
-      { id: 'washingMachine', name: 'Washing Machine', icon: '🧺', color: '#4A90E2' },
-      { id: 'dryer', name: 'Dryer', icon: '🌪️', color: '#F5A623' },
-      { id: 'airFryer', name: 'Air Fryer', icon: '🍟', color: '#D0021B' },
-      { id: 'gasStove', name: 'Gas Stove', icon: '🔥', color: '#7ED321' },
-    ];
+    
   
     // useTimers hook
     const {
       remaining,
-      minutes,
-      seconds,
+      // minutes,
+      // seconds,
       running,
       start,
       pause,
