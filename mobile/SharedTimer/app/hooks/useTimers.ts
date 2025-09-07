@@ -15,6 +15,7 @@ export function useTimer(initialSeconds = 0){
     const seconds = remaining % 60;
 
     // Start the timer
+    // useCallback(): Reuse the const with the latest values of remaining, running
     const start = useCallback(() => {
         // If there is still time remaining and it's not running, set the running state to true
         if(remaining > 0 && !running){
@@ -23,15 +24,15 @@ export function useTimer(initialSeconds = 0){
     }, [remaining, running]) 
 
     // Pause the timer
-    const pause = useCallback(() => {
+    const pause = () => {
         setRunning(false);
-    }, [])
+    }
 
     // Reset the initial value
-    const reset = useCallback(() => {
+    const reset = () => {
         setRunning(false);
         setRemaining(initialSeconds);
-    }, [initialSeconds])
+    }
 
     // Adjust the time (e.g +60 or -30 seconds)
     const update = useCallback((increase: any) => {
