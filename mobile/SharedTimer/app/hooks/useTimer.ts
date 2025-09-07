@@ -8,15 +8,18 @@ export function useTimer(initialSeconds = 0){
     // tick loop
     const intervalRef = useRef<number | null>(null);
 
-    // Derived values
-    const minutes = Math.floor(remaining / 60);
+    const derivedValue = (remaining: number) => {
+         // Derived values
+        const minutes = Math.floor(remaining / 60);
 
-    // Remain seconds
-    const seconds = remaining % 60;
+        // Remain seconds
+        const seconds = remaining % 60;
+    }
+   
 
     // Start the timer
     // useCallback(): Reuse the const with the latest values of remaining, running
-    const start = useCallback(() => {
+    const start = useCallback((remaining: number) => {
         // If there is still time remaining and it's not running, set the running state to true
         if(remaining > 0 && !running){
             setRunning(true);
