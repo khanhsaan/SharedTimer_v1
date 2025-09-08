@@ -1,27 +1,47 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-
-export function useTimer(initialSeconds = 0){
+import { appliances } from "@/components/appliances";
+import { store } from "expo-router/build/global-state/router-store";
+export function useTimer(){
+    // Initial minutes
+    const[initialMinutes, setInitialMinutes] = useState<number>(0);
     // Seconds left
-    const[remaining, setRemaining] = useState(initialSeconds);
+    const[remaining, setRemaining] = useState(initialMinutes);
     // Is it counting down?
     const[running, setRunning] = useState(false);
-    // tick loop
     const intervalRef = useRef<number | null>(null);
 
-    const derivedValue = (remaining: number) => {
-         // Derived values
-        const minutes = Math.floor(remaining / 60);
+    // Derived values
+    const minutes = Math.floor(remaining / 60);
 
-        // Remain seconds
-        const seconds = remaining % 60;
+    // Remain seconds
+    const seconds = remaining % 60;
+
+    // Store the passed appliances timer value
+    
+    // Initialize storeTimer to store the name of each appliance with the initial timer of 0
+    const[storeTimer, setStoreTimer] = useState<{id: string, time: number}[]>(() => 
+        appliances.map((a) => ({id: a.id, time: 0 }))
+    );
+
+    // Set the timer value
+    const setTimerValue = (passedId: string, initialMinutes: any) => {
+        // Look up the passed Id an set the initial minutes, if cannot find keep it the same
+        setStoreTimer(prev => prev.map(a => a.id === passedId ? {...a, time: initialMinutes} : a))
     }
-   
+
+    // DEBUG
+    useEffect(() => {
+        console.log("storeTimer changed: ", storeTimer);
+    }, [storeTimer]);
+    
     // Start the timer
     // useCallback(): Reuse the const with the latest values of remaining, running
-    const start = useCallback((remaining: number) => {
+    const start = useCallback(() => {
         // If there is still time remaining and it's not running, set the running state to true
         if(remaining > 0 && !running){
             setRunning(true);
+            setRemaining(initialMinutes);
+            console.log(`START button CLICKED! \nRunning: ${running}\nRemaining: ${remaining}`)
         }
     }, [remaining, running]) 
 
@@ -33,7 +53,7 @@ export function useTimer(initialSeconds = 0){
     // Reset the initial value
     const reset = () => {
         setRunning(false);
-        setRemaining(initialSeconds);
+        setRemaining(initialMinutes);
     }
 
     // Adjust the time (e.g +60 or -30 seconds)
@@ -81,9 +101,10 @@ export function useTimer(initialSeconds = 0){
     }, [running])
 
     return {
+        setTimerValue,
         remaining,
-        // minutes,
-        // seconds,
+        minutes,
+        seconds,
         running,
         start,
         pause,

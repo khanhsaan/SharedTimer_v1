@@ -55,21 +55,18 @@ export function TimerScreen({user, selectedProfileID}: {user: any, selectedProfi
         }
     }, [])
 
-    
-
-    
-  
-    // useTimers hook
+    // useTimer
     const {
+      setTimerValue,
       remaining,
-      // minutes,
-      // seconds,
+      minutes,
+      seconds,
       running,
       start,
       pause,
       reset,
       update
-    } = useTimer()
+    } = useTimer();
 
     return (
         <SafeAreaView style={styles.container}>
@@ -205,9 +202,14 @@ export function TimerScreen({user, selectedProfileID}: {user: any, selectedProfi
                                           <TouchableOpacity key={`${group}-${opt.label}`}
                                             style={styles.option}
                                             onPress={() => {
-                                              
+                                              // Pass the timer value to useTimers hook
+                                              setTimerValue(opt.label, opt.minutes);
+                                              // Close the washing mode window
+                                              setShowWashingModes(false);
                                             }}>
-
+                                              <Text style={styles.optionText}>{opt.label}</Text>
+                                              <Text style={styles.optionTime}>{opt.minutes} mins</Text>
+                          
                                           </TouchableOpacity>
                                         ))}
                                       </View>
