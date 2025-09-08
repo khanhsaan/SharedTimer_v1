@@ -33,17 +33,20 @@ export function useTimer(){
     useEffect(() => {
         console.log("storeTimer changed: ", storeTimer);
     }, [storeTimer]);
-    
+
     // Start the timer
     // useCallback(): Reuse the const with the latest values of remaining, running
-    const start = useCallback(() => {
-        // If there is still time remaining and it's not running, set the running state to true
-        if(remaining > 0 && !running){
+    const start = useCallback((passedId: string) => {
+        const appliance = storeTimer.find(a => a.id === passedId);
+
+        if(appliance && appliance.time > 0 && !running){
             setRunning(true);
-            setRemaining(initialMinutes);
-            console.log(`START button CLICKED! \nRunning: ${running}\nRemaining: ${remaining}`)
+            setRemaining(appliance.time);
+            console.log(`START button clicked! \nRunning: ${running}\nRemaining: ${remaining}`);
+        } else if(!appliance){
+            console.error(`Passed apppliance NOT FOUND!`);
         }
-    }, [remaining, running]) 
+    }, [remaining, running])
 
     // Pause the timer
     const pause = () => {

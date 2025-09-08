@@ -209,7 +209,6 @@ export function TimerScreen({user, selectedProfileID}: {user: any, selectedProfi
                                             }}>
                                               <Text style={styles.optionText}>{opt.label}</Text>
                                               <Text style={styles.optionTime}>{opt.minutes} mins</Text>
-                          
                                           </TouchableOpacity>
                                         ))}
                                       </View>
