@@ -203,7 +203,7 @@ export function TimerScreen({user, selectedProfileID}: {user: any, selectedProfi
                                             style={styles.option}
                                             onPress={() => {
                                               // Pass the timer value to useTimers hook
-                                              setTimerValue(opt.label, opt.minutes);
+                                              setTimerValue('washingMachine', opt.minutes);
                                               // Close the washing mode window
                                               setShowWashingModes(false);
                                             }}>
