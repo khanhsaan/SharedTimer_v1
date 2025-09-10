@@ -105,6 +105,7 @@ export function useTimer(){
 
     return {
         setTimerValue,
+        storeTimer,
         remaining,
         minutes,
         seconds,

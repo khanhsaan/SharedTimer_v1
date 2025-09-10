@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 import { useTimer } from "../hooks/useTimer";
 import { washingModes } from "@/components/washingModes";
 import { appliances } from "@/components/appliances";
+import { store } from "expo-router/build/global-state/router-store";
 
 // Create an array type to make sure the consistence
 interface Profiles {
@@ -58,6 +59,7 @@ export function TimerScreen({user, selectedProfileID}: {user: any, selectedProfi
     // useTimer
     const {
       setTimerValue,
+      storeTimer,
       remaining,
       minutes,
       seconds,
@@ -106,7 +108,9 @@ export function TimerScreen({user, selectedProfileID}: {user: any, selectedProfi
                       <View style={styles.timerSection}>
                         <View style={styles.timerDisplay}>
                           <Text style={styles.timerLabel}>Current Timer</Text>
-                          <Text style={styles.timerValue}>00</Text>
+                          <Text style={styles.timerValue}>
+                            `${}`
+                          </Text>
                         </View>
                       </View>
 
