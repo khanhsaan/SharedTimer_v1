@@ -109,7 +109,7 @@ export function TimerScreen({user, selectedProfileID}: {user: any, selectedProfi
                         <View style={styles.timerDisplay}>
                           <Text style={styles.timerLabel}>Current Timer</Text>
                           <Text style={styles.timerValue}>
-                            `${}`
+                            {storeTimer.find(timer => timer.id === a.id)?.time || 0}
                           </Text>
                         </View>
                       </View>
