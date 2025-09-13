@@ -1,6 +1,6 @@
 <mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/28.1.2 Chrome/138.0.7204.243 Electron/37.4.0 Safari/537.36" version="28.1.2" pages="2">
   <diagram name="UML Class Diagram" id="nFiH9V4HMwu1DOd0Ung1">
-    <mxGraphModel dx="828" dy="466" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="1351" dy="946" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -349,16 +349,24 @@
         <mxCell id="wUyEcWMNaGtnZdbMQFyq-9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="ZPwgUJczgAXjRSvhkvsr-1" target="wUyEcWMNaGtnZdbMQFyq-8" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="NIReu3Y0dkQ5EUy_CxB0-7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="wUyEcWMNaGtnZdbMQFyq-10" target="NIReu3Y0dkQ5EUy_CxB0-4">
+        <mxCell id="NIReu3Y0dkQ5EUy_CxB0-7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="wUyEcWMNaGtnZdbMQFyq-10" target="NIReu3Y0dkQ5EUy_CxB0-5" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="NIReu3Y0dkQ5EUy_CxB0-8" value="&lt;b&gt;Call setTimervalue:&lt;/b&gt;&lt;div&gt;&lt;b&gt;- Pass the appliance &lt;u&gt;id&lt;/u&gt; (Ex: washingMachine)&lt;/b&gt;&lt;/div&gt;&lt;div&gt;&lt;b&gt;- Pass the corresponding &lt;u&gt;timer&lt;/u&gt;&lt;/b&gt;&lt;/div&gt;" style="edgeLabel;html=1;align=left;verticalAlign=middle;resizable=0;points=[];whiteSpace=wrap;" vertex="1" connectable="0" parent="NIReu3Y0dkQ5EUy_CxB0-7">
+        <mxCell id="NIReu3Y0dkQ5EUy_CxB0-8" value="&lt;b&gt;Call setTimervalue:&lt;/b&gt;&lt;div&gt;&lt;b&gt;- Pass the appliance &lt;u&gt;id&lt;/u&gt; (Ex: washingMachine)&lt;/b&gt;&lt;/div&gt;&lt;div&gt;&lt;b&gt;- Pass the corresponding timer&lt;u&gt;&lt;br&gt;&lt;/u&gt;&lt;/b&gt;&lt;/div&gt;&lt;div&gt;&lt;b&gt;Once the user&#39;s set the washing mode&lt;/b&gt;&lt;/div&gt;" style="edgeLabel;html=1;align=left;verticalAlign=middle;resizable=0;points=[];" parent="NIReu3Y0dkQ5EUy_CxB0-7" vertex="1" connectable="0">
           <mxGeometry x="0.0897" y="3" relative="1" as="geometry">
-            <mxPoint x="-72" y="23" as="offset" />
+            <mxPoint x="-128" y="-17" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="xv-tfB5WSJbxhXBBlvx4-4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="wUyEcWMNaGtnZdbMQFyq-10" target="xv-tfB5WSJbxhXBBlvx4-3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="xv-tfB5WSJbxhXBBlvx4-5" value="&lt;b&gt;Call setRunningState:&lt;/b&gt;&lt;div&gt;&lt;b&gt;- Pass the id&lt;/b&gt;&lt;/div&gt;&lt;div&gt;&lt;b&gt;- Set the running state =&amp;gt; true&lt;/b&gt;&lt;/div&gt;&lt;div&gt;&lt;b&gt;Once the user&#39;s pressed START&lt;/b&gt;&lt;/div&gt;" style="edgeLabel;html=1;align=left;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="xv-tfB5WSJbxhXBBlvx4-4">
+          <mxGeometry x="0.1646" y="-3" relative="1" as="geometry">
+            <mxPoint x="-75" y="-3" as="offset" />
           </mxGeometry>
         </mxCell>
         <mxCell id="wUyEcWMNaGtnZdbMQFyq-10" value="TimerScreen(user, selectedProfileID)" style="swimlane;fontStyle=1;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-          <mxGeometry x="730" y="150" width="190" height="110" as="geometry" />
+          <mxGeometry x="730" y="180" width="190" height="110" as="geometry" />
         </mxCell>
         <mxCell id="wUyEcWMNaGtnZdbMQFyq-12" value="+ signOutHandle: useAuth()" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" parent="wUyEcWMNaGtnZdbMQFyq-10" vertex="1">
           <mxGeometry y="30" width="190" height="40" as="geometry" />
@@ -366,20 +374,26 @@
         <mxCell id="FJnJVzPvDunZ26d_qGg5-2" value="&lt;div&gt;+ retrieveProfiles: useProfiles()&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" parent="wUyEcWMNaGtnZdbMQFyq-10" vertex="1">
           <mxGeometry y="70" width="190" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="NIReu3Y0dkQ5EUy_CxB0-1" value="useTimer" style="swimlane;fontStyle=1;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="990" y="260" width="190" height="190" as="geometry" />
+        <mxCell id="NIReu3Y0dkQ5EUy_CxB0-1" value="useTimer" style="swimlane;fontStyle=1;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="1250" y="130" width="190" height="270" as="geometry" />
         </mxCell>
-        <mxCell id="NIReu3Y0dkQ5EUy_CxB0-3" value="&lt;div&gt;- storeTimer: (string, number)[]&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="NIReu3Y0dkQ5EUy_CxB0-1">
+        <mxCell id="NIReu3Y0dkQ5EUy_CxB0-3" value="&lt;div&gt;- storeTimer: (string, number)[]&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" parent="NIReu3Y0dkQ5EUy_CxB0-1" vertex="1">
           <mxGeometry y="30" width="190" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="NIReu3Y0dkQ5EUy_CxB0-4" value="&lt;div&gt;- setStoreTimer&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="NIReu3Y0dkQ5EUy_CxB0-1">
+        <mxCell id="NIReu3Y0dkQ5EUy_CxB0-4" value="&lt;div&gt;- setStoreTimer&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" parent="NIReu3Y0dkQ5EUy_CxB0-1" vertex="1">
           <mxGeometry y="70" width="190" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="NIReu3Y0dkQ5EUy_CxB0-5" value="+ setTimerValue(passedId: string, initialMinutes: number)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="NIReu3Y0dkQ5EUy_CxB0-1">
+        <mxCell id="NIReu3Y0dkQ5EUy_CxB0-5" value="+ setTimerValue(passedId: string, initialMinutes: number)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" parent="NIReu3Y0dkQ5EUy_CxB0-1" vertex="1">
           <mxGeometry y="110" width="190" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="NIReu3Y0dkQ5EUy_CxB0-9" value="+ start(passedId: string)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="NIReu3Y0dkQ5EUy_CxB0-1">
+        <mxCell id="xv-tfB5WSJbxhXBBlvx4-1" value="- storeRunning: {id: string, running: boolean}[]" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="NIReu3Y0dkQ5EUy_CxB0-1">
           <mxGeometry y="150" width="190" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="xv-tfB5WSJbxhXBBlvx4-2" value="+ setStoreRunning" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="NIReu3Y0dkQ5EUy_CxB0-1">
+          <mxGeometry y="190" width="190" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="xv-tfB5WSJbxhXBBlvx4-3" value="- setRunningState(passedId: sting, passedRunning: boolean)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="NIReu3Y0dkQ5EUy_CxB0-1">
+          <mxGeometry y="230" width="190" height="40" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>

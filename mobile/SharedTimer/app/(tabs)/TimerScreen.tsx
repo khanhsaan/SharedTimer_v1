@@ -59,6 +59,7 @@ export function TimerScreen({user, selectedProfileID}: {user: any, selectedProfi
     // useTimer
     const {
       setTimerValue,
+      setRunningState,
       storeTimer,
       remaining,
       minutes,
@@ -122,7 +123,6 @@ export function TimerScreen({user, selectedProfileID}: {user: any, selectedProfi
                           </Text>
                         </View>
                       </View>
-
                      
 
                       {/* START AND FINISH TIME */}
@@ -168,7 +168,14 @@ export function TimerScreen({user, selectedProfileID}: {user: any, selectedProfi
                           00
                         </Text>
                       </View>
+
+                        {/* START & RESET BUTTONS */}
+                      <View style={styles.controlsRow}>
+                        {}
+                      </View>
                     </View>
+
+                    
                   ))}
                 </View>
                 

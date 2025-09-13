@@ -23,16 +23,30 @@ export function useTimer(){
         appliances.map((a) => ({id: a.id, time: 0 }))
     );
 
+    // Intialise storeRunning to store the running state of each appliance with the initial state of false
+    const[storeRunning, setStoreRunning] = useState<{id: string, running: boolean}[]>(() =>
+        appliances.map((a) => ({id: a.id, running: false}))
+    );
+
     // Set the timer value
     const setTimerValue = (passedId: string, initialMinutes: any) => {
-        // Look up the passed Id an set the initial minutes, if cannot find keep it the same
+        // Look up the passed Id from the latest value of the array and set the initial minutes, if cannot find keep it the same
         setStoreTimer(prev => prev.map(a => a.id === passedId ? {...a, time: initialMinutes} : a))
     }
 
-    // DEBUG
+    // Set the running state
+    const setRunningState = (passedId: string, passedRunning: boolean) => {
+        // Look up the passed Id from the latest value of the array and set the running state, if cannot find keep it the same
+        setStoreRunning(prev => prev.map(a => a.id === passedId ? {...a, running: passedRunning}: a))
+    }
+
+    // Initialise storeTimer and storeRunnig with the initial values as 0 & false
     useEffect(() => {
-        console.log("storeTimer changed: ", storeTimer);
-    }, [storeTimer]);
+
+        // DEBUG
+        console.log("storeTimer: ", storeTimer);
+        console.log("storeRunning: ", storeRunning);
+    }, [storeTimer, storeRunning])
 
     // Start the timer
     // useCallback(): Reuse the const with the latest values of remaining, running
@@ -105,7 +119,9 @@ export function useTimer(){
 
     return {
         setTimerValue,
+        setRunningState,
         storeTimer,
+        storeRunning,
         remaining,
         minutes,
         seconds,
