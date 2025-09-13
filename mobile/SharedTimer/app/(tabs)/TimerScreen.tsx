@@ -103,16 +103,27 @@ export function TimerScreen({user, selectedProfileID}: {user: any, selectedProfi
                           </View>
                         )
                       }
+
+                      {/* APPLIANCE ICONS & NAMES */}
+                      <View style={styles.cardTop}>
+                        <View style={styles.applianceInfo}>
+                          <Text style={styles.icon}>{a.icon}</Text>
+                          <Text style={styles.applianceTitle}>{a.name}</Text>
+                        </View>
+                      </View>
                       
                       {/* TIMER SECTION */}
                       <View style={styles.timerSection}>
                         <View style={styles.timerDisplay}>
                           <Text style={styles.timerLabel}>Current Timer</Text>
                           <Text style={styles.timerValue}>
+                            {/* Display the corresponding current timer */}
                             {storeTimer.find(timer => timer.id === a.id)?.time || 0}
                           </Text>
                         </View>
                       </View>
+
+                     
 
                       {/* START AND FINISH TIME */}
                       
