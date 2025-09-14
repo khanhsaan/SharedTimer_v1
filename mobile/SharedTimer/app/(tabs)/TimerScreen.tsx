@@ -66,8 +66,8 @@ export function TimerScreen({user, selectedProfileID}: {user: any, selectedProfi
       minutes,
       seconds,
       running,
-      start,
-      pause,
+      startTimer,
+      pauseTimer,
       reset,
       update
     } = useTimer();
@@ -173,18 +173,19 @@ export function TimerScreen({user, selectedProfileID}: {user: any, selectedProfi
                         {/* START & RESET BUTTONS */}
                       <View style={styles.controlsRow}>
                         {/* Display START / PAUSE buttons depend on appliance running state */}
-                        {storeRunning.find(o => o.id === a.id) ? (
+                        {storeRunning.find(o => o.id === a.id)?.running ? (
                           <TouchableOpacity style={[styles.controlButton, styles.warnButton]}
-                            onPress={() => pause(a.id)}>
+                            onPress={() => pauseTimer(a.id)}>
                               <Text style={[styles.controlButtonText, styles.whiteText]}>Pause</Text>
                           </TouchableOpacity>
                         ) : (
-                          <TouchableOpacity></TouchableOpacity>
+                          <TouchableOpacity style={[styles.controlButton , styles.successButton]}
+                            onPress={() => startTimer(a.id)}>
+                              <Text style={[styles.controlButtonText, styles.whiteText]}>Start</Text>
+                          </TouchableOpacity>
                         )}
                       </View>
                     </View>
-
-                    
                   ))}
                 </View>
                 

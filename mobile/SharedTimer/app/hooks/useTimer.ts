@@ -31,7 +31,13 @@ export function useTimer(){
     // Set the timer value
     const setTimerValue = (passedId: string, initialMinutes: any) => {
         // Look up the passed Id from the latest value of the array and set the initial minutes, if cannot find keep it the same
-        setStoreTimer(prev => prev.map(a => a.id === passedId ? {...a, time: initialMinutes} : a))
+        setStoreTimer(prev => prev.map(a => a.id === passedId ? {...a, time: initialMinutes} : a));
+
+        // DEBUG
+        const appliance = storeTimer.find(a => a.id === passedId)
+        if(appliance) {
+            console.log(`${passedId} is set SUCCESSFULLY with timer ${initialMinutes}`);
+        }
     }
 
     // Set the running state
@@ -42,7 +48,6 @@ export function useTimer(){
 
     // Initialise storeTimer and storeRunnig with the initial values as 0 & false
     useEffect(() => {
-
         // DEBUG
         console.log("storeTimer: ", storeTimer);
         console.log("storeRunning: ", storeRunning);
@@ -50,7 +55,9 @@ export function useTimer(){
 
     // Start the timer
     // useCallback(): Reuse the const with the latest values of remaining, running
-    const start = useCallback((passedId: string) => {
+    const startTimer = useCallback((passedId: string) => {
+        console.log("----- startTimer receieved PASSED ID: ", passedId);
+
         const applianceTime = storeTimer.find(a => a.id === passedId)?.time;
         const applianceRunning = storeRunning.find(a => a.id === passedId)?.running;
 
@@ -58,14 +65,16 @@ export function useTimer(){
         if(applianceTime && applianceTime > 0 && !applianceRunning){
             // Set that appliance timer state -> true
             setStoreRunning(prev => prev.map(a => a.id === passedId ? {...a, running: true}: a));
-            console.log(`START button clicked! \nRunning: ${running}`);
-        } else if(!applianceTime){
-            console.error(`Passed apppliance NOT FOUND!`);
+            console.log(`------\nSTART button clicked! \nRunning: ${applianceRunning}\nRemaining: ${applianceTime}\n------`);
+        } else if(applianceTime == 0) {
+            console.error(`Appliance timer = 0`);
+        } else {
+            console.log(`CANNOT find passed ID`);
         }
-    }, [storeRunning])
+    }, [storeRunning, storeTimer])
 
     // Pause the timer
-    const pause = useCallback((passedId: string) => {
+    const pauseTimer = useCallback((passedId: string) => {
         const applianceRunning = storeRunning.find(a => a.id == passedId)?.running;
 
         if(!applianceRunning){
@@ -134,8 +143,8 @@ export function useTimer(){
         minutes,
         seconds,
         running,
-        start,
-        pause,
+        startTimer,
+        pauseTimer,
         reset,
         update
     };
