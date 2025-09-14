@@ -51,21 +51,29 @@ export function useTimer(){
     // Start the timer
     // useCallback(): Reuse the const with the latest values of remaining, running
     const start = useCallback((passedId: string) => {
-        const appliance = storeTimer.find(a => a.id === passedId);
+        const applianceTime = storeTimer.find(a => a.id === passedId)?.time;
+        const applianceRunning = storeRunning.find(a => a.id === passedId)?.running;
 
-        if(appliance && appliance.time > 0 && !running){
-            setRunning(true);
-            setRemaining(appliance.time);
-            console.log(`START button clicked! \nRunning: ${running}\nRemaining: ${remaining}`);
-        } else if(!appliance){
+        // If the appliance timer > 0 and appliance timer is not running
+        if(applianceTime && applianceTime > 0 && !applianceRunning){
+            // Set that appliance timer state -> true
+            setStoreRunning(prev => prev.map(a => a.id === passedId ? {...a, running: true}: a));
+            console.log(`START button clicked! \nRunning: ${running}`);
+        } else if(!applianceTime){
             console.error(`Passed apppliance NOT FOUND!`);
         }
-    }, [remaining, running])
+    }, [storeRunning])
 
     // Pause the timer
-    const pause = () => {
-        setRunning(false);
-    }
+    const pause = useCallback((passedId: string) => {
+        const applianceRunning = storeRunning.find(a => a.id == passedId)?.running;
+
+        if(!applianceRunning){
+            // Set that appliance timer state -> false
+            setStoreRunning(prev => prev.map(a => a.id === passedId ? {...a, running: false}: a));
+        }
+        
+    },[storeRunning])
 
     // Reset the initial value
     const reset = () => {
