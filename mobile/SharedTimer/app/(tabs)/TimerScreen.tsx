@@ -139,9 +139,8 @@ export function TimerScreen({user, selectedProfileID}: {user: any, selectedProfi
                      
 
                       {/* START AND FINISH TIME */}
-                      
-                      {/* START UI */}
                       <View style={styles.hoursDisplay}>
+                        {/* START UI */}
                         <View style={[
                           styles.hourItem,
                           {
@@ -156,30 +155,30 @@ export function TimerScreen({user, selectedProfileID}: {user: any, selectedProfi
                           <Text style={[
                             styles.hourValue,
                             {color: "#2d3748"}
-                          ]}>00</Text>
+                          ]}>--</Text>
                         </View>
-                      </View>
-                      
-                      {/* FINISH UI */}
-                      <View style={[
-                        styles.hourItem,
-                        {
-                          borderColor: `${a.color}40`,
-                          backgroundColor: `${a.color}15`
-                        }
-                      ]}>
-                        <Text style={[
-                          styles.hourLabel,
-                          { color: a.color}
-                        ]}>Finish</Text>
-                        <Text style={[
-                          styles.hourValue,
+
+                        {/* FINISH UI */}
+                        <View style={[
+                          styles.hourItem,
                           {
-                            color: '#2d3748'
+                            borderColor: `${a.color}40`,
+                            backgroundColor: `${a.color}15`
                           }
                         ]}>
-                          00
-                        </Text>
+                          <Text style={[
+                            styles.hourLabel,
+                            { color: a.color}
+                          ]}>Finish</Text>
+                          <Text style={[
+                            styles.hourValue,
+                            {
+                              color: '#2d3748'
+                            }
+                          ]}>
+                            --
+                          </Text>
+                        </View>
                       </View>
 
                         {/* START & RESET BUTTONS */}
