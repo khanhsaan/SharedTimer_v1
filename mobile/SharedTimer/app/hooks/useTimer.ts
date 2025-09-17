@@ -77,7 +77,7 @@ export function useTimer(){
     const pauseTimer = useCallback((passedId: string) => {
         const applianceRunning = storeRunning.find(a => a.id == passedId)?.running;
 
-        if(!applianceRunning){
+        if(applianceRunning){
             // Set that appliance timer state -> false
             setStoreRunning(prev => prev.map(a => a.id === passedId ? {...a, running: false}: a));
         }
