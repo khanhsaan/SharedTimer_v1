@@ -56,6 +56,18 @@ export function TimerScreen({user, selectedProfileID}: {user: any, selectedProfi
         }
     }, [])
 
+    // Format timer
+    const formatTimer= (minutes: number) => {
+      let h = Math.floor(minutes / 60);
+      let m = Math.floor(minutes % 60);
+      let s = Math.floor(m % 60);
+
+      if (h > 0){
+        return `${h}h ${m}m`;
+      }
+      return `${m}m ${s}`;
+    }
+
     // useTimer
     const {
       setTimerValue,
@@ -120,7 +132,7 @@ export function TimerScreen({user, selectedProfileID}: {user: any, selectedProfi
                           <Text style={styles.timerLabel}>Current Timer</Text>
                           <Text style={styles.timerValue}>
                             {/* Display the corresponding current timer */}
-                            {storeTimer.find(timer => timer.id === a.id)?.time || 0}
+                            {formatTimer(storeTimer.find(timer => timer.id === a.id)?.time || 0)}
                           </Text>
                         </View>
                       </View>
