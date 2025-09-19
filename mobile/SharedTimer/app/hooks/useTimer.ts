@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { appliances } from "@/components/appliances";
 import { store } from "expo-router/build/global-state/router-store";
+import { prefetch } from "expo-router/build/global-state/routing";
 export function useTimer(){
     // Initial minutes
     const[initialMinutes, setInitialMinutes] = useState<number>(0);
@@ -105,29 +106,24 @@ export function useTimer(){
         setRemaining(Math.max(0, remaining + increase));
     }, [remaining]);
 
+    // Store the started moment of appliance
+    const [storeStartedAt, setStoreStartedAt] = useState<{id: string, startedAt: number | null}[]>(
+        () => appliances.map(a => ({id: a.id, startedAt: null}))
+    );
+
     // Counting down effect
     // Listen to the state of the timer running
     useEffect(() => {
-        // If the timer is running
-        if(running){
-            // Using setInterval() to run setRemaining() every 1 sec
-            intervalRef.current = setInterval(() => {
-                setRemaining((prev) => {
-                    // If the value has reached 1 or value being smaller than one
-                    if(prev <= 1){
-                        // clear interval
-                        if(intervalRef.current) clearInterval(intervalRef.current);
-                        // stop the timer
-                        setRunning(false);
-                        // return time of 0
-                        return 0;
-                    }
-                    // Else, keep counting down
-                    return prev - 1;
-                });
-            }, 1000);
+        const isAnyRunning = storeRunning.some(a => a.running);
+
+        if(!isAnyRunning){
+            console.log("----- There is NO appliance running");
+            return;
         }
         
+        const t = setInterval(() => {
+                         
+        })
         // If the timer has stopped, clear the interval
         return () => {
             if(intervalRef.current) clearInterval(intervalRef.current);
