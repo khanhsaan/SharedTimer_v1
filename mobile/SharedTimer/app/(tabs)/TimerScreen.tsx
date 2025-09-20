@@ -74,6 +74,7 @@ export function TimerScreen({user, selectedProfileID}: {user: any, selectedProfi
       setRunningState,
       storeTimer,
       storeRunning,
+      storeRemaining,
       remaining,
       minutes,
       seconds,
@@ -132,7 +133,7 @@ export function TimerScreen({user, selectedProfileID}: {user: any, selectedProfi
                           <Text style={styles.timerLabel}>Current Timer</Text>
                           <Text style={styles.timerValue}>
                             {/* Display the corresponding current timer */}
-                            {formatTimer(storeTimer.find(timer => timer.id === a.id)?.time || 0)}
+                            {formatTimer(storeRemaining.find(timer => timer.id === a.id)?.remaining || 0)}
                           </Text>
                         </View>
                       </View>
