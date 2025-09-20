@@ -34,15 +34,9 @@ export function useTimer(){
     );
 
     // Set the timer value
-    const setTimerValue = (passedId: string, initialMinutes: any) => {
+    const setTimerValue = (passedId: string, initialMinutes: number) => {
         // Look up the passed Id from the latest value of the array and set the initial minutes, if cannot find keep it the same
-        setStoreTimer(prev => prev.map(a => a.id === passedId ? {...a, time: initialMinutes * 60} : a));
-
-        // DEBUG
-        const appliance = storeTimer.find(a => a.id === passedId)
-        if(appliance) {
-            console.log(`${passedId} is set SUCCESSFULLY with timer ${initialMinutes}`);
-        }
+        setStoreRemaining(prev => prev.map(a => a.id === passedId ? {...a, remaining: initialMinutes * 60} : a));
     }
 
     // Set the running state
@@ -68,8 +62,8 @@ export function useTimer(){
     const startTimer = useCallback((passedId: string) => {
         console.log("----- startTimer receieved PASSED ID: ", passedId);
 
-        const applianceTime = storeTimer.find(a => a.id === passedId)?.time;
-        const applianceRunning = storeRunning.find(a => a.id === passedId)?.running;
+        const applianceTime = storeRemaining.find(a => a.id === passedId)?.remaining ?? 0;
+        const applianceRunning = storeRunning.find(a => a.id === passedId)?.running ?? false;
 
         // If the appliance timer > 0 and appliance timer is not running
         if(applianceTime && applianceTime > 0 && !applianceRunning){
@@ -77,13 +71,14 @@ export function useTimer(){
             setStoreRunning(prev => prev.map(a => a.id === passedId ? {...a, running: true}: a));
             // Log the started time
             setStoreStartedAt(prev => prev.map(a => a.id === passedId ? {...a, startedAt: Date.now()}: a));
+
             console.log(`------\nSTART button clicked! \nRunning: ${applianceRunning}\nRemaining: ${applianceTime}\n------`);
         } else if(applianceTime == 0) {
             console.error(`Appliance timer = 0`);
         } else {
             console.log(`CANNOT find passed ID`);
         }
-    }, [storeRunning, storeTimer])
+    }, [storeRunning, storeRemaining])
 
     // Pause the timer
     const pauseTimer = useCallback((passedId: string) => {
@@ -134,7 +129,7 @@ export function useTimer(){
                 if(!storeRunning.find(r => r.id === a.id)?.running) return a;
 
                 // Calculate the remaining time
-                const base = storeTimer.find(t => t.id === a.id)?.time ?? 0;
+                const base = storeRemaining.find(t => t.id === a.id)?.remaining ?? 0;
                 // DEBUG
                 console.log(`----- BASE: ${base / 60}`)
                 const started = storeStartedAt.find(s => s.id === a.id)?.startedAt ?? 0;
@@ -164,6 +159,7 @@ export function useTimer(){
         setRunningState,
         storeTimer,
         storeRunning,
+        storeRemaining,
         remaining,
         minutes,
         seconds,
