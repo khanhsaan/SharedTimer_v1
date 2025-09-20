@@ -57,10 +57,10 @@ export function TimerScreen({user, selectedProfileID}: {user: any, selectedProfi
     }, [])
 
     // Format timer
-    const formatTimer= (minutes: number) => {
-      let h = Math.floor(minutes / 60);
-      let m = Math.floor(minutes % 60);
-      let s = Math.floor(m % 60);
+    const formatTimer= (seconds: number) => {
+      let h = Math.floor(seconds / (60 * 60));
+      let m = Math.floor(seconds % (60 * 60) / 60);
+      let s = Math.floor(seconds % 60);
 
       if (h > 0){
         return `${h}h ${m}m`;

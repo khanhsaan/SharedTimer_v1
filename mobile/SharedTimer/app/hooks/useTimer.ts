@@ -29,10 +29,14 @@ export function useTimer(){
         appliances.map((a) => ({id: a.id, running: false}))
     );
 
+    const[storeRemaining, setStoreRemaining] = useState<{id: string, remaining: number}[]>(() => 
+        appliances.map(a => ({id: a.id, remaining: 0}))
+    );
+
     // Set the timer value
     const setTimerValue = (passedId: string, initialMinutes: any) => {
         // Look up the passed Id from the latest value of the array and set the initial minutes, if cannot find keep it the same
-        setStoreTimer(prev => prev.map(a => a.id === passedId ? {...a, time: initialMinutes} : a));
+        setStoreTimer(prev => prev.map(a => a.id === passedId ? {...a, time: initialMinutes * 60} : a));
 
         // DEBUG
         const appliance = storeTimer.find(a => a.id === passedId)
@@ -46,6 +50,11 @@ export function useTimer(){
         // Look up the passed Id from the latest value of the array and set the running state, if cannot find keep it the same
         setStoreRunning(prev => prev.map(a => a.id === passedId ? {...a, running: passedRunning}: a))
     }
+
+    // Store the started moment of appliance
+    const [storeStartedAt, setStoreStartedAt] = useState<{id: string, startedAt: number | null}[]>(
+        () => appliances.map(a => ({id: a.id, startedAt: null}))
+    );
 
     // Initialise storeTimer and storeRunnig with the initial values as 0 & false
     useEffect(() => {
@@ -66,6 +75,8 @@ export function useTimer(){
         if(applianceTime && applianceTime > 0 && !applianceRunning){
             // Set that appliance timer state -> true
             setStoreRunning(prev => prev.map(a => a.id === passedId ? {...a, running: true}: a));
+            // Log the started time
+            setStoreStartedAt(prev => prev.map(a => a.id === passedId ? {...a, startedAt: Date.now()}: a));
             console.log(`------\nSTART button clicked! \nRunning: ${applianceRunning}\nRemaining: ${applianceTime}\n------`);
         } else if(applianceTime == 0) {
             console.error(`Appliance timer = 0`);
@@ -106,29 +117,40 @@ export function useTimer(){
         setRemaining(Math.max(0, remaining + increase));
     }, [remaining]);
 
-    // Store the started moment of appliance
-    const [storeStartedAt, setStoreStartedAt] = useState<{id: string, startedAt: number | null}[]>(
-        () => appliances.map(a => ({id: a.id, startedAt: null}))
-    );
-
     // Counting down effect
     // Listen to the state of the timer running
     useEffect(() => {
+        // Check if there's any appliance running
         const isAnyRunning = storeRunning.some(a => a.running);
-
+        
         if(!isAnyRunning){
             console.log("----- There is NO appliance running");
             return;
-        }
+        } 
         
         const t = setInterval(() => {
-                         
-        })
-        // If the timer has stopped, clear the interval
-        return () => {
-            if(intervalRef.current) clearInterval(intervalRef.current);
-        }
-    }, [running])
+            setStoreRemaining(prev => prev.map(a => {
+                // If the appliance is not running return it
+                if(!storeRunning.find(r => r.id === a.id)?.running) return a;
+                // Calculate the remaining time
+                const base = storeTimer.find(t => t.id === a.id)?.time ?? 0;
+                // DEBUG
+                console.log(`----- BASE: ${base / 60}`)
+                const started = storeStartedAt.find(s => s.id === a.id)?.startedAt ?? 0;
+                // DEBUG
+                console.log(`----- STARTED: ${started}`)
+                const elapsed = Math.max(0, (Date.now() - started));
+                
+                const remaining = Math.max(0, (base - elapsed));
+                // DEBUG
+                console.log(`----- REMAINING: ${remaining}`)
+
+                return {...a, remaining: remaining};
+            }))
+        }, 1000);
+
+        return () => clearInterval(t);
+    }, [storeRunning])
 
     return {
         setTimerValue,
