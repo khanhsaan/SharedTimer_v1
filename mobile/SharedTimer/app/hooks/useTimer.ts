@@ -19,10 +19,7 @@ export function useTimer(){
 
     // Store the passed appliances timer value
     
-    // Initialize storeTimer to store the name of each appliance with the initial timer of 0
-    const[storeTimer, setStoreTimer] = useState<{id: string, time: number}[]>(() => 
-        appliances.map((a) => ({id: a.id, time: 0 }))
-    );
+   
 
     // Intialise storeRunning to store the running state of each appliance with the initial state of false
     const[storeRunning, setStoreRunning] = useState<{id: string, running: boolean}[]>(() =>
@@ -53,9 +50,9 @@ export function useTimer(){
     // Initialise storeTimer and storeRunnig with the initial values as 0 & false
     useEffect(() => {
         // DEBUG
-        console.log("storeTimer: ", storeTimer);
+        console.log("storeTimer: ", storeRemaining);
         console.log("storeRunning: ", storeRunning);
-    }, [storeTimer, storeRunning])
+    }, [storeRemaining, storeRunning])
 
     // Start the timer
     // useCallback(): Reuse the const with the latest values of remaining, running
@@ -157,7 +154,6 @@ export function useTimer(){
     return {
         setTimerValue,
         setRunningState,
-        storeTimer,
         storeRunning,
         storeRemaining,
         remaining,

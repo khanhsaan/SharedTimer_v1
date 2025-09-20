@@ -72,7 +72,6 @@ export function TimerScreen({user, selectedProfileID}: {user: any, selectedProfi
     const {
       setTimerValue,
       setRunningState,
-      storeTimer,
       storeRunning,
       storeRemaining,
       remaining,
