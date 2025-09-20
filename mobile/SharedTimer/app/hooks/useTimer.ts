@@ -132,18 +132,25 @@ export function useTimer(){
             setStoreRemaining(prev => prev.map(a => {
                 // If the appliance is not running return it
                 if(!storeRunning.find(r => r.id === a.id)?.running) return a;
+
                 // Calculate the remaining time
                 const base = storeTimer.find(t => t.id === a.id)?.time ?? 0;
                 // DEBUG
                 console.log(`----- BASE: ${base / 60}`)
                 const started = storeStartedAt.find(s => s.id === a.id)?.startedAt ?? 0;
+                
                 // DEBUG
                 console.log(`----- STARTED: ${started}`)
-                const elapsed = Math.max(0, (Date.now() - started));
-                
+                const elapsed = Math.max(0, (Date.now() - started) / 1000);
+
                 const remaining = Math.max(0, (base - elapsed));
                 // DEBUG
                 console.log(`----- REMAINING: ${remaining}`)
+                
+                // Once the remaining hit 0 its corresponding running -> false
+                if(remaining === 0){
+                    setStoreRunning(prev => prev.map(r => r.id === a.id ? {...r, running: false}: r));
+                }
 
                 return {...a, remaining: remaining};
             }))
