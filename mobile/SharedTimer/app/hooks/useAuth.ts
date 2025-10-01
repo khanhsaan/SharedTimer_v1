@@ -71,7 +71,7 @@ export const useAuth = ({userEmail, userPassword, userConfirmPassword}:{userEmai
     });
 
     setAuthSignUpData(data);
-    setAuthSignUpError(authSignUpError);
+    setAuthSignUpError(authSignInError);
 
     // Email and password must not be empty
     if(!userEmail || !userPassword ) {
@@ -93,8 +93,15 @@ export const useAuth = ({userEmail, userPassword, userConfirmPassword}:{userEmai
     }
 
     if(error){
-        setAuthSignUpError(error.toString());
+        const mapped = mapErrorMessage(error.toString())
+        setAuthSignUpError(mapped);
         console.error(`Sign-up FAILED!`, authSignUpError);
+        return (
+          {
+            authSignInData: null,
+            authSignInError: authSignUpError
+          }
+        )
     } 
     // Else, the sign in process is successful, reset the error message, print the data
     else{
@@ -105,6 +112,17 @@ export const useAuth = ({userEmail, userPassword, userConfirmPassword}:{userEmai
             {authSignUpData, authSignUpError: null}
         );
     }
+  }
+
+  const mapErrorMessage = (error: any) => {
+      const message = (error?.message || error?.error_description || "").toLowerCase();
+      let error_message = "";
+
+      if(message.includes("already registered") || message.includes("already exists")){
+        return error_message = "Account has been registered!";
+      } else {
+        return error_message = message;
+      }
   }
 
   return {
