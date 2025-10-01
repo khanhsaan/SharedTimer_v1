@@ -33,11 +33,13 @@ export const useAuth = ({userEmail, userPassword, userConfirmPassword}:{userEmai
     // Retrieve the data and error from AuthHandle
     // If there is error, set error message and print it
     if(error){
+        const code = error.code;
+        setAuthSignUpError(code);
         console.error(`Sign-in FAILED!`, authSignInError);
 
         return {
             authSignInData: null,
-            authSignInError: error.toString()
+            authSignInError: authSignInError
         }
     } 
     // Else, the sign in process is SUCCESSFUL, reset the error message, print the data
@@ -93,9 +95,11 @@ export const useAuth = ({userEmail, userPassword, userConfirmPassword}:{userEmai
     }
 
     if(error){
-        const mapped = mapErrorMessage(error.toString())
-        setAuthSignUpError(mapped);
-        console.error(`Sign-up FAILED!`, authSignUpError);
+        const code = error.code;
+        const name = error.name;
+        // DEBUG
+        console.error(`Sign-up FAILED!`, code);
+        setAuthSignUpError(code);
         return (
           {
             authSignInData: null,
@@ -116,9 +120,16 @@ export const useAuth = ({userEmail, userPassword, userConfirmPassword}:{userEmai
 
   const mapErrorMessage = (error: any) => {
       const message = (error?.message || error?.error_description || "").toLowerCase();
+      const code  = (error?.code || error?.error_code).toLowerCase();
+      const status = error?.status;
+
       let error_message = "";
 
-      if(message.includes("already registered") || message.includes("already exists")){
+      if(code === "weak_password") {
+        return error_message = "Password must contain atleast 6 characters."
+      }
+
+      if(message.includes("already registered") || message.includes("already exists") || code == "user_already_exists" || status === 422){
         return error_message = "Account has been registered!";
       } else {
         return error_message = message;

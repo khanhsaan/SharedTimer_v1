@@ -80,6 +80,10 @@ export function Auth() {
                 onPress={async() => {
                   // If the user is signing in 
                   if(isSignIn === true){
+                    // DEBUG
+                    console.log(`Input email: ${userEmail}`);
+                    console.log(`Input password: ${userPassword}`);
+                    
                     await signInHandle();
                   // If the user is signing up
                   } else {
