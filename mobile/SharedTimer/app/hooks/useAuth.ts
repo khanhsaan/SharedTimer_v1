@@ -101,8 +101,8 @@ export const useAuth = ({ userEmail, userPassword, userConfirmPassword }: { user
       console.error(`Sign-up FAILED!`, code);
       return (
         {
-          signUpData: null,
-          signUpError: code
+          authSignUpData: null,
+          authSignUpError: code
         }
       )
     }

@@ -11,136 +11,136 @@ export function Auth() {
   const [userPassword, setUserPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [loading, setLoading] = useState(false)
-  const[errorMsg, setErrorMsg] = useState('');
+  const [errorMsg, setErrorMsg] = useState('');
   // Check if the user wants to Sign in or Sign up
-  const[isSignIn, setIsSignIn] = useState(false);
+  const [isSignIn, setIsSignIn] = useState(false);
 
-  const{ signInHandle, signUpHandle } = useAuth({userEmail, userPassword, userConfirmPassword: confirmPassword});
+  const { signInHandle, signUpHandle } = useAuth({ userEmail, userPassword, userConfirmPassword: confirmPassword });
 
   return (
     <SafeAreaView style={styles.container}>
       <KeyboardAvoidingView
         style={styles.auth}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-        
+
         <ScrollView
           contentContainerStyle={styles.authScrollContainer}
           showsVerticalScrollIndicator={false}>
-            <Text style={styles.authTitle}>SharedTimer</Text>
+          <Text style={styles.authTitle}>SharedTimer</Text>
 
-            <View style={styles.authCard}>
-              {/* Email input field */}
+          <View style={styles.authCard}>
+            {/* Email input field */}
+            <TextInput
+              style={styles.authInput}
+              placeholder='Email'
+              value={userEmail}
+              onChangeText={(newText) => setUserEmail(newText)}
+              keyboardType='email-address'
+              autoCapitalize='none'
+              autoCorrect={false}
+              placeholderTextColor={"rgba(45, 55, 72, 0.5)"}
+            />
+
+            {/* Password input field */}
+            <TextInput
+              style={styles.authInput}
+              placeholder='Password'
+              value={userPassword}
+              onChangeText={(newText) => setUserPassword(newText)}
+              secureTextEntry
+              placeholderTextColor={"rgba(45, 55, 72, 0.5)"}
+            />
+
+            {/* Extra input field appears to confirm password when in Sign Up mode */}
+            {!isSignIn && (
               <TextInput
                 style={styles.authInput}
-                placeholder='Email'
-                value={userEmail}
-                onChangeText={(newText) => setUserEmail(newText)}
-                keyboardType='email-address'
-                autoCapitalize='none'
-                autoCorrect={false}
-                placeholderTextColor={"rgba(45, 55, 72, 0.5)"}  
-              />
-              
-              {/* Password input field */}
-              <TextInput
-                style={styles.authInput}
-                placeholder='Password'
-                value={userPassword}
-                onChangeText={(newText) => setUserPassword(newText)}
+                placeholder='Confirm password'
+                value={confirmPassword}
+                onChangeText={(newText) => setConfirmPassword(newText)}
                 secureTextEntry
-                placeholderTextColor={"rgba(45, 55, 72, 0.5)"}
+                placeholderTextColor="rgba(45, 55, 72, 0.5)"
               />
+            )}
 
-              {/* Extra input field appears to confirm password when in Sign Up mode */}
-              {!isSignIn && (
-                <TextInput
-                  style={styles.authInput}
-                  placeholder='Confirm password'
-                  value={confirmPassword}
-                  onChangeText={(newText) => setConfirmPassword(newText)}
-                  secureTextEntry
-                  placeholderTextColor="rgba(45, 55, 72, 0.5)"
-                />
-              )}
+            {/* Banner appears when an email already exists */}
+            {errorMsg && errorMsg.includes('user_already_exists') && (
+              <View
+                style={styles.banner}>
+                <Text
+                  style={styles.bannerText}>
+                  Email already exists, sign in instead!
+                </Text>
+              </View>
+            )}
 
-              {/* Banner appears when an email already exists */}
-              {errorMsg && errorMsg.includes('user_already_exists') && (
-                <View
-                  style={styles.banner}>
-                  <Text
-                    style={styles.bannerText}>
-                      Email already exists, sign in instead!
-                  </Text>    
-                </View>
-              )} 
+            {/* Banner appears when wrong credentials */}
+            {errorMsg && errorMsg.includes('invalid_credentials') && (
+              <View
+                style={styles.banner}>
+                <Text
+                  style={styles.bannerText}>
+                  Wrong email or password, please try again.
+                </Text>
+              </View>
+            )}
 
-              {/* Banner appears when wrong credentials */}
-              {errorMsg && errorMsg.includes('invalid_credentials') && (
-                <View
-                  style={styles.banner}>
-                  <Text
-                    style={styles.bannerText}>
-                      Wrong email or password, please try again.
-                  </Text>    
-                </View>
-              )}              
-
-              {/* Sign In / Sign Up button */}
-              <TouchableOpacity
-                style={[styles.authButton, loading && styles.authButtonDisabled]}
-                onPress={async() => {
-                  // Signing In
-                  if(isSignIn === true){
-                    const success = await signInHandle();
-                    if(success?.authSignInError){
-                      const error = success.authSignInError;
-                      console.error(`authSignInError: ${error}`)
-                      setErrorMsg(error);
-                    } else {
-                      console.error(`No authSignInError`);
-                      setErrorMsg('');
-                    }
-                  // Signing Up
+            {/* Sign In / Sign Up button */}
+            <TouchableOpacity
+              style={[styles.authButton, loading && styles.authButtonDisabled]}
+              onPress={async () => {
+                // Signing In
+                if (isSignIn === true) {
+                  const success = await signInHandle();
+                  if (success?.authSignInError) {
+                    const error = success.authSignInError;
+                    console.error(`authSignInError: ${error}`)
+                    setErrorMsg(error);
                   } else {
-                    const success = await signUpHandle();
-                    // If there is no error from the sign up state, move to the sign in page
-                    if(success?.signUpError === null){
-                      console.log(`NO signUpError\nsignUpData: ${success.signUpData}`);
-                      setIsSignIn(true);
-                      setErrorMsg('');
-                    } 
-                    
-                    else if(success.signUpError){
-                      const error = success.signUpError;
-                      console.log(`signUpError: ${error}`);
-                      setErrorMsg(error);
-                      setIsSignIn(false);
-                    }
+                    console.error(`No authSignInError`);
+                    setErrorMsg('');
                   }
-                }}
-                disabled={loading}
-                activeOpacity={0.8}>
+                  // Signing Up
+                } else {
+                  const success = await signUpHandle();
+                  // If there is no error from the sign up state, move to the sign in page
+                  if (success?.signUpError === null) {
+                    console.log(`NO signUpError\nsignUpData: ${success.signUpData}`);
+                    setIsSignIn(true);
+                    setErrorMsg('');
+                  }
 
-                  <Text
-                    style={styles.authButtonText}>
-                      {loading ? 'Please wait...' : (isSignIn ? 'Sign in' : 'Sign Up')}
-                  </Text>
-              </TouchableOpacity>
+                  else if (success.authSignUpError) {
+                    const error = success.authSignUpError;
+                    console.log(`signUpError: ${error}`);
+                    setErrorMsg(error);
+                    setIsSignIn(false);
+                  }
+                }
+              }}
+              disabled={loading}
+              activeOpacity={0.8}>
 
-              {/* Switch between Sign in / Sign Up */}
-              <TouchableOpacity
-                style={styles.linkButton}
-                onPress={() => {
-                  setIsSignIn(!isSignIn);
-                }}
-                disabled={loading}
-                activeOpacity={0.8}>
-                  <Text
-                    style={styles.linkButtonText}>
-                      {isSignIn ? 'Create account' : 'Already have an account? Sign in' }
-                  </Text>
-              </TouchableOpacity>
-            </View>
+              <Text
+                style={styles.authButtonText}>
+                {loading ? 'Please wait...' : (isSignIn ? 'Sign in' : 'Sign Up')}
+              </Text>
+            </TouchableOpacity>
+
+            {/* Switch between Sign in / Sign Up */}
+            <TouchableOpacity
+              style={styles.linkButton}
+              onPress={() => {
+                setIsSignIn(!isSignIn);
+              }}
+              disabled={loading}
+              activeOpacity={0.8}>
+              <Text
+                style={styles.linkButtonText}>
+                {isSignIn ? 'Create account' : 'Already have an account? Sign in'}
+              </Text>
+            </TouchableOpacity>
+          </View>
         </ScrollView>
 
       </KeyboardAvoidingView>
