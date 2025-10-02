@@ -72,6 +72,17 @@ export function Auth() {
                       Email already exists, sign in instead!
                   </Text>    
                 </View>
+              )} 
+
+              {/* Banner appears when wrong credentials */}
+              {errorMsg && errorMsg.includes('invalid_credentials') && (
+                <View
+                  style={styles.banner}>
+                  <Text
+                    style={styles.bannerText}>
+                      Wrong email or password, please try again.
+                  </Text>    
+                </View>
               )}              
 
               {/* Sign In / Sign Up button */}
@@ -81,8 +92,13 @@ export function Auth() {
                   // Signing In
                   if(isSignIn === true){
                     const success = await signInHandle();
-                    if(success?.authSignInError === null){
-                      
+                    if(success?.authSignInError){
+                      const error = success.authSignInError;
+                      console.error(`authSignInError: ${error}`)
+                      setErrorMsg(error);
+                    } else {
+                      console.error(`No authSignInError`);
+                      setErrorMsg('');
                     }
                   // Signing Up
                   } else {

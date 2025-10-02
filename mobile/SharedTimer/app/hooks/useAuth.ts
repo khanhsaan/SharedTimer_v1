@@ -34,7 +34,7 @@ export const useAuth = ({userEmail, userPassword, userConfirmPassword}:{userEmai
     // If there is error, set error message and print it
     if(error){
         const code = error.code;
-        setAuthSignUpError(code);
+        setAuthSignInError(code);
         console.error(`Sign-in FAILED!`, code);
 
         return {
