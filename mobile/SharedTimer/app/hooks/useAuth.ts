@@ -26,7 +26,7 @@ export const useAuth = ({userEmail, userPassword, userConfirmPassword}:{userEmai
 
         return {
             authSignInData: null,
-            authSignInError
+            authSignInError: authSignInError
         };
     }
 
@@ -35,7 +35,7 @@ export const useAuth = ({userEmail, userPassword, userConfirmPassword}:{userEmai
     if(error){
         const code = error.code;
         setAuthSignUpError(code);
-        console.error(`Sign-in FAILED!`, authSignInError);
+        console.error(`Sign-in FAILED!`, code);
 
         return {
             authSignInData: null,

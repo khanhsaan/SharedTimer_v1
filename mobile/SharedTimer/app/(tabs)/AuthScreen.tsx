@@ -63,16 +63,16 @@ export function Auth() {
                 />
               )}
 
-              {/* Banner appears when wrong email or password */}
-              {errorMsg && (
+              {/* Banner appears when an email already exists */}
+              {errorMsg && errorMsg.includes('user_already_exists') && (
                 <View
                   style={styles.banner}>
                   <Text
                     style={styles.bannerText}>
-                      Wrong email or password!
+                      Email already exists, sign in instead!
                   </Text>    
                 </View>
-              )}
+              )}              
 
               {/* Sign In / Sign Up button */}
               <TouchableOpacity
@@ -80,7 +80,10 @@ export function Auth() {
                 onPress={async() => {
                   // Signing In
                   if(isSignIn === true){
-                    await signInHandle();
+                    const success = await signInHandle();
+                    if(success?.authSignInError === null){
+                      
+                    }
                   // Signing Up
                   } else {
                     const success = await signUpHandle();
@@ -88,8 +91,13 @@ export function Auth() {
                     if(success?.signUpError === null){
                       console.log(`NO signUpError\nsignUpData: ${success.signUpData}`);
                       setIsSignIn(true);
-                    } else {
-                      console.log(`signUpError: ${success.signUpError}`);
+                      setErrorMsg('');
+                    } 
+                    
+                    else if(success.signUpError){
+                      const error = success.signUpError;
+                      console.log(`signUpError: ${error}`);
+                      setErrorMsg(error);
                       setIsSignIn(false);
                     }
                   }
