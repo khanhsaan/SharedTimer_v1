@@ -78,20 +78,18 @@ export function Auth() {
               <TouchableOpacity
                 style={[styles.authButton, loading && styles.authButtonDisabled]}
                 onPress={async() => {
-                  // If the user is signing in 
+                  // Signing In
                   if(isSignIn === true){
-                    // DEBUG
-                    console.log(`Input email: ${userEmail}`);
-                    console.log(`Input password: ${userPassword}`);
-                    
                     await signInHandle();
-                  // If the user is signing up
+                  // Signing Up
                   } else {
                     const success = await signUpHandle();
                     // If there is no error from the sign up state, move to the sign in page
-                    if(success?.authSignUpError === null){
+                    if(success?.signUpError === null){
+                      console.log(`NO signUpError\nsignUpData: ${success.signUpData}`);
                       setIsSignIn(true);
                     } else {
+                      console.log(`signUpError: ${success.signUpError}`);
                       setIsSignIn(false);
                     }
                   }

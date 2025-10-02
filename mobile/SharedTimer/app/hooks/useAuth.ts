@@ -99,11 +99,10 @@ export const useAuth = ({userEmail, userPassword, userConfirmPassword}:{userEmai
         const name = error.name;
         // DEBUG
         console.error(`Sign-up FAILED!`, code);
-        setAuthSignUpError(code);
         return (
           {
-            authSignInData: null,
-            authSignInError: authSignUpError
+            signUpData: null,
+            signUpError: code
           }
         )
     } 
@@ -113,7 +112,10 @@ export const useAuth = ({userEmail, userPassword, userConfirmPassword}:{userEmai
         setAuthSignUpError('');
         console.log(`Sign-up successfully! `, data);
         return (
-            {authSignUpData, authSignUpError: null}
+            {
+              signUpData: authSignUpData, 
+              signUpError: null
+            }
         );
     }
   }
