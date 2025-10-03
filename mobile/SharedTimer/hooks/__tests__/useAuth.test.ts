@@ -46,7 +46,7 @@ describe('useAuth', () => {
         it('should return error when password and confirm password are not match', async () => {
             const { result: hookReturn } = renderHook(() => {
                 return useAuth({
-                    userEmail: 'email@gmail.com',
+                    userEmail: '123@gmail.com',
                     userPassword: '123456',
                     userConfirmPassword: '12345',
                 })
@@ -71,7 +71,7 @@ describe('useAuth', () => {
 
             const { result: hookReturn } = renderHook(() => {
                 return useAuth({
-                    userEmail: 'email@gmail.com',
+                    userEmail: '123@gmail.com',
                     userPassword: '123',
                     userConfirmPassword: '123',
                 })
@@ -84,6 +84,31 @@ describe('useAuth', () => {
             expect(response).toEqual({
                 authSignUpData: null,
                 authSignUpError: 'weak_password',
+            });
+        })
+
+        it('should return error when email exists', async () => {
+            // Override the mock for this specific test
+            (supabase.auth.signUp as jest.Mock).mockResolvedValueOnce({
+                data: null,
+                error: { code: 'email_exists' }
+            });
+
+            const { result: hookReturn } = renderHook(() => {
+                return useAuth({
+                    userEmail: '123@gmail.com',
+                    userPassword: '123456',
+                    userConfirmPassword: '123456',
+                })
+            });
+
+            let response;
+            await act(async () => {
+                response = await hookReturn.current.signUpHandle();
+            });
+            expect(response).toEqual({
+                authSignUpData: null,
+                authSignUpError: 'email_exists',
             });
         })
     })
