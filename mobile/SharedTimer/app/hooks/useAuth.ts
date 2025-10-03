@@ -13,12 +13,6 @@ export const useAuth = ({ userEmail, userPassword, userConfirmPassword }: { user
 
   // Sign in handling component
   const signInHandle = async () => {
-    // Pass userEmail and userPassword to supabase.auth
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email: userEmail,
-      password: userPassword,
-    });
-
     // Email and password must not be empty
     if (!userEmail || !userPassword) {
       setAuthSignInError("Email or password is empty");
@@ -29,6 +23,12 @@ export const useAuth = ({ userEmail, userPassword, userConfirmPassword }: { user
         authSignInError: authSignInError
       };
     }
+
+    // Pass userEmail and userPassword to supabase.auth
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email: userEmail,
+      password: userPassword,
+    });
 
     // Retrieve the data and error from AuthHandle
     // If there is error, set error message and print it
@@ -67,6 +67,18 @@ export const useAuth = ({ userEmail, userPassword, userConfirmPassword }: { user
 
   // Sign Up handle
   const signUpHandle = async () => {
+    // Email and password must not be empty
+    if (!userEmail || !userPassword) {
+      setAuthSignUpError("Email or password is empty");
+      console.warn(authSignUpError);
+      return (
+        {
+          authSignUpData: null,
+          authSignUpError: "Email or password is empty",
+        }
+      );
+    }
+
     const { data, error } = await supabase.auth.signUp({
       email: userEmail,
       password: userPassword
@@ -75,14 +87,6 @@ export const useAuth = ({ userEmail, userPassword, userConfirmPassword }: { user
     setAuthSignUpData(data);
     setAuthSignUpError(authSignInError);
 
-    // Email and password must not be empty
-    if (!userEmail || !userPassword) {
-      setAuthSignUpError("Email or password is empty");
-      console.warn(authSignUpError);
-      return (
-        { authSignUpData: null, authSignUpError }
-      );
-    }
     // Retrieve the data and error from AuthHandle
     // If there is error, set error message and print it
 
