@@ -79,6 +79,15 @@ export const useAuth = ({ userEmail, userPassword, userConfirmPassword }: { user
       );
     }
 
+    // Password and confirm Password must match
+    if (userConfirmPassword !== userPassword) {
+      setAuthSignUpError("Confirm password does not match");
+      console.warn(authSignUpError);
+      return (
+        { authSignUpData: null, authSignUpError }
+      );
+    }
+
     const { data, error } = await supabase.auth.signUp({
       email: userEmail,
       password: userPassword
@@ -89,14 +98,6 @@ export const useAuth = ({ userEmail, userPassword, userConfirmPassword }: { user
 
     // Retrieve the data and error from AuthHandle
     // If there is error, set error message and print it
-
-    if (userConfirmPassword !== userPassword) {
-      setAuthSignUpError("Confirm password does not match");
-      console.warn(authSignUpError);
-      return (
-        { authSignUpData: null, authSignUpError }
-      );
-    }
 
     if (error) {
       const code = error.code;
