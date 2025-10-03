@@ -84,7 +84,10 @@ export const useAuth = ({ userEmail, userPassword, userConfirmPassword }: { user
       setAuthSignUpError("Confirm password does not match");
       console.warn(authSignUpError);
       return (
-        { authSignUpData: null, authSignUpError }
+        {
+          authSignUpData: null,
+          authSignUpError: "Confirm password does not match",
+        }
       );
     }
 

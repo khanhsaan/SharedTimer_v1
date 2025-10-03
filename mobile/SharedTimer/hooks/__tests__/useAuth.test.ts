@@ -13,6 +13,7 @@ jest.mock('@/lib/supabase', () => ({
 import { renderHook, waitFor, act } from '@testing-library/react';  // ✅ Built-in
 import { useAuth } from '@/app/hooks/useAuth';
 import { supabase } from '@/lib/supabase';
+import { authHandle } from '@/app/handle/AuthHandle';
 
 describe('useAuth', () => {
     // clear all the tests before run
@@ -40,9 +41,26 @@ describe('useAuth', () => {
                 authSignUpError: 'Email or password is empty',
             });
             expect(supabase.auth.signUp).not.toHaveBeenCalled();
-        })
+        });
 
-        it('')
+        it('should return error when password and confirm password are not maatch', async () => {
+            const { result: hookReturn } = renderHook(() => {
+                return useAuth({
+                    userEmail: 'email@gmail.com',
+                    userPassword: '123456',
+                    userConfirmPassword: '12345',
+                })
+            });
+
+            let response;
+            await act(async () => {
+                response = await hookReturn.current.signUpHandle();
+            });
+            expect(response).toEqual({
+                authSignUpData: null,
+                authSignUpError: 'Confirm password does not match',
+            });
+        })
     })
 })
 
