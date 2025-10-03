@@ -1,4 +1,3 @@
-// Mock supabase before any imports
 jest.mock('@/lib/supabase', () => ({
     supabase: {
         auth: {
@@ -10,7 +9,8 @@ jest.mock('@/lib/supabase', () => ({
     },
 }));
 
-import { renderHook, waitFor, act } from '@testing-library/react';  // ✅ Built-in
+import { renderHook, waitFor, act } from '@testing-library/react';
+// useAuth will call the interfered supabase module by jest rather then to call the imported supabase module in useAuth.ts
 import { useAuth } from '@/app/hooks/useAuth';
 import { supabase } from '@/lib/supabase';
 import { authHandle } from '@/app/handle/AuthHandle';
@@ -43,7 +43,7 @@ describe('useAuth', () => {
             expect(supabase.auth.signUp).not.toHaveBeenCalled();
         });
 
-        it('should return error when password and confirm password are not maatch', async () => {
+        it('should return error when password and confirm password are not match', async () => {
             const { result: hookReturn } = renderHook(() => {
                 return useAuth({
                     userEmail: 'email@gmail.com',
@@ -59,6 +59,31 @@ describe('useAuth', () => {
             expect(response).toEqual({
                 authSignUpData: null,
                 authSignUpError: 'Confirm password does not match',
+            });
+        })
+
+        it('should return error when password is weak', async () => {
+            // Override the mock for this specific test
+            (supabase.auth.signUp as jest.Mock).mockResolvedValueOnce({
+                data: null,
+                error: { code: 'weak_password' }
+            });
+
+            const { result: hookReturn } = renderHook(() => {
+                return useAuth({
+                    userEmail: 'email@gmail.com',
+                    userPassword: '123',
+                    userConfirmPassword: '123',
+                })
+            });
+
+            let response;
+            await act(async () => {
+                response = await hookReturn.current.signUpHandle();
+            });
+            expect(response).toEqual({
+                authSignUpData: null,
+                authSignUpError: 'weak_password',
             });
         })
     })

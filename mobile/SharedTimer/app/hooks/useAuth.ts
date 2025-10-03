@@ -96,17 +96,15 @@ export const useAuth = ({ userEmail, userPassword, userConfirmPassword }: { user
       password: userPassword
     });
 
-    setAuthSignUpData(data);
-    setAuthSignUpError(authSignInError);
-
     // Retrieve the data and error from AuthHandle
     // If there is error, set error message and print it
 
     if (error) {
       const code = error.code;
-      const name = error.name;
       // DEBUG
       console.error(`Sign-up FAILED!`, code);
+      setAuthSignUpError(code);
+      setAuthSignUpData(null);
       return (
         {
           authSignUpData: null,
@@ -117,12 +115,13 @@ export const useAuth = ({ userEmail, userPassword, userConfirmPassword }: { user
     // Else, the sign in process is successful, reset the error message, print the data
     else {
       // Reset error message if there is any from the previous stage
-      setAuthSignUpError('');
+      setAuthSignUpError(null);
+      setAuthSignUpData(data);
       console.log(`Sign-up successfully! `, data);
       return (
         {
-          signUpData: authSignUpData,
-          signUpError: null
+          authSignUpData: data,
+          authSignUpError: null
         }
       );
     }
