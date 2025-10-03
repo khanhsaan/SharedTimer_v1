@@ -1,8 +1,18 @@
-import { renderHook, act } from '@testing-library/react-hooks';
+// Mock supabase before any imports
+jest.mock('@/lib/supabase', () => ({
+  supabase: {
+    auth: {
+      signUp: jest.fn().mockResolvedValue({ data: null, error: null }),
+      signInWithPassword: jest.fn().mockResolvedValue({ data: null, error: null }),
+      signOut: jest.fn().mockResolvedValue({ error: null }),
+      onAuthStateChange: jest.fn(),
+    },
+  },
+}));
+
+import { renderHook, waitFor, act } from '@testing-library/react';  // ✅ Built-in
 import { useAuth } from '@/app/hooks/useAuth';
 import { supabase } from '@/lib/supabase';
-
-jest.mock('@/lib/supabase');
 
 describe('useAuth', () => {
     // clear all the tests before run
@@ -23,7 +33,7 @@ describe('useAuth', () => {
             let response;
             await act(async () => {
                 response = await hookReturn.current.signUpHandle();
-            })
+            });
 
             expect(response).toEqual({
                 authSignUpData: null,
