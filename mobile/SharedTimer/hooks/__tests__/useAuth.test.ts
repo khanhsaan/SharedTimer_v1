@@ -125,7 +125,7 @@ describe('useAuth', () => {
 
             let response;
             await act(async () => {
-                response = await hookReturn.current.signUpHandle();
+                response = await hookReturn.current.signInHandle();
             });
             expect(response).toEqual({
                 authSignInData: null,
