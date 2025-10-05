@@ -104,8 +104,8 @@ export function Auth() {
                 } else {
                   const success = await signUpHandle();
                   // If there is no error from the sign up state, move to the sign in page
-                  if (success?.signUpError === null) {
-                    console.log(`NO signUpError\nsignUpData: ${success.signUpData}`);
+                  if (success?.authSignUpError === null) {
+                    console.log(`NO signUpError\nsignUpData: ${success.authSignUpData}`);
                     setIsSignIn(true);
                     setErrorMsg('');
                   }

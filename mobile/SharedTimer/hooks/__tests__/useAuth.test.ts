@@ -21,6 +21,7 @@ describe('useAuth', () => {
         jest.clearAllMocks();
     });
 
+    // signUpHandle
     describe('signUpHandle', () => {
         it('should return error when email is empty', async () => {
             const { result: hookReturn } = renderHook(() =>
@@ -110,7 +111,27 @@ describe('useAuth', () => {
                 authSignUpData: null,
                 authSignUpError: 'email_exists',
             });
+        });
+    });
+
+    describe('useAuth', () => {
+        it('should return error when empty email/ password', async () => {
+            const { result: hookReturn } = renderHook(() => {
+                return useAuth({
+                    userEmail: '123@gmail.com',
+                    userPassword: '',
+                })
+            });
+
+            let response;
+            await act(async () => {
+                response = await hookReturn.current.signUpHandle();
+            });
+            expect(response).toEqual({
+                authSignInData: null,
+                authSignInError: 'Email or password is empty',
+            });
         })
-    })
+    });
 })
 

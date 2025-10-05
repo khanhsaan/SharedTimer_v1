@@ -2,7 +2,7 @@ import { useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { useStateForPath } from "@react-navigation/native";
 
-export const useAuth = ({ userEmail, userPassword, userConfirmPassword }: { userEmail: string, userPassword: string, userConfirmPassword: string }) => {
+export const useAuth = ({ userEmail, userPassword, userConfirmPassword }: { userEmail: string, userPassword: string, userConfirmPassword?: string }) => {
   const [authSignInError, setAuthSignInError] = useState<any>(null);
   const [authSignInData, setAuthSignInData] = useState<any>(null); // Accept any variable type
   // store and set the current signed in user
@@ -15,12 +15,13 @@ export const useAuth = ({ userEmail, userPassword, userConfirmPassword }: { user
   const signInHandle = async () => {
     // Email and password must not be empty
     if (!userEmail || !userPassword) {
+      const error = "Email or password is empty";
       setAuthSignInError("Email or password is empty");
-      console.warn(authSignInError);
+      console.warn(error);
 
       return {
         authSignInData: null,
-        authSignInError: authSignInError
+        authSignInError: error
       };
     }
 
