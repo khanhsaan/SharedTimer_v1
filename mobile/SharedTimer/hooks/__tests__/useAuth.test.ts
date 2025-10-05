@@ -112,9 +112,55 @@ describe('useAuth', () => {
                 authSignUpError: 'email_exists',
             });
         });
+
+        it('should return success when sign up successfully', async () => {
+            // Override the mock for this specific test
+            (supabase.auth.signUp as jest.Mock).mockResolvedValueOnce({
+                data: { message: 'success' },
+                error: null,
+            });
+
+            const { result: hookReturn } = renderHook(() => {
+                return useAuth({
+                    userEmail: 'newEmail@gmail.com',
+                    userPassword: '123456',
+                    userConfirmPassword: '123456',
+                })
+            });
+
+            let response;
+            await act(async () => {
+                response = await hookReturn.current.signUpHandle();
+            });
+            expect(response).toEqual({
+                authSignUpData: { message: "success" },
+                authSignUpError: null,
+            });
+        });
     });
 
-    describe('useAuth', () => {
+    // signInHandle
+    describe('signInHandle', () => {
+        it('should return error when empty email/ password', async () => {
+            const { result: hookReturn } = renderHook(() => {
+                return useAuth({
+                    userEmail: '123@gmail.com',
+                    userPassword: '',
+                })
+            });
+
+            let response;
+            await act(async () => {
+                response = await hookReturn.current.signInHandle();
+            });
+            expect(response).toEqual({
+                authSignInData: null,
+                authSignInError: 'Email or password is empty',
+            });
+        })
+    });
+
+    describe('signInHandle', () => {
         it('should return error when empty email/ password', async () => {
             const { result: hookReturn } = renderHook(() => {
                 return useAuth({
