@@ -7,7 +7,7 @@ import { IconSymbol } from '@/components/ui/IconSymbol';
 import TabBarBackground from '@/components/ui/TabBarBackground';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
-import { Auth, Auth as AuthScreen} from './AuthScreen';
+import { Auth, Auth as AuthScreen} from '../(auth)/AuthScreen';
 import HomeScreen from './index';
 import { Session } from '@supabase/supabase-js';
 import { supabase } from '@/lib/supabase';

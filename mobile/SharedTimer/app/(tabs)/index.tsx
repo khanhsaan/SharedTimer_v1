@@ -9,7 +9,7 @@ import { ThemedView } from '@/components/ThemedView';
 import 'react-native-url-polyfill/auto'
 import { useState, useEffect } from 'react'
 import { supabase } from '../../lib/supabase'
-import {Auth as AuthScreen} from './AuthScreen'
+import {Auth as AuthScreen} from '../(auth)/AuthScreen'
 import { View, Text } from 'react-native'
 import { Session } from '@supabase/supabase-js'
 
