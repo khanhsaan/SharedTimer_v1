@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { Session } from '@supabase/supabase-js';
 import { supabase } from '@/lib/supabase';
-import { ProfileGate } from '../(auth)/ProfileGate';
-import { TimerScreen } from './TimerScreen';
+import ProfileGate from '../(auth)/ProfileGate';
+import TimerScreen from './TimerScreen';
 
 export default function RootLayout() {
   const [session, setSession] = useState<Session | null>(null);
@@ -18,7 +18,7 @@ export default function RootLayout() {
     });
     
   }, []);
-
+  
   if(session && !loading){
     if(selectedProfileID === ''){
       return (
