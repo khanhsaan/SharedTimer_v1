@@ -7,9 +7,14 @@ import 'react-native-reanimated';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { useEffect, useState } from 'react';
 import { Session } from '@supabase/supabase-js';
-import { supabase } from '@/lib/supabase';
+import { supabase, supabaseHealthCheck } from '@/lib/supabase';
+import { Text, View } from 'react-native';
 
 export default function RootLayout() {
+  interface Errors{
+    healthCheckError: string,
+  }
+
   const colorScheme = useColorScheme();
   const [loaded] = useFonts({
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
@@ -17,10 +22,43 @@ export default function RootLayout() {
 
   const[session, setSession] = useState<Session | null> (null);
   const[loading, setLoading] = useState(true);
+  const[healthCheck, setHealthCheck] = useState<boolean>(true);
+  const[error, setError] = useState<Errors | null>(null);
   const segments = useSegments();
   const router = useRouter();
 
-  useEffect(() => {
+  const getSupabaseHealthCheck = async() => {
+    const healthRes = await supabaseHealthCheck();
+    // If there is no health check response
+    if(!healthRes) {
+      console.error("There is no health response from supabaseHealthCheck()");
+      setError({healthCheckError: 'There is no health response from supabaseHealthCheck()'});
+      setHealthCheck(false);
+      setLoading(false);
+      return;
+    }
+    // If there is health check error
+    if(healthRes.health.error || !healthRes.health.isConnected) {
+      setError(
+        {healthCheckError: healthRes.health.error || 'Unknown connection error'}
+      )
+      setHealthCheck(false);
+      setLoading(false);
+      return;
+    }
+    console.log('Supabase can be connected!')
+    setHealthCheck(true);
+    setError(null);
+  }
+
+  const intialiseSupabase = async() => {
+    await getSupabaseHealthCheck();
+
+    if(error?.healthCheckError){
+      console.error(error);
+      return;
+    }
+
     supabase.auth.getSession().then(
       ({data: {session}}) => {
         setSession(session);
@@ -34,6 +72,10 @@ export default function RootLayout() {
     });
 
     return () => subscription.unsubscribe();
+  }
+
+  useEffect(() => {
+    intialiseSupabase();
   }, []);
 
   useEffect(() => {
@@ -49,7 +91,20 @@ export default function RootLayout() {
   }, [segments, session]);
 
   if (!loaded || loading) {
-    return null;
+    return (
+      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+        <Text>Loading...</Text>
+      </View>
+    )
+  }
+
+  if(error?.healthCheckError && !healthCheck) {
+    return (
+      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+        <Text>Unable to connect to Supabase</Text>
+        <Text>{error.healthCheckError}</Text>
+      </View>
+    )
   }
 
   return (
