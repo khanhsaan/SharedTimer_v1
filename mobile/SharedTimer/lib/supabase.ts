@@ -6,15 +6,21 @@ import { createClient, processLock } from '@supabase/supabase-js'
 const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL!;
 const supabaseKey = process.env.EXPO_PUBLIC_SUPABASE_API_KEY!;
 
+interface HealthCheck {
+  isConnected: boolean,
+  error: string,
+}
+
 export async function supabaseHealthCheck(): Promise<{
-  isConnected: boolean;
-  error: string;
+  health: HealthCheck
 }> {
   try{
     if(!supabaseUrl || !supabaseKey){
       return {
-        isConnected: false,
-        error: 'Missing Supabase credentials',
+        health: {
+          isConnected: false,
+          error: 'Missing Supabase credentials'
+        }
       }
     }
 
@@ -25,8 +31,10 @@ export async function supabaseHealthCheck(): Promise<{
 
     if(error) {
       return {
-        isConnected: false,
-        error: error.message,
+        health: {
+          isConnected: false,
+          error: error.message,
+        }
       }
     }
 
@@ -34,19 +42,25 @@ export async function supabaseHealthCheck(): Promise<{
 
     if(authError){
       return {
-        isConnected: false,
-        error: `Supabase Auth Service error: ${authError.message}`
+        health: {
+          isConnected: false,
+          error: `Supabase Auth Service error: ${authError.message}`
+        }
       }
     }
 
     return {
-      isConnected: true,
-      error: '',
+      health: {
+        isConnected: true,
+        error: '',
+      }
     }
   } catch (error) {
     return {
-      isConnected: false,
-      error: error instanceof Error ? error.message : 'Unknow error',
+      health: {
+        isConnected: false,
+        error: error instanceof Error ? error.message : 'Unknow error',
+      }
     }
   } 
 }
