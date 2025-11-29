@@ -19,7 +19,7 @@ interface Profiles {
   created_at: string;
 }
 
-export function TimerScreen({user, selectedProfileID}: {user: any, selectedProfileID: string}) {
+export default function TimerScreen({user, selectedProfileID}: {user: any, selectedProfileID: string}) {
 
     const passedUser = {
         userEmail: "",
