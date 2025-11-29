@@ -1,12 +1,11 @@
 import React, { use, useEffect, useState } from 'react'
 import { Alert, Button, KeyboardAvoidingView, Platform, StyleSheet, Text, TextInput, TouchableOpacity, View, ScrollView, SafeAreaView } from 'react-native'
 import { supabase } from '../../lib/supabase'
-import { authHandle } from '@/app/handle/AuthHandle'
 import { configRegExp } from 'expo-router/build/fork/getStateFromPath-forks'
 import { useAuth } from '../hooks/useAuth'
 
 // Custom hook
-export function Auth() {
+export default function Auth() {
   const [userEmail, setUserEmail] = useState('')
   const [userPassword, setUserPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
@@ -85,6 +84,17 @@ export function Auth() {
               </View>
             )}
 
+            {/* Banner appears when password is weak */}
+            {errorMsg && errorMsg.includes('weak_password') && (
+              <View
+                style={styles.banner}>
+                <Text
+                  style={styles.bannerText}>
+                  Password is too weak
+                </Text>
+              </View>
+            )}
+
             {/* Sign In / Sign Up button */}
             <TouchableOpacity
               style={[styles.authButton, loading && styles.authButtonDisabled]}
@@ -125,7 +135,7 @@ export function Auth() {
                 style={styles.authButtonText}>
                 {loading ? 'Please wait...' : (isSignIn ? 'Sign in' : 'Sign Up')}
               </Text>
-            </TouchableOpacity>
+            </TouchableOpacity> 
 
             {/* Switch between Sign in / Sign Up */}
             <TouchableOpacity
