@@ -13,7 +13,6 @@ import { renderHook, waitFor, act } from '@testing-library/react';
 // useAuth will call the interfered supabase module by jest rather then to call the imported supabase module in useAuth.ts
 import { useAuth } from '@/app/hooks/useAuth';
 import { supabase } from '@/lib/supabase';
-import { authHandle } from '@/app/handle/AuthHandle';
 
 describe('useAuth', () => {
     // clear all the tests before run
