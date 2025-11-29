@@ -11,7 +11,7 @@ interface Profiles {
     created_at: string;
 }
 
-export function ProfileGate({user, returnedSelectedProfileID}:{user: any, returnedSelectedProfileID: (profileID: string) => void}) {
+export default function ProfileGate({user, returnedSelectedProfileID}:{user: any, returnedSelectedProfileID: (profileID: string) => void}) {
     const[isHighlighted, setIsHighLighted] = useState<boolean>(false);
     const[selectedProfileID, setSelectedProfileID] = useState<string>('');
     const[newProfileName, setNewProfileName] = useState<string>('');
