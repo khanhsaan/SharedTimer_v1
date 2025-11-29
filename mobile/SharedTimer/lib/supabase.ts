@@ -4,11 +4,11 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { createClient, processLock } from '@supabase/supabase-js'
 
 const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL!;
-const supabaseKey = process.env.EXPO_PUBLIC_SUPABASE_API_KEY!;
+const supabaseKey = process.env.EXPO_PUBLIC_SUPABASE_KEY!;
 
 interface HealthCheck {
   isConnected: boolean,
-  error: string,
+  error?: string,
 }
 
 export async function supabaseHealthCheck(): Promise<{
@@ -52,7 +52,6 @@ export async function supabaseHealthCheck(): Promise<{
     return {
       health: {
         isConnected: true,
-        error: '',
       }
     }
   } catch (error) {
