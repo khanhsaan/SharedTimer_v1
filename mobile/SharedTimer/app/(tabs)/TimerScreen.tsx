@@ -3,14 +3,12 @@ import { Modal, StyleSheet, TouchableOpacity } from "react-native";
 import { ScrollView, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useAuth } from "../hooks/useAuth";
-import { supabase } from "@/lib/supabase";
 import { ProfileBar } from "@/components/ProfilesBar";
 import { useProfiles } from "../hooks/useProfiles";
 import { useEffect, useState } from "react";
 import { useTimer } from "../hooks/useTimer";
 import { washingModes } from "@/components/washingModes";
 import { appliances } from "@/components/appliances";
-import { store } from "expo-router/build/global-state/router-store";
 
 // Create an array type to make sure the consistence
 interface Profiles {
