@@ -3,11 +3,55 @@ import 'react-native-url-polyfill/auto'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { createClient, processLock } from '@supabase/supabase-js'
 
-// Non-null assertion operator (!): Tells TypeScript these variables will be defined at runtime
 const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL!;
-const supabaseAnonKey = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY!;
+const supabaseKey = process.env.EXPO_PUBLIC_SUPABASE_API_KEY!;
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+export async function supabaseHealthCheck(): Promise<{
+  isConnected: boolean;
+  error: string;
+}> {
+  try{
+    if(!supabaseUrl || !supabaseKey){
+      return {
+        isConnected: false,
+        error: 'Missing Supabase credentials',
+      }
+    }
+
+    const {data, error} = await supabase
+    .from('profiles')
+    .select('count')
+    .limit(1)
+
+    if(error) {
+      return {
+        isConnected: false,
+        error: error.message,
+      }
+    }
+
+    const{error: authError} = await supabase.auth.getSession();
+
+    if(authError){
+      return {
+        isConnected: false,
+        error: `Supabase Auth Service error: ${authError.message}`
+      }
+    }
+
+    return {
+      isConnected: true,
+      error: '',
+    }
+  } catch (error) {
+    return {
+      isConnected: false,
+      error: error instanceof Error ? error.message : 'Unknow error',
+    }
+  } 
+}
+
+export const supabase = createClient(supabaseUrl, supabaseKey, {
   auth: {
     ...(Platform.OS !== "web" ? { storage: AsyncStorage } : {}),
     autoRefreshToken: true,
@@ -17,11 +61,6 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   },
 })
 
-// Tells Supabase Auth to continuously refresh the session automatically
-// if the app is in the foreground. When this is added, you will continue
-// to receive `onAuthStateChange` events with the `TOKEN_REFRESHED` or
-// `SIGNED_OUT` event if the user's session is terminated. This should
-// only be registered once.
 if (Platform.OS !== "web") {
   AppState.addEventListener('change', (state) => {
     if (state === 'active') {
