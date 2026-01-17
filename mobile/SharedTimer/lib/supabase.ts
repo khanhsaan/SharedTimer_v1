@@ -11,16 +11,16 @@ interface HealthCheck {
   error?: string,
 }
 
-export async function supabaseHealthCheck(): Promise<{
-  health: HealthCheck
-}> {
+export async function supabaseHealthCheck(): Promise<{health: HealthCheck}>
+{
   try{
     if(!supabaseUrl || !supabaseKey){
+      const health: HealthCheck = {
+        isConnected: false,
+        error: 'Missing Supabase credentials'
+      }
       return {
-        health: {
-          isConnected: false,
-          error: 'Missing Supabase credentials'
-        }
+        health
       }
     }
 
@@ -30,11 +30,12 @@ export async function supabaseHealthCheck(): Promise<{
     .limit(1)
 
     if(error) {
+      const health: HealthCheck = {
+        isConnected: false,
+        error: error.message,
+      }
       return {
-        health: {
-          isConnected: false,
-          error: error.message,
-        }
+        health
       }
     }
 
@@ -72,6 +73,11 @@ export const supabase = createClient(supabaseUrl, supabaseKey, {
     detectSessionInUrl: false,
     lock: processLock,
   },
+  realtime: {
+    params: {
+      eventPerSeconds: 10,
+    }
+  }
 })
 
 if (Platform.OS !== "web") {
