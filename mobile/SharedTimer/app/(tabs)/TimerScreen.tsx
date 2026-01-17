@@ -174,7 +174,6 @@ export default function TimerScreen({user, selectedProfileID}: {user: any, selec
                               color: '#2d3748'
                             }
                           ]}>
-                            --
                           </Text>
                         </View>
                       </View>
