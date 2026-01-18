@@ -6,9 +6,9 @@ export function useTimer(){
     // Initial minutes
     const[initialMinutes, setInitialMinutes] = useState<number>(0);
     // Seconds left
-    const[remaining, setRemaining] = useState(initialMinutes);
+    const[remaining, setRemaining] = useState<number>(initialMinutes);
     // Is it counting down?
-    const[running, setRunning] = useState(false);
+    const[running, setRunning] = useState<boolean>(false);
     const intervalRef = useRef<number | null>(null);
 
     // Derived values
@@ -18,8 +18,6 @@ export function useTimer(){
     const seconds = remaining % 60;
 
     // Store the passed appliances timer value
-    
-   
 
     // Intialise storeRunning to store the running state of each appliance with the initial state of false
     const[storeRunning, setStoreRunning] = useState<{id: string, running: boolean}[]>(() =>
