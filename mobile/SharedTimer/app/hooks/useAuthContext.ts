@@ -6,7 +6,7 @@ export const useAuthContext = () => {
 
     if(context === undefined){
         throw new Error('Context must be used with a AuthContext');
-    } else {
-        return context;
     }
+
+    return context;
 }

@@ -3,9 +3,9 @@ import { Session } from "@supabase/supabase-js";
 import React, { createContext, ReactNode, useCallback, useEffect, useState } from "react";
 
 interface AuthContextObject {
-    session: Session | null,
-    error: string | null,
-    loading: boolean,
+    authSession: Session | null,
+    authError: string | null,
+    authLoading: boolean,
     clearError: () => void,
 }
 
@@ -14,7 +14,7 @@ export const AuthContext = createContext<AuthContextObject | undefined>(undefine
 export const AuthContextProvider: React.FC<{children: ReactNode}> = ({ children }) => {
     const [session, setSession] = useState<Session | null>(null);
     const [error, setError] = useState<string | null>(null);
-    const [loading, setLoading] = useState<boolean>(false);
+    const [loading, setLoading] = useState<boolean>(true);
 
     useEffect(() => {
         setLoading(true);
@@ -43,9 +43,9 @@ export const AuthContextProvider: React.FC<{children: ReactNode}> = ({ children 
     }, []);
 
     const value: AuthContextObject = {
-        session,
-        error,
-        loading,
+        authSession: session,
+        authError: error,
+        authLoading: loading,
         clearError
     }
 

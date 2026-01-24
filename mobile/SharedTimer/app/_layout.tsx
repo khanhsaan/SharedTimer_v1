@@ -6,8 +6,7 @@ import 'react-native-reanimated';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { useEffect, useState } from 'react';
-import { Session } from '@supabase/supabase-js';
-import { supabase, supabaseHealthCheck } from '@/lib/supabase';
+import { supabaseHealthCheck } from '@/lib/supabase';
 import { ColorSchemeName, Text, View } from 'react-native';
 import { useAuthContext } from './hooks/useAuthContext';
 import { AuthContextProvider } from './context/AuthContext';
