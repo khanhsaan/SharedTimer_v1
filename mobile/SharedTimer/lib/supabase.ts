@@ -1,10 +1,10 @@
 import { AppState, Platform } from 'react-native'
 import 'react-native-url-polyfill/auto'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { createClient, processLock } from '@supabase/supabase-js'
+import { createClient, processLock, Session } from '@supabase/supabase-js'
 
 const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL!;
-const supabaseKey = process.env.EXPO_PUBLIC_SUPABASE_KEY!;
+const supabaseKey = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY!;
 
 interface HealthCheck {
   isConnected: boolean,
@@ -88,4 +88,14 @@ if (Platform.OS !== "web") {
       supabase.auth.stopAutoRefresh()
     }
   })
+}
+
+export const getSession = async(): Promise<Session | null> => {
+  const{ data, error } = await supabase.auth.getSession();
+
+  if(error){
+    throw error;
+  }
+
+  return data.session;
 }

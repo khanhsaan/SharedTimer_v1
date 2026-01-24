@@ -4,7 +4,7 @@ import React, { createContext, ReactNode, useCallback, useEffect, useState } fro
 
 interface AuthContextObject {
     session: Session | null,
-    error: string,
+    error: string | null,
     loading: boolean,
     clearError: () => void,
 }
@@ -13,7 +13,7 @@ export const AuthContext = createContext<AuthContextObject | undefined>(undefine
 
 export const AuthContextProvider: React.FC<{children: ReactNode}> = ({ children }) => {
     const [session, setSession] = useState<Session | null>(null);
-    const [error, setError] = useState<string>('');
+    const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
 
     useEffect(() => {
@@ -32,14 +32,14 @@ export const AuthContextProvider: React.FC<{children: ReactNode}> = ({ children 
 
         const {data: {subscription}} = supabase.auth.onAuthStateChange((_event, session) => {
             setSession(session);
-            setError('');
+            setError(null);
         })
 
         return () => subscription.unsubscribe();
     }, [])
 
     const clearError = useCallback(() => {
-        setError('');
+        setError(null);
     }, []);
 
     const value: AuthContextObject = {
