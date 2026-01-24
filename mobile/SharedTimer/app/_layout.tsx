@@ -79,6 +79,7 @@ function AppContent({ colorScheme, loaded }: AppContentProps){
     console.log('Supabase can be connected!')
     setHealthCheck(true);
     setError(null);
+    setLoading(false);
   }
 
   const intialiseSupabase = async() => {
@@ -109,7 +110,7 @@ function AppContent({ colorScheme, loaded }: AppContentProps){
     }
   }, [segments, session]);
 
-  if (!loaded || loading) {
+  if (!loaded || loading || authLoading) {
     return (
       <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
         <Text>Loading...</Text>
