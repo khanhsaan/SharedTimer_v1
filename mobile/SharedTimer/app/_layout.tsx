@@ -8,24 +8,54 @@ import { useColorScheme } from '@/hooks/useColorScheme';
 import { useEffect, useState } from 'react';
 import { Session } from '@supabase/supabase-js';
 import { supabase, supabaseHealthCheck } from '@/lib/supabase';
-import { Text, View } from 'react-native';
+import { ColorSchemeName, Text, View } from 'react-native';
+import { useAuthContext } from './hooks/useAuthContext';
+import { AuthContextProvider } from './context/AuthContext';
+
+interface Errors{
+  healthCheckError: string,
+}
+
+interface AppContentProps {
+  colorScheme: ColorSchemeName,
+  loaded: boolean,
+}
 
 export default function RootLayout() {
-  interface Errors{
-    healthCheckError: string,
-  }
-
   const colorScheme = useColorScheme();
   const [loaded] = useFonts({
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
   });
 
-  const[session, setSession] = useState<Session | null> (null);
+  return (
+    <AuthContextProvider>
+      <AppContent
+        colorScheme={colorScheme}
+        loaded={loaded}>
+      </AppContent>
+    </AuthContextProvider>
+  )
+}
+
+function AppContent({ colorScheme, loaded }: AppContentProps){
+
+  // AuthContext
+  const context = useAuthContext();
+
+  const {
+    authSession,
+    authError,
+    authLoading,
+    clearError
+  } = context;
+
   const[loading, setLoading] = useState(true);
   const[healthCheck, setHealthCheck] = useState<boolean>(true);
   const[error, setError] = useState<Errors | null>(null);
   const segments = useSegments();
   const router = useRouter();
+
+  const session = authSession;
 
   const getSupabaseHealthCheck = async() => {
     const healthRes = await supabaseHealthCheck();
@@ -56,22 +86,11 @@ export default function RootLayout() {
 
     if(error?.healthCheckError){
       console.error(error);
+      setError(error);
       return;
     }
 
-    supabase.auth.getSession().then(
-      ({data: {session}}) => {
-        setSession(session);
-        setLoading(false);
-      }
-    );
-
-    // listens for event: login, logout, ... then set the new session
-    const{data: {subscription}} = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-    });
-
-    return () => subscription.unsubscribe();
+    setError(null);
   }
 
   useEffect(() => {
@@ -118,3 +137,4 @@ export default function RootLayout() {
     </ThemeProvider>
   );
 }
+
