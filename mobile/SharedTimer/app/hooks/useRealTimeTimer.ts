@@ -2,9 +2,6 @@ import { appliances } from "@/components/appliances";
 import { useEffect, useRef, useState } from "react"
 
 export const useRealTimeTimer = () => {
-    const [timer, setTimer] = useState<number>(0);
-    const [lockedBy, setLockedBy] = useState<string>('');
-
     // intialise running state to be all false
     const [running, setRunning] = useState<{id: string, running: boolean}[]>(
         appliances.map((a) => ({
@@ -62,23 +59,23 @@ export const useRealTimeTimer = () => {
     }
     
     const startTimer = (applianceID: string, startedAt: number, baseTimer: number) => {
-        let applianceFound = false;
-
+        // check if appliance exists first
+        const applianceFound = running.some(a => a.id === applianceID);
+        
+        if(!applianceFound){
+            setError(new Error(`Cannot find appliance id`));
+            return;
+        }
         // set appliance running state to TRUE
         setRunning(prev => {
             return prev.map((a) => {
                 if(a.id === applianceID) {
-                    applianceFound = true;
                     return {...a, running: true};
                 }
-                applianceFound = false;
-                setError(new Error(`Cannot find appliance id`));
                 return a;
             })    
         }
         );
-
-        if(!applianceFound) return;
 
         const{hour: start_hour, min: start_min} = formatHoursAndMins(startedAt);
         setStartHour(prev =>
@@ -109,15 +106,16 @@ export const useRealTimeTimer = () => {
         );
         const intervalID = setInterval(() => {
             remainingTime = calculateRemaining(startedAt, baseTimer);
+
+            setRemaining(prev =>
+                prev.map((a) =>
+                    a.id === applianceID ?
+                    {...a, remaining: remainingTime} :
+                    a
+                )
+            );
+
             if(remainingTime === 0) {
-                setRemaining(prev =>
-                    prev.map((a) =>
-                        a.id === applianceID ?
-                        {...a, remaining: 0} :
-                        a
-                    )
-                );
-                
                 // set appliance running state to FALSE
                 setRunning(prev => 
                     prev.map(a =>
@@ -127,17 +125,12 @@ export const useRealTimeTimer = () => {
                     )
                 );
 
-                const invervalID = intervalsRef.current[applianceID];
-                if(intervalID) clearInterval(intervalID); // clear interval
-                intervalsRef.current[applianceID] = 0; // reset interval id
+                const intervalID = intervalsRef.current[applianceID];
+                clearInterval(intervalID); // clear interval
+                delete intervalsRef.current[applianceID]; // delete interval id
+
+                return;
             };
-            setRemaining(prev =>
-                prev.map((a) =>
-                    a.id === applianceID ?
-                    {...a, remaining: remainingTime} :
-                    a
-                )
-            );
         }, 60000); // update every 1 min
 
         intervalsRef.current[applianceID] = intervalID; // store interval ID
@@ -150,7 +143,7 @@ export const useRealTimeTimer = () => {
             // reset intervalsRef
             intervalsRef.current = {};
         }
-    })
+    }, [])
 
     const pauseTimer = (applianceID: string) => {
         setRunning(prev => 
@@ -160,18 +153,19 @@ export const useRealTimeTimer = () => {
                 a
             )
         );
-        intervalsRef.current[applianceID] = 0 // reset interval ID
         const intervalID = intervalsRef.current[applianceID];
         if(intervalID) clearInterval(intervalID); // clear interval
+        delete intervalsRef.current[applianceID]; // remove interval ID
     }
 
     return {
+        running,
+        remaining,
         startHour,
         finishHour,
         startTimer,
         pauseTimer,
-        setRunning,
-        calculateRemaining
+        error,
     }
 }
 
