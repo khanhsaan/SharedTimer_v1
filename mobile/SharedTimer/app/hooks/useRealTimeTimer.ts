@@ -21,11 +21,22 @@ export const useRealTimeTimer = () => {
         }))
     );
     const [error, setError] = useState<Error | null>(null);
-    
-   let finishedAt: number = 0;
 
-    const [startHour, setStartHour] = useState<string | null>(null);
-    const [finishHour, setFinishHour] = useState<string | null>(null);
+    // intialise start hour to be all 0
+    const [startHour, setStartHour] = useState<{id: string, startHour: string}[]>(
+        appliances.map((a) => ({
+            id: a.id,
+            startHour: '',
+        }))
+    );
+
+    // intialise finish hour to be all 0
+    const [finishHour, setFinishHour] = useState<{id: string, finishHour: string}[]>(
+        appliances.map((a) => ({
+            id: a.id,
+            finishHour: ''
+        }))
+    );
 
     const intervalsRef = useRef<Record<string, number>>({});
 
@@ -59,11 +70,10 @@ export const useRealTimeTimer = () => {
                 if(a.id === applianceID) {
                     applianceFound = true;
                     return {...a, running: true};
-                } else {
-                    applianceFound = false;
-                    setError(new Error(`Cannot find appliance id`));
-                    return a;
                 }
+                applianceFound = false;
+                setError(new Error(`Cannot find appliance id`));
+                return a;
             })    
         }
         );
@@ -71,14 +81,34 @@ export const useRealTimeTimer = () => {
         if(!applianceFound) return;
 
         const{hour: start_hour, min: start_min} = formatHoursAndMins(startedAt);
-        setStartHour(`${start_hour}:${start_min}`);
+        setStartHour(prev =>
+            prev.map((a) =>
+                a.id === applianceID ?
+                {...a, startHour: `${start_hour}:${start_min}`}:
+                a
+            )
+        );
         
         const finishedAt = startedAt + baseTimer;
         const{hour: finish_hour, min: finish_min} = formatHoursAndMins(finishedAt);
-        setFinishHour(`${finish_hour}:${finish_min}`);
+        setFinishHour(prev =>
+            prev.map((a) =>
+                a.id === applianceID ?
+                {...a, finishHour: `${finish_hour}:${finish_min}`}:
+                a
+            )
+        );
 
+        let remainingTime = calculateRemaining(startedAt, baseTimer);
+        setRemaining(prev =>
+            prev.map((a) =>
+                a.id === applianceID ?
+                {...a, remaining: remainingTime}:
+                a
+            )
+        );
         const intervalID = setInterval(() => {
-            const remainingTime = calculateRemaining(startedAt, baseTimer);
+            remainingTime = calculateRemaining(startedAt, baseTimer);
             if(remainingTime === 0) {
                 setRemaining(prev =>
                     prev.map((a) =>
@@ -97,7 +127,9 @@ export const useRealTimeTimer = () => {
                     )
                 );
 
-                return;
+                const invervalID = intervalsRef.current[applianceID];
+                if(intervalID) clearInterval(intervalID); // clear interval
+                intervalsRef.current[applianceID] = 0; // reset interval id
             };
             setRemaining(prev =>
                 prev.map((a) =>
@@ -128,8 +160,9 @@ export const useRealTimeTimer = () => {
                 a
             )
         );
+        intervalsRef.current[applianceID] = 0 // reset interval ID
         const intervalID = intervalsRef.current[applianceID];
-        if(intervalID) clearInterval(intervalID);
+        if(intervalID) clearInterval(intervalID); // clear interval
     }
 
     return {
