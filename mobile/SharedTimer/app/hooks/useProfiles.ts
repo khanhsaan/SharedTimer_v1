@@ -114,3 +114,5 @@ export const useProfiles = () => {
         handleDeleteProfile
     }   
 }
+
+export default useProfiles;

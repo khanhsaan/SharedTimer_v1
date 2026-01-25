@@ -8,3 +8,5 @@ export const authHandle = async({user_email, user_password}: {user_email: string
 
     return {data, error};
 }
+
+export default authHandle;

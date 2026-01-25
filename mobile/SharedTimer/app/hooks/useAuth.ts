@@ -152,3 +152,5 @@ export const useAuth = ({ userEmail, userPassword, userConfirmPassword }: { user
     signOutHandle
   };
 }
+
+export default useAuth;
