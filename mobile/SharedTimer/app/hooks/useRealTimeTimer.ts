@@ -1,10 +1,18 @@
+import { appliances } from "@/components/appliances";
 import { useEffect, useState } from "react"
 
 export const useRealTimeTimer = () => {
     const [timer, setTimer] = useState<number>(0);
     const [lockedBy, setLockedBy] = useState<string>('');
-    const [running, setRunning] = useState<boolean>(false);
-    const [remaining, setRemaining] = useState<number>(0);
+    // intialise running state to be all false
+    const [running, setRunning] = useState<{id: string, running: boolean}[]>(
+        appliances.map((a) => ({
+            id: a.id,
+            running: false,
+        }))
+    );
+
+    const [remaining, setRemaining] = useState<{id: string, remaining: number}[]>([]);
     
    let finishedAt: number = 0;
 
@@ -33,7 +41,7 @@ export const useRealTimeTimer = () => {
     }
 
     let intervalID: number;
-    const startTimer = (startedAt: number, baseTimer: number) => {
+    const startTimer = (id: string, startedAt: number, baseTimer: number) => {
         setRunning(true);
         const{hour: start_hour, min: start_min} = formatHoursAndMins(startedAt);
         setStartHour(`${start_hour}:${start_min}`);
@@ -46,6 +54,7 @@ export const useRealTimeTimer = () => {
             const remainingTime = calculateRemaining(startedAt, baseTimer);
             if(remainingTime === 0) {
                 setRemaining(0);
+                setRunning(false);
                 return;
             };
             setRemaining(remainingTime);
@@ -54,8 +63,16 @@ export const useRealTimeTimer = () => {
 
     useEffect(() => {
         if(running) return;
-        clearInterval(intervalID);
+        if(intervalID) clearInterval(intervalID);
     }, [running]);
+
+    useEffect(() => {
+        return () => {
+            if(intervalID){
+                clearInterval(intervalID);
+            }
+        }
+    })
 
     const pauseTimer = () => {
         setRunning(false);
