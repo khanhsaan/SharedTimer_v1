@@ -13,6 +13,7 @@ export const useRealTimeTimer = () => {
     );
 
     const [remaining, setRemaining] = useState<{id: string, remaining: number}[]>([]);
+    const [error, setError] = useState<Error | null>(null);
     
    let finishedAt: number = 0;
 
@@ -42,7 +43,25 @@ export const useRealTimeTimer = () => {
 
     let intervalID: number;
     const startTimer = (id: string, startedAt: number, baseTimer: number) => {
-        setRunning(true);
+        let applianceFound = false;
+        
+        // set appliance running state to TRUE
+        setRunning(prev => {
+            return prev.map((a) => {
+                if(a.id === id) {
+                    applianceFound = true;
+                    return {...a, running: true};
+                } else {
+                    applianceFound = false;
+                    setError(new Error(`Cannot find appliance id`));
+                    return a;
+                }
+            })    
+        }
+        );
+
+        if(!applianceFound) return;
+
         const{hour: start_hour, min: start_min} = formatHoursAndMins(startedAt);
         setStartHour(`${start_hour}:${start_min}`);
         
@@ -54,7 +73,16 @@ export const useRealTimeTimer = () => {
             const remainingTime = calculateRemaining(startedAt, baseTimer);
             if(remainingTime === 0) {
                 setRemaining(0);
-                setRunning(false);
+                
+                // set appliance running state to FALSE
+                setRunning(prev => 
+                    prev.map(a =>
+                        a.id === id ?
+                        {...a, running: false} :
+                        a
+                    )
+                );
+
                 return;
             };
             setRemaining(remainingTime);
