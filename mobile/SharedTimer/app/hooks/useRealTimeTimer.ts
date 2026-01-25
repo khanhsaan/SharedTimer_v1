@@ -4,6 +4,7 @@ import { useEffect, useState } from "react"
 export const useRealTimeTimer = () => {
     const [timer, setTimer] = useState<number>(0);
     const [lockedBy, setLockedBy] = useState<string>('');
+
     // intialise running state to be all false
     const [running, setRunning] = useState<{id: string, running: boolean}[]>(
         appliances.map((a) => ({
@@ -12,7 +13,13 @@ export const useRealTimeTimer = () => {
         }))
     );
 
-    const [remaining, setRemaining] = useState<{id: string, remaining: number}[]>([]);
+    // intialise running remaining time to be all 0
+    const [remaining, setRemaining] = useState<{id: string, remaining: number}[]>(
+        appliances.map((a) => ({
+            id: a.id,
+            remaining: 0,
+        }))
+    );
     const [error, setError] = useState<Error | null>(null);
     
    let finishedAt: number = 0;
@@ -44,7 +51,7 @@ export const useRealTimeTimer = () => {
     let intervalID: number;
     const startTimer = (id: string, startedAt: number, baseTimer: number) => {
         let applianceFound = false;
-        
+
         // set appliance running state to TRUE
         setRunning(prev => {
             return prev.map((a) => {
