@@ -1,5 +1,5 @@
 import { appliances } from "@/components/appliances";
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 
 export const useRealTimeTimer = () => {
     const [timer, setTimer] = useState<number>(0);
@@ -27,6 +27,8 @@ export const useRealTimeTimer = () => {
     const [startHour, setStartHour] = useState<string | null>(null);
     const [finishHour, setFinishHour] = useState<string | null>(null);
 
+    const intervalsRef = useRef<Record<string, number>>({});
+
     const calculateRemaining = (startedAt: number, baseTimer: number) => {
         const now = Date.now();
 
@@ -47,15 +49,14 @@ export const useRealTimeTimer = () => {
             min
         }
     }
-
-    let intervalID: number;
-    const startTimer = (id: string, startedAt: number, baseTimer: number) => {
+    
+    const startTimer = (applianceID: string, startedAt: number, baseTimer: number) => {
         let applianceFound = false;
 
         // set appliance running state to TRUE
         setRunning(prev => {
             return prev.map((a) => {
-                if(a.id === id) {
+                if(a.id === applianceID) {
                     applianceFound = true;
                     return {...a, running: true};
                 } else {
@@ -76,15 +77,21 @@ export const useRealTimeTimer = () => {
         const{hour: finish_hour, min: finish_min} = formatHoursAndMins(finishedAt);
         setFinishHour(`${finish_hour}:${finish_min}`);
 
-        intervalID = setInterval(() => {
+        const intervalID = setInterval(() => {
             const remainingTime = calculateRemaining(startedAt, baseTimer);
             if(remainingTime === 0) {
-                setRemaining(0);
+                setRemaining(prev =>
+                    prev.map((a) =>
+                        a.id === applianceID ?
+                        {...a, remaining: 0} :
+                        a
+                    )
+                );
                 
                 // set appliance running state to FALSE
                 setRunning(prev => 
                     prev.map(a =>
-                        a.id === id ?
+                        a.id === applianceID ?
                         {...a, running: false} :
                         a
                     )
@@ -92,26 +99,37 @@ export const useRealTimeTimer = () => {
 
                 return;
             };
-            setRemaining(remainingTime);
+            setRemaining(prev =>
+                prev.map((a) =>
+                    a.id === applianceID ?
+                    {...a, remaining: remainingTime} :
+                    a
+                )
+            );
         }, 60000); // update every 1 min
+
+        intervalsRef.current[applianceID] = intervalID; // store interval ID
     }
 
     useEffect(() => {
-        if(running) return;
-        if(intervalID) clearInterval(intervalID);
-    }, [running]);
-
-    useEffect(() => {
         return () => {
-            if(intervalID){
-                clearInterval(intervalID);
-            }
+            // clear all intervals
+            Object.values(intervalsRef.current).forEach(intervalID => clearInterval(intervalID));
+            // reset intervalsRef
+            intervalsRef.current = {};
         }
     })
 
-    const pauseTimer = () => {
-        setRunning(false);
-        clearInterval(intervalID);
+    const pauseTimer = (applianceID: string) => {
+        setRunning(prev => 
+            prev.map((a) =>
+                a.id === applianceID ?
+                {...a, running: false}:
+                a
+            )
+        );
+        const intervalID = intervalsRef.current[applianceID];
+        if(intervalID) clearInterval(intervalID);
     }
 
     return {
@@ -122,4 +140,6 @@ export const useRealTimeTimer = () => {
         setRunning,
         calculateRemaining
     }
-}   
+}
+
+export default useRealTimeTimer;
