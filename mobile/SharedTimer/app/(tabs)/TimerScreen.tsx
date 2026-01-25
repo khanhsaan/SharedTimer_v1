@@ -270,6 +270,8 @@ export function TimerScreen({user, selectedProfileID}: {user: any, selectedProfi
     
 };
 
+export default TimerScreen;
+
 const styles = StyleSheet.create({
     container: {
       flex: 1,
