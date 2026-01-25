@@ -10,6 +10,7 @@ export const useRealTimeTimer = () => {
         }))
     );
 
+
     // intialise running remaining time to be all 0
     const [remaining, setRemaining] = useState<{id: string, remaining: number}[]>(
         appliances.map((a) => ({
@@ -17,7 +18,6 @@ export const useRealTimeTimer = () => {
             remaining: 0,
         }))
     );
-    const [error, setError] = useState<Error | null>(null);
 
     // intialise start hour to be all 0
     const [startHour, setStartHour] = useState<{id: string, startHour: string}[]>(
@@ -34,6 +34,16 @@ export const useRealTimeTimer = () => {
             finishHour: ''
         }))
     );
+
+    const [baseTimerState, setBaseTimerState] = useState<{id: string, baseTimerState: number}[]>(
+        appliances.map((a) => ({
+            id: a.id,
+            baseTimerState: 0
+        }))
+    )
+
+    const [error, setError] = useState<Error | null>(null);
+
 
     const intervalsRef = useRef<Record<string, number>>({});
 
@@ -57,15 +67,33 @@ export const useRealTimeTimer = () => {
             min
         }
     }
+
+    const setTimerValue = (applianceID: string, baseTimer: number) => {
+        setBaseTimerState(prev =>
+            prev.map((a) => 
+                applianceID === a.id ?
+                {...a, baseTimerState: baseTimer} :
+                a
+            )
+        )
+    }
     
-    const startTimer = (applianceID: string, startedAt: number, baseTimer: number) => {
+    const startTimer = (applianceID: string, startedAt: number) => {
         // check if appliance exists first
         const applianceFound = running.some(a => a.id === applianceID);
+
+        const baseTimer = baseTimerState.find(a => a.id === applianceID)?.baseTimerState;
         
         if(!applianceFound){
             setError(new Error(`Cannot find appliance id`));
             return;
         }
+
+        if(baseTimer === undefined || baseTimer === null){
+            setError(new Error(`Base timer for appliance ${applianceID} is null`));
+            return;
+        }
+
         // set appliance running state to TRUE
         setRunning(prev => {
             return prev.map((a) => {
@@ -165,6 +193,7 @@ export const useRealTimeTimer = () => {
         finishHour,
         startTimer,
         pauseTimer,
+        setTimerValue,
         error,
     }
 }
