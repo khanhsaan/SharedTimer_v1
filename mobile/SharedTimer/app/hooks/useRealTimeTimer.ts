@@ -78,7 +78,9 @@ export const useRealTimeTimer = () => {
         )
     }
     
-    const startTimer = (applianceID: string, startedAt: number) => {
+    const startTimer = (applianceID: string) => {
+        const startedAt = Math.floor(Date.now() / 1000);
+
         // check if appliance exists first
         const applianceFound = running.some(a => a.id === applianceID);
 
