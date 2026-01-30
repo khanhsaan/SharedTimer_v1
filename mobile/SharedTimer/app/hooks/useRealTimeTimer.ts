@@ -110,9 +110,7 @@ export const useRealTimeTimer = () => {
         );
     }
     
-    const startTimer = (applianceID: string) => {
-        const startedAt = Math.floor((Date.now() / 1000));
-
+    const startTimer = (applianceID: string) => {        
         // check if appliance exists first
         const applianceFound = running.some(a => a.id === applianceID);
 
@@ -138,18 +136,11 @@ export const useRealTimeTimer = () => {
             })    
         }
         );
+        const now = new Date();
+        const startedAtSec = now.getSeconds();
 
-
-        let remainingTime = calculateRemaining(startedAt, baseTimer);
-        setRemaining(prev =>
-            prev.map((a) =>
-                a.id === applianceID ?
-                {...a, remaining: remainingTime}:
-                a
-            )
-        );
         const intervalID = setInterval(() => {
-            remainingTime = calculateRemaining(startedAt, baseTimer);
+            let remainingTime = calculateRemaining(startedAtSec, baseTimer);
 
             setRemaining(prev =>
                 prev.map((a) =>
