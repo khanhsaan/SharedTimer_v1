@@ -69,7 +69,16 @@ export const useRealTimeTimer = () => {
 
     const setTimerValue = (applianceID: string, baseTimer: number) => {
         const now = new Date();
-        
+        const baseTime_sec = baseTimer * 60;
+
+        setRemaining(prev =>
+            prev.map(a =>
+                a.id === applianceID?
+                {...a, remaining: baseTime_sec}:
+                a
+            )
+        );
+
         setBaseTimerState(prev =>
             prev.map((a) => 
                 applianceID === a.id ?
