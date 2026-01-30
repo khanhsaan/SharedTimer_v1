@@ -7,10 +7,10 @@ import { supabase } from "@/lib/supabase";
 import { ProfileBar } from "@/components/ProfilesBar";
 import { useProfiles } from "../hooks/useProfiles";
 import { useEffect, useState } from "react";
-import { useTimer } from "../hooks/useTimer";
 import { washingModes } from "@/components/washingModes";
 import { appliances } from "@/components/appliances";
 import { store } from "expo-router/build/global-state/router-store";
+import useRealTimeTimer from "../hooks/useRealTimeTimer";
 
 // Create an array type to make sure the consistence
 interface Profiles {
@@ -68,21 +68,15 @@ export function TimerScreen({user, selectedProfileID}: {user: any, selectedProfi
       return `${m}m ${s}`;
     }
 
-    // useTimer
     const {
       setTimerValue,
-      setRunningState,
-      storeRunning,
-      storeRemaining,
-      remaining,
-      minutes,
-      seconds,
-      running,
+      running: storeRunning,
+      remaining: storeRemaining,
       startTimer,
       pauseTimer,
-      reset,
-      update
-    } = useTimer();
+      startHour,
+      finishHour,
+    } = useRealTimeTimer();
 
     return (
         <SafeAreaView style={styles.container}>
@@ -155,7 +149,9 @@ export function TimerScreen({user, selectedProfileID}: {user: any, selectedProfi
                           <Text style={[
                             styles.hourValue,
                             {color: "#2d3748"}
-                          ]}>--</Text>
+                          ]}>
+                            {startHour.find(h => h.id === a.id)?.startHour || `--`}
+                            </Text>
                         </View>
 
                         {/* FINISH UI */}
@@ -176,7 +172,7 @@ export function TimerScreen({user, selectedProfileID}: {user: any, selectedProfi
                               color: '#2d3748'
                             }
                           ]}>
-                            --
+                            {finishHour.find(h => h.id === a.id)?.finishHour || `--`}
                           </Text>
                         </View>
                       </View>
