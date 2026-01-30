@@ -69,6 +69,8 @@ export const useRealTimeTimer = () => {
     }
 
     const setTimerValue = (applianceID: string, baseTimer: number) => {
+        const startedAt = Math.floor(Date.now() / 1000);
+
         setBaseTimerState(prev =>
             prev.map((a) => 
                 applianceID === a.id ?
@@ -76,6 +78,23 @@ export const useRealTimeTimer = () => {
                 a
             )
         )
+        const{hour: start_hour, min: start_min} = formatHoursAndMins(startedAt);
+        setStartHour(prev =>
+            prev.map(a => a.id === applianceID ?
+                {...a, startHour: `${start_hour}:${start_min}`}:
+                a
+            )
+        )
+
+        const finishedAt = startedAt + baseTimer;
+        const{hour: finish_hour, min: finish_min} = formatHoursAndMins(finishedAt);
+        setFinishHour(prev =>
+            prev.map((a) =>
+                a.id === applianceID ?
+                {...a, finishHour: `${finish_hour}:${finish_min}`}:
+                a
+            )
+        );
     }
     
     const startTimer = (applianceID: string) => {
@@ -107,24 +126,6 @@ export const useRealTimeTimer = () => {
         }
         );
 
-        const{hour: start_hour, min: start_min} = formatHoursAndMins(startedAt);
-        setStartHour(prev =>
-            prev.map((a) =>
-                a.id === applianceID ?
-                {...a, startHour: `${start_hour}:${start_min}`}:
-                a
-            )
-        );
-        
-        const finishedAt = startedAt + baseTimer;
-        const{hour: finish_hour, min: finish_min} = formatHoursAndMins(finishedAt);
-        setFinishHour(prev =>
-            prev.map((a) =>
-                a.id === applianceID ?
-                {...a, finishHour: `${finish_hour}:${finish_min}`}:
-                a
-            )
-        );
 
         let remainingTime = calculateRemaining(startedAt, baseTimer);
         setRemaining(prev =>
