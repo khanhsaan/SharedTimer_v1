@@ -57,10 +57,9 @@ export const useRealTimeTimer = () => {
         return remaining;
     }
 
-    const formatHoursAndMins = (totalSeconds: number) => {
-        const hour = Math.floor(totalSeconds / 3600);
-        const remaining_sec = totalSeconds % 3600;
-        const min = Math.floor(remaining_sec / 60);
+    const formatHoursAndMins = (totalMins: number) => {
+        const hour = Math.floor(totalMins / 60);
+        const min = Math.floor(totalMins % 60);
 
         return {
             hour,
@@ -69,16 +68,19 @@ export const useRealTimeTimer = () => {
     }
 
     const setTimerValue = (applianceID: string, baseTimer: number) => {
-        const startedAt = Math.floor(Date.now() / 1000);
-
+        const now = new Date();
+        
         setBaseTimerState(prev =>
             prev.map((a) => 
                 applianceID === a.id ?
                 {...a, baseTimerState: baseTimer} :
                 a
             )
-        )
-        const{hour: start_hour, min: start_min} = formatHoursAndMins(startedAt);
+        );
+
+        const start_hour = now.getHours();
+        const start_min = now.getMinutes();
+
         setStartHour(prev =>
             prev.map(a => a.id === applianceID ?
                 {...a, startHour: `${start_hour}:${start_min}`}:
@@ -86,8 +88,10 @@ export const useRealTimeTimer = () => {
             )
         )
 
-        const finishedAt = startedAt + baseTimer;
-        const{hour: finish_hour, min: finish_min} = formatHoursAndMins(finishedAt);
+        const finishedAt = new Date(now.getTime() + baseTimer * 60 * 1000);
+        const finish_hour = finishedAt.getHours();
+        const finish_min = finishedAt.getMinutes();
+        
         setFinishHour(prev =>
             prev.map((a) =>
                 a.id === applianceID ?
@@ -98,7 +102,7 @@ export const useRealTimeTimer = () => {
     }
     
     const startTimer = (applianceID: string) => {
-        const startedAt = Math.floor(Date.now() / 1000);
+        const startedAt = Math.floor((Date.now() / 1000));
 
         // check if appliance exists first
         const applianceFound = running.some(a => a.id === applianceID);
