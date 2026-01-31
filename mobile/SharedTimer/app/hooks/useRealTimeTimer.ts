@@ -140,6 +140,7 @@ export const useRealTimeTimer = () => {
 
         const intervalID = setInterval(() => {
             let remainingTime = calculateRemaining(startedAtSec, baseTimer);
+            console.log('Remaining: ', remainingTime);
 
             setRemaining(prev =>
                 prev.map((a) =>
@@ -165,7 +166,7 @@ export const useRealTimeTimer = () => {
 
                 return;
             };
-        }, 60000); // update every 1 min
+        }, 1000); // update every 1 sec
 
         intervalsRef.current[applianceID] = intervalID; // store interval ID
     }
