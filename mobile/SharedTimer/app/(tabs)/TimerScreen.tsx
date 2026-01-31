@@ -62,9 +62,9 @@ export function TimerScreen({user, selectedProfileID}: {user: any, selectedProfi
       let s = Math.floor(seconds % 60);
 
       if (h > 0){
-        return `${h}h ${m}m`;
+        return `${h}h ${m}m ${s}s`;
       }
-      return `${m}m ${s}`;
+      return `${m}m ${s}s`;
     }
 
     const {
@@ -75,6 +75,8 @@ export function TimerScreen({user, selectedProfileID}: {user: any, selectedProfi
       pauseTimer,
       startHour,
       finishHour,
+      incrementTimer,
+      decrementTimer,
     } = useRealTimeTimer();
 
     return (
@@ -124,16 +126,26 @@ export function TimerScreen({user, selectedProfileID}: {user: any, selectedProfi
                         <View style={styles.timerDisplay}>
                           <Text style={styles.timerLabel}>Current Timer</Text>
                           <View style={styles.timerControlRow}>
-                            <Button style={styles.timerControlButton}>
-                              -
-                            </Button>
+                            {/* Decrement BUTTON */}
+                            <TouchableOpacity
+                              style = {styles.timerControlButton}
+                              onPress = {() => decrementTimer(a.id, 10)}>
+                              <Text style={styles.timerControlButtonText}>
+                                -
+                              </Text>
+                            </TouchableOpacity>
                             <Text style={styles.timerValue}>
                               {/* Display the corresponding current timer */}
                               {formatTimer(storeRemaining.find(timer => timer.id === a.id)?.remaining || 0)}
                             </Text>
-                            <Button>
-                              +
-                            </Button>
+                            {/* Increment BUTTON */}
+                            <TouchableOpacity
+                              style = {styles.timerControlButton}
+                              onPress = {() => incrementTimer(a.id, 10)}>
+                              <Text style={styles.timerControlButtonText}>
+                                +
+                              </Text>
+                            </TouchableOpacity>
                           </View>
                           
                         </View>
@@ -250,7 +262,8 @@ export function TimerScreen({user, selectedProfileID}: {user: any, selectedProfi
                                             style={styles.option}
                                             onPress={() => {
                                               // Pass the timer value to useTimers hook
-                                              setTimerValue('washingMachine', opt.minutes);
+                                              const optSec = opt.minutes * 60;
+                                              setTimerValue('washingMachine', optSec);
                                               // Close the washing mode window
                                               setShowWashingModes(false);
                                             }}>

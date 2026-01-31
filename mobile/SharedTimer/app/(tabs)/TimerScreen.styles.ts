@@ -2,7 +2,20 @@ import { StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
     timerControlButton: {
-        padding: 5,
+      backgroundColor: '#667eea',
+      padding: 5,
+      borderRadius: 24,
+      width: 48,
+      height: 30,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+
+    timerControlButtonText: {
+      color: 'white',
+      fontSize: 24,
+      fontWeight: 'bold',
+      lineHeight: 24,
     },
 
     timerControlRow: {

@@ -66,14 +66,13 @@ export const useRealTimeTimer = () => {
         }
     }
     
-    const setTimerValue = (applianceID: string, baseTimer: number) => {
+    const setTimerValue = (applianceID: string, value: number) => {
         const now = new Date();
-        const baseTime_sec = baseTimer * 60;
 
         setRemaining(prev =>
             prev.map(a =>
                 a.id === applianceID?
-                {...a, remaining: baseTime_sec}:
+                {...a, remaining: value}:
                 a
             )
         );
@@ -81,7 +80,7 @@ export const useRealTimeTimer = () => {
         setBaseTimerState(prev =>
             prev.map((a) => 
                 applianceID === a.id ?
-                {...a, baseTimerState: baseTime_sec} :
+                {...a, baseTimerState: value} :
                 a
             )
         );
@@ -96,7 +95,7 @@ export const useRealTimeTimer = () => {
             )
         )
 
-        const finishedAt = new Date(now.getTime() + baseTimer * 60 * 1000);
+        const finishedAt = new Date(now.getTime() + value * 60 * 1000);
         const finish_hour = finishedAt.getHours();
         const finish_min = finishedAt.getMinutes();
         
@@ -135,8 +134,7 @@ export const useRealTimeTimer = () => {
             })    
         }
         );
-        const now = new Date();
-        const startedAtSec = now.getSeconds();
+        const startedAtSec = Date.now() / 1000;
 
         const intervalID = setInterval(() => {
             let remainingTime = calculateRemaining(startedAtSec, baseTimer);
@@ -145,7 +143,7 @@ export const useRealTimeTimer = () => {
             setRemaining(prev =>
                 prev.map((a) =>
                     a.id === applianceID ?
-                    {...a, remaining: remainingTime} :
+                    {...a, remaining: Math.round(remainingTime)} :
                     a
                 )
             );
@@ -201,16 +199,10 @@ export const useRealTimeTimer = () => {
         }
 
         setBaseTimerState(prev =>
-            prev.map(a => {
-                if(a.id === applianceID){
-                    const baseTimer = a.baseTimerState;
-                    return {
-                        ...a,
-                        baseTimerState: baseTimer + value
-                    };
-                } else{
-                    return a;
-                }}
+            prev.map(a =>
+                a.id === applianceID?
+                {...a, baseTimerState: Math.max(a.baseTimerState + value, 0)}:
+                a
             )
         );
 

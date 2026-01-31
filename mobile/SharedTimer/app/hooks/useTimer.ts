@@ -164,3 +164,5 @@ export function useTimer(){
         update
     };
 }
+
+export default useTimer;
