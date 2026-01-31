@@ -1,6 +1,16 @@
 import { StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
+    timerControlButton: {
+        padding: 5,
+    },
+
+    timerControlRow: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: 12,
+    },
     container: {
       flex: 1,
       backgroundColor: '#667eea', // Purple gradient background like web

@@ -10,7 +10,6 @@ export const useRealTimeTimer = () => {
         }))
     );
 
-
     // intialise running remaining time to be all 0
     const [remaining, setRemaining] = useState<{id: string, remaining: number}[]>(
         appliances.map((a) => ({
@@ -66,7 +65,7 @@ export const useRealTimeTimer = () => {
             min
         }
     }
-
+    
     const setTimerValue = (applianceID: string, baseTimer: number) => {
         const now = new Date();
         const baseTime_sec = baseTimer * 60;
