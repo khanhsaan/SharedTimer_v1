@@ -81,7 +81,7 @@ export const useRealTimeTimer = () => {
         setBaseTimerState(prev =>
             prev.map((a) => 
                 applianceID === a.id ?
-                {...a, baseTimerState: baseTimer} :
+                {...a, baseTimerState: baseTime_sec} :
                 a
             )
         );
@@ -191,6 +191,62 @@ export const useRealTimeTimer = () => {
         if(intervalID) clearInterval(intervalID); // clear interval
         delete intervalsRef.current[applianceID]; // remove interval ID
     }
+    
+    const incrementTimer = (applianceID: string, value: number) => {
+        // if appliance is running set to stop
+        const isRunning = running.find(a => a.id === applianceID)?.running;
+        if(isRunning){
+            pauseTimer(applianceID);
+        }
+
+        setBaseTimerState(prev =>
+            prev.map(a => {
+                if(a.id === applianceID){
+                    const baseTimer = a.baseTimerState;
+                    return {
+                        ...a,
+                        baseTimerState: baseTimer + value
+                    };
+                } else{
+                    return a;
+                }}
+            )
+        );
+
+        // Update to UI
+        setRemaining(prev =>
+            prev.map(a =>
+                a.id === applianceID?
+                {...a, remaining: a.remaining + value}:
+                a
+            )
+        );
+    }
+
+    const decrementTimer = (applianceID: string, value: number) => {
+        // if appliance is running set to stop
+        const isRunning = running.find(a => a.id === applianceID)?.running;
+        if(isRunning){
+            pauseTimer(applianceID);
+        }
+
+        setBaseTimerState(prev =>
+            prev.map(a =>
+                a.id === applianceID?
+                {...a, baseTimerState: Math.max(a.baseTimerState - value, 0)}:
+                a
+            )
+        );
+
+        // Update to UI
+        setRemaining(prev =>
+            prev.map(a =>
+                a.id === applianceID?
+                {...a, remaining: Math.max(a.remaining - value, 0)}:
+                a
+            )
+        );
+    }
 
     return {
         running,
@@ -200,6 +256,8 @@ export const useRealTimeTimer = () => {
         startTimer,
         pauseTimer,
         setTimerValue,
+        incrementTimer,
+        decrementTimer,
         error,
     }
 }
