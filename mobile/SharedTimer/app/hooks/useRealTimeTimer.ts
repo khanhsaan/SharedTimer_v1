@@ -56,35 +56,9 @@ export const useRealTimeTimer = () => {
         return remaining;
     }
 
-    const formatHoursAndMins = (totalMins: number) => {
-        const hour = Math.floor(totalMins / 60);
-        const min = Math.floor(totalMins % 60);
-
-        return {
-            hour,
-            min
-        }
-    }
-    
-    const setTimerValue = (applianceID: string, value: number) => {
+    const updateStartFinishHour = (applianceID: string, value: number) => {
         const now = new Date();
-
-        setRemaining(prev =>
-            prev.map(a =>
-                a.id === applianceID?
-                {...a, remaining: value}:
-                a
-            )
-        );
-
-        setBaseTimerState(prev =>
-            prev.map((a) => 
-                applianceID === a.id ?
-                {...a, baseTimerState: value} :
-                a
-            )
-        );
-
+        
         const start_hour = now.getHours();
         const start_min = now.getMinutes();
 
@@ -106,6 +80,27 @@ export const useRealTimeTimer = () => {
                 a
             )
         );
+    }
+    const setTimerValue = (applianceID: string, value: number) => {
+        const now = new Date();
+
+        setRemaining(prev =>
+            prev.map(a =>
+                a.id === applianceID?
+                {...a, remaining: value}:
+                a
+            )
+        );
+
+        setBaseTimerState(prev =>
+            prev.map((a) => 
+                applianceID === a.id ?
+                {...a, baseTimerState: value} :
+                a
+            )
+        );
+
+        updateStartFinishHour(applianceID, value);
     }
     
     const startTimer = (applianceID: string) => {        
@@ -196,7 +191,7 @@ export const useRealTimeTimer = () => {
         const isRunning = running.find(a => a.id === applianceID)?.running;
         if(isRunning){
             pauseTimer(applianceID);
-        }
+        };
 
         setBaseTimerState(prev =>
             prev.map(a =>
@@ -214,6 +209,11 @@ export const useRealTimeTimer = () => {
                 a
             )
         );
+
+        const newRemaining = remaining.find(a => a.id === applianceID)?.remaining;
+        if(newRemaining){
+            updateStartFinishHour(applianceID, newRemaining + value);
+        }
     }
 
     const decrementTimer = (applianceID: string, value: number) => {
@@ -239,6 +239,11 @@ export const useRealTimeTimer = () => {
                 a
             )
         );
+
+        const newRemaining = remaining.find(a => a.id === applianceID)?.remaining;
+        if(newRemaining){
+            updateStartFinishHour(applianceID, newRemaining - value);
+        }
     }
 
     return {
