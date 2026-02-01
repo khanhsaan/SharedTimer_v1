@@ -1,9 +1,9 @@
 import { appliances } from "@/components/appliances";
-import { useEffect, useRef, useState } from "react"
+import { use, useCallback, useEffect, useRef, useState } from "react"
 
 export const useRealTimeTimer = () => {
     // intialise running state to be all false
-    const [running, setRunning] = useState<{id: string, running: boolean}[]>(
+    const [runningState, setRunningState] = useState<{id: string, running: boolean}[]>(
         appliances.map((a) => ({
             id: a.id,
             running: false,
@@ -43,8 +43,12 @@ export const useRealTimeTimer = () => {
 
     const [error, setError] = useState<Error | null>(null);
 
-
+    
     const intervalsRef = useRef<Record<string, number>>({});
+
+    const clearError = useCallback(() => {
+        setError(null);
+    }, [])
 
     const calculateRemaining = (startedAt: number, baseTimer: number) => {
         const now = Date.now();
@@ -66,7 +70,7 @@ export const useRealTimeTimer = () => {
         }
     }
     
-    const setTimerValue = (applianceID: string, value: number) => {
+    const setTimerValue = useCallback((applianceID: string, value: number) => {
         const now = new Date();
 
         setRemaining(prev =>
@@ -106,11 +110,11 @@ export const useRealTimeTimer = () => {
                 a
             )
         );
-    }
+    }, []);
     
-    const startTimer = (applianceID: string) => {        
+    const startTimer = useCallback((applianceID: string) => {        
         // check if appliance exists first
-        const applianceFound = running.some(a => a.id === applianceID);
+        const applianceFound = runningState.some(a => a.id === applianceID);
 
         const baseTimer = baseTimerState.find(a => a.id === applianceID)?.baseTimerState;
         
@@ -125,7 +129,7 @@ export const useRealTimeTimer = () => {
         }
 
         // set appliance running state to TRUE
-        setRunning(prev => {
+        setRunningState(prev => {
             return prev.map((a) => {
                 if(a.id === applianceID) {
                     return {...a, running: true};
@@ -150,7 +154,7 @@ export const useRealTimeTimer = () => {
 
             if(remainingTime === 0) {
                 // set appliance running state to FALSE
-                setRunning(prev => 
+                setRunningState(prev => 
                     prev.map(a =>
                         a.id === applianceID ?
                         {...a, running: false} :
@@ -167,8 +171,10 @@ export const useRealTimeTimer = () => {
         }, 1000); // update every 1 sec
 
         intervalsRef.current[applianceID] = intervalID; // store interval ID
-    }
+    }, [runningState, baseTimerState]);
 
+
+    // clear all intervals on mount
     useEffect(() => {
         return () => {
             // clear all intervals
@@ -176,10 +182,10 @@ export const useRealTimeTimer = () => {
             // reset intervalsRef
             intervalsRef.current = {};
         }
-    }, [])
+    }, []);
 
-    const pauseTimer = (applianceID: string) => {
-        setRunning(prev => 
+    const pauseTimer = useCallback((applianceID: string) => {
+        setRunningState(prev => 
             prev.map((a) =>
                 a.id === applianceID ?
                 {...a, running: false}:
@@ -189,11 +195,11 @@ export const useRealTimeTimer = () => {
         const intervalID = intervalsRef.current[applianceID];
         if(intervalID) clearInterval(intervalID); // clear interval
         delete intervalsRef.current[applianceID]; // remove interval ID
-    }
+    }, []);
     
-    const incrementTimer = (applianceID: string, value: number) => {
+    const incrementTimer = useCallback((applianceID: string, value: number) => {
         // if appliance is running set to stop
-        const isRunning = running.find(a => a.id === applianceID)?.running;
+        const isRunning = runningState.find(a => a.id === applianceID)?.running;
         if(isRunning){
             pauseTimer(applianceID);
         }
@@ -214,11 +220,11 @@ export const useRealTimeTimer = () => {
                 a
             )
         );
-    }
+    }, [runningState]);
 
-    const decrementTimer = (applianceID: string, value: number) => {
+    const decrementTimer = useCallback((applianceID: string, value: number) => {
         // if appliance is running set to stop
-        const isRunning = running.find(a => a.id === applianceID)?.running;
+        const isRunning = runningState.find(a => a.id === applianceID)?.running;
         if(isRunning){
             pauseTimer(applianceID);
         }
@@ -239,10 +245,10 @@ export const useRealTimeTimer = () => {
                 a
             )
         );
-    }
+    }, [runningState]);
 
     return {
-        running,
+        running: runningState,
         remaining,
         startHour,
         finishHour,
