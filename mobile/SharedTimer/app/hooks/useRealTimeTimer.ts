@@ -3,6 +3,11 @@ import { supabase } from "@/lib/supabase";
 import { useCallback, useEffect, useRef, useState } from "react"
 import useProfiles from "./useProfiles";
 
+interface Response {
+    data: any,
+    error: any,
+}
+
 export const useRealTimeTimer = (profileID: string, userID: string) => {
     const [error, setError] = useState<Error | null>(null);
 
@@ -116,10 +121,12 @@ export const useRealTimeTimer = (profileID: string, userID: string) => {
         );
     }, []);
 
-    const lockTimerByProfileName = async(profileName: string, profileID: string, userID: string) => {
-        if(profileName == null){
-            setError(new Error(`profileName must NOT be NULL`));
-            return;
+    const lockTimerByProfileName = async(profileName: string, profileID: string, userID: string): Promise<Response> => {
+        if(!profileName){
+            return {
+                data: null,
+                error: 'Profile name is required'
+            }
         }
         const {data, error} = await supabase
             .from('appliances')
@@ -129,15 +136,22 @@ export const useRealTimeTimer = (profileID: string, userID: string) => {
             .select();
 
         if(error){
-            setError(new Error(`Error while trying to update locked_by: ${error.message}`));
-            console.error(`Error while trying to update locked_by: ${error.message}`);
-            return;
+            return {
+                data: null,
+                error: `Failed to lock appliance: ${error.message}`
+            }
         }
 
-        if(data === null || data === undefined){
-            setError(new Error(`Data is null or undefined while trying to update locked_by`));
-            console.error(`Data is null or undefined while trying to update locked_by`);
-            return;
+        if(!data){
+            return {
+                data: null,
+                error: `Returned data is null`
+            }
+        }
+
+        return {
+            data: data,
+            error: null,
         }
     }
     
