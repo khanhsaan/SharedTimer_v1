@@ -1,5 +1,5 @@
-import { Button, Text } from "@react-navigation/elements";
-import { Modal, StyleSheet, TouchableOpacity } from "react-native";
+import { Text } from "@react-navigation/elements";
+import { Modal, TouchableOpacity } from "react-native";
 import { ScrollView, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useAuth } from "../hooks/useAuth";
@@ -77,7 +77,8 @@ export function TimerScreen({user, selectedProfileID}: {user: any, selectedProfi
       finishHour,
       incrementTimer,
       decrementTimer,
-    } = useRealTimeTimer();
+      error,
+    } = useRealTimeTimer(selectedProfileID, user.id);
 
     return (
         <SafeAreaView style={styles.container}>

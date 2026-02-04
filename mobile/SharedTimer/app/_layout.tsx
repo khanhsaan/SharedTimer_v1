@@ -94,7 +94,7 @@ function AppContent({ colorScheme, loaded }: AppContentProps){
   }
 
   useEffect(() => {
-    intialiseSupabase();
+    intialiseSupabase(); // Connect to supabase
   }, []);
 
   useEffect(() => {

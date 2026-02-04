@@ -1,7 +1,23 @@
 import { appliances } from "@/components/appliances";
-import { use, useCallback, useEffect, useRef, useState } from "react"
+import { supabase } from "@/lib/supabase";
+import { useCallback, useEffect, useRef, useState } from "react"
+import useProfiles from "./useProfiles";
 
-export const useRealTimeTimer = () => {
+export const useRealTimeTimer = (profileID: string, userID: string) => {
+    const [error, setError] = useState<Error | null>(null);
+
+    useEffect(() => {
+        if(profileID === null || userID === null){
+            setError(new Error(`profileID & userID must NOT be NULL`));
+        } else {
+            clearError();
+        }
+    }, [profileID, userID]);
+
+    const {
+        getProfileName
+    } = useProfiles();
+    
     // intialise running state to be all false
     const [runningState, setRunningState] = useState<{id: string, running: boolean}[]>(
         appliances.map((a) => ({
@@ -41,8 +57,6 @@ export const useRealTimeTimer = () => {
         }))
     )
 
-    const [error, setError] = useState<Error | null>(null);
-
     
     const intervalsRef = useRef<Record<string, number>>({});
 
@@ -58,16 +72,6 @@ export const useRealTimeTimer = () => {
         const remaining = Math.max(baseTimer - elapse, 0);
 
         return remaining;
-    }
-
-    const formatHoursAndMins = (totalMins: number) => {
-        const hour = Math.floor(totalMins / 60);
-        const min = Math.floor(totalMins % 60);
-
-        return {
-            hour,
-            min
-        }
     }
     
     const setTimerValue = useCallback((applianceID: string, value: number) => {
@@ -111,8 +115,33 @@ export const useRealTimeTimer = () => {
             )
         );
     }, []);
+
+    const lockTimerByProfileName = async(profileName: string, profileID: string, userID: string) => {
+        if(profileName == null){
+            setError(new Error(`profileName must NOT be NULL`));
+            return;
+        }
+        const {data, error} = await supabase
+            .from('appliances')
+            .update({'locked_by': profileName})
+            .eq('user_id', userID)
+            .eq('id', profileID)
+            .select();
+
+        if(error){
+            setError(new Error(`Error while trying to update locked_by: ${error.message}`));
+            console.error(`Error while trying to update locked_by: ${error.message}`);
+            return;
+        }
+
+        if(data === null || data === undefined){
+            setError(new Error(`Data is null or undefined while trying to update locked_by`));
+            console.error(`Data is null or undefined while trying to update locked_by`);
+            return;
+        }
+    }
     
-    const startTimer = useCallback((applianceID: string) => {        
+    const startTimer = useCallback(async(applianceID: string) => {        
         // check if appliance exists first
         const applianceFound = runningState.some(a => a.id === applianceID);
 
@@ -128,7 +157,18 @@ export const useRealTimeTimer = () => {
             return;
         }
 
-        // set appliance running state to TRUE
+        const response = await getProfileName(profileID, userID);
+
+        if(response.data && response.error){
+            setError(new Error(`Error while fetching profile name: ${response.error}`));
+            return;
+        }
+
+        const profileName = response.data;
+
+        lockTimerByProfileName(profileName, profileID, userID);
+        
+        // set dappliance running state to TRUE
         setRunningState(prev => {
             return prev.map((a) => {
                 if(a.id === applianceID) {
