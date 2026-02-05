@@ -1,14 +1,21 @@
 import { useContext } from "react"
 import { AuthContext } from "../context/AuthContext"
+import { AuthContextObject, ResponseType } from "../types";
 
-export const useAuthContext = () => {
-    const context = useContext(AuthContext);
+export const useAuthContext = (): ResponseType => {
+    const context: AuthContextObject | undefined = useContext(AuthContext);
 
     if(context === undefined){
-        throw new Error('Context must be used with a AuthContext');
+        return {
+            data: null,
+            error: new Error(`Auth context is UNDEFINED`)
+        }
     }
 
-    return context;
+    return {
+        data: context,
+        error: null
+    }
 }
 
 export default useAuthContext;

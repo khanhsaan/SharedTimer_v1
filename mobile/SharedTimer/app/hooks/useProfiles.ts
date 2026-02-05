@@ -126,7 +126,7 @@ export const useProfiles = () => {
         if(!data){
             return {
                 data: null,
-                error: 'The returned data is null or undefined'
+                error: new Error('The returned data is null or undefined')
             }
         }
         const profileName = data.name; 

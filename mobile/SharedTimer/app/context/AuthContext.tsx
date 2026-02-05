@@ -1,13 +1,7 @@
 import { supabase } from "@/lib/supabase";
 import { Session } from "@supabase/supabase-js";
 import React, { createContext, ReactNode, useCallback, useEffect, useState } from "react";
-
-interface AuthContextObject {
-    authSession: Session | null,
-    authError: string | null,
-    authLoading: boolean,
-    clearError: () => void,
-}
+import { AuthContextObject } from "../types";
 
 export const AuthContext = createContext<AuthContextObject | undefined>(undefined);
 

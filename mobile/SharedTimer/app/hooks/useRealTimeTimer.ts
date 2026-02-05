@@ -3,6 +3,7 @@ import { supabase } from "@/lib/supabase";
 import { useCallback, useEffect, useRef, useState } from "react"
 import useProfiles from "./useProfiles";
 import { ResponseType } from "../types";
+import useAuthContext from "./useAuthContext";
 
 export const useRealTimeTimer = (profileID: string, userID: string) => {
     const [error, setError] = useState<Error | null>(null);
@@ -109,7 +110,7 @@ export const useRealTimeTimer = (profileID: string, userID: string) => {
         );
     }, []);
 
-    const lockTimerByProfileName = async(profileName: string, applianceID: string, userID: string): Promise<ResponseType> => {
+    const lockTimerByProfileName = async(profileName: string, applianceName: string, userID: string): Promise<ResponseType> => {
         if(!profileName){
             return {
                 data: null,
@@ -120,10 +121,12 @@ export const useRealTimeTimer = (profileID: string, userID: string) => {
             .from('appliances')
             .update({'locked_by': profileName})
             .eq('user_id', userID)
-            .eq('id', applianceID)
+            .eq('name', applianceName)
             .select();
 
+
         if(error){
+            console.log(`Failed to lock appliance: ${error.message}`);
             return {
                 data: null,
                 error: new Error(`Failed to lock appliance: ${error.message}`)
@@ -131,11 +134,21 @@ export const useRealTimeTimer = (profileID: string, userID: string) => {
         }
 
         if(!data){
+            console.log(`Returned data is UNAVAILABLE`);
             return {
                 data: null,
-                error: new Error(`Returned data is null`)
+                error: new Error(`Returned data is UNAVAILABLE`)
             }
         }
+        
+        const log = {
+            applianceIDLog: data?.[0]?.id,
+            applianceNameLog: data?.[0]?.name,
+            profileNameLog: data?.[0]?.locked_by,
+            fullData: data
+        };
+
+        console.log('Lock details: ', log);
 
         return {
             data: data,
@@ -143,11 +156,11 @@ export const useRealTimeTimer = (profileID: string, userID: string) => {
         }
     }
     
-    const startTimer = useCallback(async(applianceID: string) => {        
+    const startTimer = useCallback(async(applianceName: string) => {        
         // check if appliance exists first
-        const applianceFound = runningState.some(a => a.id === applianceID);
+        const applianceFound = runningState.some(a => a.id === applianceName);
 
-        const baseTimer = baseTimerState.find(a => a.id === applianceID)?.baseTimerState;
+        const baseTimer = baseTimerState.find(a => a.id === applianceName)?.baseTimerState;
         
         if(!applianceFound){
             setError(new Error(`Cannot find appliance id`));
@@ -155,7 +168,7 @@ export const useRealTimeTimer = (profileID: string, userID: string) => {
         }
 
         if(baseTimer === undefined || baseTimer === null){
-            setError(new Error(`Base timer for appliance ${applianceID} is null`));
+            setError(new Error(`Base timer for appliance ${applianceName} is null`));
             return;
         }
 
@@ -168,7 +181,7 @@ export const useRealTimeTimer = (profileID: string, userID: string) => {
 
         const profileName = response.data;
 
-        const{data, error} = await lockTimerByProfileName(profileName, applianceID, userID);
+        const{data, error} = await lockTimerByProfileName(profileName, applianceName, userID);
         if(error){
             setError(error);
             return;
@@ -180,7 +193,7 @@ export const useRealTimeTimer = (profileID: string, userID: string) => {
         // set dappliance running state to TRUE
         setRunningState(prev => {
             return prev.map((a) => {
-                if(a.id === applianceID) {
+                if(a.id === applianceName) {
                     return {...a, running: true};
                 }
                 return a;
@@ -195,7 +208,7 @@ export const useRealTimeTimer = (profileID: string, userID: string) => {
 
             setRemaining(prev =>
                 prev.map((a) =>
-                    a.id === applianceID ?
+                    a.id === applianceName ?
                     {...a, remaining: Math.round(remainingTime)} :
                     a
                 )
@@ -205,21 +218,21 @@ export const useRealTimeTimer = (profileID: string, userID: string) => {
                 // set appliance running state to FALSE
                 setRunningState(prev => 
                     prev.map(a =>
-                        a.id === applianceID ?
+                        a.id === applianceName ?
                         {...a, running: false} :
                         a
                     )
                 );
 
-                const intervalID = intervalsRef.current[applianceID];
+                const intervalID = intervalsRef.current[applianceName];
                 clearInterval(intervalID); // clear interval
-                delete intervalsRef.current[applianceID]; // delete interval id
+                delete intervalsRef.current[applianceName]; // delete interval id
 
                 return;
             };
         }, 1000); // update every 1 sec
 
-        intervalsRef.current[applianceID] = intervalID; // store interval ID
+        intervalsRef.current[applianceName] = intervalID; // store interval ID
 
         clearError();
     }, [runningState, baseTimerState]);

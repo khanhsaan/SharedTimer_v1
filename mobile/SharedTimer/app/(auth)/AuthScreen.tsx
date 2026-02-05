@@ -107,7 +107,7 @@ export default function Auth() {
                     console.error(`authSignInError: ${error}`)
                     setErrorMsg(error);
                   } else {
-                    console.error(`No authSignInError`);
+                    console.log(`No authSignInError`);
                     setErrorMsg('');
                   }
                   // Signing Up
