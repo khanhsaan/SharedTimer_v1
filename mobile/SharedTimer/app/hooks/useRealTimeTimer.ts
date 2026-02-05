@@ -113,7 +113,7 @@ export const useRealTimeTimer = (profileID: string, userID: string) => {
         if(!profileName){
             return {
                 data: null,
-                error: 'Profile name is required'
+                error: new Error('Profile name is required')
             }
         }
         const {data, error} = await supabase
@@ -126,14 +126,14 @@ export const useRealTimeTimer = (profileID: string, userID: string) => {
         if(error){
             return {
                 data: null,
-                error: `Failed to lock appliance: ${error.message}`
+                error: new Error(`Failed to lock appliance: ${error.message}`)
             }
         }
 
         if(!data){
             return {
                 data: null,
-                error: `Returned data is null`
+                error: new Error(`Returned data is null`)
             }
         }
 
@@ -163,13 +163,20 @@ export const useRealTimeTimer = (profileID: string, userID: string) => {
 
         if(response.data && response.error){
             setError(new Error(`Error while fetching profile name: ${response.error}`));
-            return;
+        return;
         }
 
         const profileName = response.data;
 
-        lockTimerByProfileName(profileName, profileID, userID);
-        
+        const{data, error} = await lockTimerByProfileName(profileName, applianceID, userID);
+        if(error){
+            setError(error);
+            return;
+        }
+        if(!data){
+            setError(new Error(`Returned data is UNAVAILABLE`));
+        }
+
         // set dappliance running state to TRUE
         setRunningState(prev => {
             return prev.map((a) => {
@@ -213,6 +220,8 @@ export const useRealTimeTimer = (profileID: string, userID: string) => {
         }, 1000); // update every 1 sec
 
         intervalsRef.current[applianceID] = intervalID; // store interval ID
+
+        clearError();
     }, [runningState, baseTimerState]);
 
 
