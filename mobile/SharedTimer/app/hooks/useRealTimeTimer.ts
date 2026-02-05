@@ -2,22 +2,10 @@ import { appliances } from "@/components/appliances";
 import { supabase } from "@/lib/supabase";
 import { useCallback, useEffect, useRef, useState } from "react"
 import useProfiles from "./useProfiles";
-
-interface Response {
-    data: any,
-    error: any,
-}
+import { ResponseType } from "../types";
 
 export const useRealTimeTimer = (profileID: string, userID: string) => {
     const [error, setError] = useState<Error | null>(null);
-
-    useEffect(() => {
-        if(profileID === null || userID === null){
-            setError(new Error(`profileID & userID must NOT be NULL`));
-        } else {
-            clearError();
-        }
-    }, [profileID, userID]);
 
     const {
         getProfileName
@@ -121,7 +109,7 @@ export const useRealTimeTimer = (profileID: string, userID: string) => {
         );
     }, []);
 
-    const lockTimerByProfileName = async(profileName: string, profileID: string, userID: string): Promise<Response> => {
+    const lockTimerByProfileName = async(profileName: string, applianceID: string, userID: string): Promise<ResponseType> => {
         if(!profileName){
             return {
                 data: null,
@@ -132,7 +120,7 @@ export const useRealTimeTimer = (profileID: string, userID: string) => {
             .from('appliances')
             .update({'locked_by': profileName})
             .eq('user_id', userID)
-            .eq('id', profileID)
+            .eq('id', applianceID)
             .select();
 
         if(error){

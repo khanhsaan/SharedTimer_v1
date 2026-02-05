@@ -1,5 +1,6 @@
 import { supabase } from "@/lib/supabase";
 import { useState } from "react";
+import { ResponseType } from "../types";
 
 // Create an array type to make sure the consistence
 interface Profiles {
@@ -8,15 +9,9 @@ interface Profiles {
     created_at: string;
 }
 
-interface Response {
-    data: any,
-    error: any,
-}
-
 export const useProfiles = () => {
     // Create array to store the created profiles which have any type of value
     const[profilesArr, setProfilesArr] = useState<Profiles[]>([]);
-    
 
     // Create a method that listens for if the logged in user is change
     const retrieveProfiles = async(user: any) => {
@@ -114,7 +109,7 @@ export const useProfiles = () => {
 
     }
 
-    const getProfileName = async(profileID: string, userID: string): Promise<Response> =>{
+    const getProfileName = async(profileID: string, userID: string): Promise<ResponseType> =>{
         const{data, error} = await supabase
             .from('profiles')
             .select('name')
@@ -128,7 +123,7 @@ export const useProfiles = () => {
                 error: error
             };
         }
-        if(data === null || data === undefined){
+        if(!data){
             return {
                 data: null,
                 error: 'The returned data is null or undefined'
