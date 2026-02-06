@@ -3,7 +3,7 @@ import ProfileGate from '../(auth)/ProfileGate';
 import TimerScreen from './TimerScreen';
 import useAuthContext from '../hooks/useAuthContext';
 import { AuthContextObject } from '../types';
-import { router } from 'expo-router';
+import { router, Stack } from 'expo-router';
 import { Text, View } from 'react-native';
 
 export default function RootLayout() {
@@ -32,17 +32,23 @@ export default function RootLayout() {
     }
 
     if(session && !authLoading){
-        if(selectedProfileID === ''){
-          return (
-            <ProfileGate 
-              user={session.user} 
-              returnedSelectedProfileID={(profileID) => setSelectedProfileID(profileID)}>
-            </ProfileGate>
-          )
-        }
+      if(selectedProfileID === ''){
         return (
-          <TimerScreen user={currentUser} selectedProfileID={selectedProfileID}></TimerScreen>
+          <ProfileGate 
+            user={session.user} 
+            returnedSelectedProfileID={(profileID) => setSelectedProfileID(profileID)}>
+          </ProfileGate>
         )
       }
+      return (
+        <TimerScreen user={currentUser} selectedProfileID={selectedProfileID}></TimerScreen>
+      )
     }
+
+    return (
+      <Stack screenOptions={{headerShown: false}}>
+        <Stack.Screen name='TimerScreen'></Stack.Screen>
+      </Stack>
+    )
+}
 
