@@ -10,6 +10,9 @@ import { washingModes } from "@/components/washingModes";
 import { appliances } from "@/components/appliances";
 import useRealTimeTimer from "../hooks/useRealTimeTimer";
 import styles from "./TimerScreen.styles";
+import useAuthContext from "../hooks/useAuthContext";
+import { router } from "expo-router";
+import { AuthContextObject } from "../types";
 
 // Create an array type to make sure the consistence
 interface Profiles {
@@ -18,7 +21,7 @@ interface Profiles {
   created_at: string;
 }
 
-export function TimerScreen({user, selectedProfileID}: {user: any, selectedProfileID: string}) {
+export function TimerScreen({selectedProfileID}: {user: any, selectedProfileID: string}) {
 
     const passedUser = {
         userEmail: "",
@@ -31,7 +34,23 @@ export function TimerScreen({user, selectedProfileID}: {user: any, selectedProfi
     const[showWashingMode, setShowWashingModes] = useState<boolean>(false);
     const[expanded, setExpanded] = useState<string | null>(null);
 
-    // Listen for the user session changed, run refresh() to retrieve the corresponding profiles
+    // use context
+    const response = useAuthContext();
+
+    if(response.error){
+      console.error("Error while trying to use Auth Context: ", response.error.message);
+      router.replace('/(auth)/AuthScreen');
+    }
+
+    if(!response.data){
+      console.error("UNAVAILABLE data while trying to use Auth Context ");
+      router.replace('/(auth)/AuthScreen');
+    }
+
+    const context: AuthContextObject = response.data;
+    const user = context.authSession?.user;
+
+    // Listen for the context session changed, run refresh() to retrieve the corresponding profiles
     useEffect(() => {
       if(user?.id){
           retrieveProfiles(user)
@@ -41,7 +60,7 @@ export function TimerScreen({user, selectedProfileID}: {user: any, selectedProfi
                   }
               })
       }
-    }, [user?.id])
+    }, [context])
 
     // Retrieve all of the profiles once on initiation
     useEffect(() => {
