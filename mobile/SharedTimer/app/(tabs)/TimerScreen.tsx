@@ -67,7 +67,7 @@ export function TimerScreen({selectedProfileID}: {selectedProfileID: string}) {
                   }
               })
       }
-    }, [user?.id, retrieveProfiles])
+    }, [user?.id])
 
     // Retrieve all of the profiles once on initiation
     useEffect(() => {
