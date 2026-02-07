@@ -1,6 +1,5 @@
 import { Text } from "@react-navigation/elements";
-import { Modal, TouchableOpacity } from "react-native";
-import { ScrollView, View } from "react-native";
+import { ScrollView, View, Modal, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useAuth } from "../hooks/useAuth";
 import { ProfileBar } from "@/components/ProfilesBar";
@@ -21,7 +20,7 @@ interface Profiles {
   created_at: string;
 }
 
-export function TimerScreen({selectedProfileID}: {user: any, selectedProfileID: string}) {
+export function TimerScreen({selectedProfileID}: {selectedProfileID: string}) {
 
     const passedUser = {
         userEmail: "",
@@ -40,15 +39,23 @@ export function TimerScreen({selectedProfileID}: {user: any, selectedProfileID: 
     if(response.error){
       console.error("Error while trying to use Auth Context: ", response.error.message);
       router.replace('/(auth)/AuthScreen');
+      return;
     }
 
     if(!response.data){
       console.error("UNAVAILABLE data while trying to use Auth Context ");
       router.replace('/(auth)/AuthScreen');
+      return;
     }
 
     const context: AuthContextObject = response.data;
     const user = context.authSession?.user;
+
+    if(!user || !user?.id){
+      console.error("Error while trying to fetch user");
+      router.replace('/(auth)/AuthScreen');
+      return;
+    }
 
     // Listen for the context session changed, run refresh() to retrieve the corresponding profiles
     useEffect(() => {
@@ -60,7 +67,7 @@ export function TimerScreen({selectedProfileID}: {user: any, selectedProfileID: 
                   }
               })
       }
-    }, [context])
+    }, [user?.id, retrieveProfiles])
 
     // Retrieve all of the profiles once on initiation
     useEffect(() => {
@@ -106,7 +113,7 @@ export function TimerScreen({selectedProfileID}: {user: any, selectedProfileID: 
                 <View style={styles.header}>
                     <View>
                         <Text style={styles.title}>Household Timers</Text>
-                        <Text style={styles.subtitle}>Welcome, {user.email}</Text>
+                        <Text style={styles.subtitle}>Welcome, {user?.email}</Text>
                     </View>
                     {/* Sign out button */}
                     <TouchableOpacity style={styles.signOutButton}>
