@@ -266,7 +266,7 @@ const styles = StyleSheet.create({
       marginBottom: 20,
     },
     timerLabel: {
-      fontSize: 14,
+      fontSize: 9,
       color: '#718096',
       marginBottom: 8,
       textAlign: 'center',

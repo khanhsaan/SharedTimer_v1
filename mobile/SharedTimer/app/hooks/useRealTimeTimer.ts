@@ -1,17 +1,28 @@
 import { appliances } from "@/components/appliances";
-import { useEffect, useRef, useState } from "react"
+import { supabase } from "@/lib/supabase";
+import { useCallback, useEffect, useRef, useState } from "react"
+import useProfiles from "./useProfiles";
+import { ResponseType } from "../types";
+import useAuthContext from "./useAuthContext";
 
-export const useRealTimeTimer = () => {
+export const useRealTimeTimer = (profileID: string, userID: string) => {
+    const [error, setError] = useState<Error | null>(null);
+
+    const {
+        getProfileName
+    } = useProfiles();
+    
     // intialise running state to be all false
-    const [running, setRunning] = useState<{id: string, running: boolean}[]>(
+    const [runningState, setRunningState] = useState<{id: string, name: string, running: boolean}[]>(
         appliances.map((a) => ({
             id: a.id,
+            name: a.name,
             running: false,
         }))
     );
 
     // intialise running remaining time to be all 0
-    const [remaining, setRemaining] = useState<{id: string, remaining: number}[]>(
+    const [remainingState, setRemainingState] = useState<{id: string, remaining: number}[]>(
         appliances.map((a) => ({
             id: a.id,
             remaining: 0,
@@ -34,17 +45,19 @@ export const useRealTimeTimer = () => {
         }))
     );
 
-    const [baseTimerState, setBaseTimerState] = useState<{id: string, baseTimerState: number}[]>(
+    const [baseTimerState, setBaseTimerState] = useState<{id: string, baseTimer: number}[]>(
         appliances.map((a) => ({
             id: a.id,
-            baseTimerState: 0
+            baseTimer: 0
         }))
     )
 
-    const [error, setError] = useState<Error | null>(null);
-
-
+    
     const intervalsRef = useRef<Record<string, number>>({});
+
+    const clearError = useCallback(() => {
+        setError(null);
+    }, [])
 
     const calculateRemaining = (startedAt: number, baseTimer: number) => {
         const now = Date.now();
@@ -55,10 +68,26 @@ export const useRealTimeTimer = () => {
 
         return remaining;
     }
-
-    const updateStartFinishHour = (applianceID: string, value: number) => {
+    
+    const setTimerValue = useCallback((applianceID: string, valueSec: number) => {
         const now = new Date();
-        
+
+        setRemainingState(prev =>
+            prev.map(a =>
+                a.id === applianceID?
+                {...a, remaining: valueSec}:
+                a
+            )
+        );
+
+        setBaseTimerState(prev =>
+            prev.map((a) => 
+                applianceID === a.id ?
+                {...a, baseTimer: valueSec} :
+                a
+            )
+        );
+
         const start_hour = now.getHours();
         const start_min = now.getMinutes();
 
@@ -69,7 +98,7 @@ export const useRealTimeTimer = () => {
             )
         )
 
-        const finishedAt = new Date(now.getTime() + value * 60 * 1000);
+        const finishedAt = new Date(now.getTime() + valueSec * 1000);
         const finish_hour = finishedAt.getHours();
         const finish_min = finishedAt.getMinutes();
         
@@ -80,34 +109,82 @@ export const useRealTimeTimer = () => {
                 a
             )
         );
+    }, []);
+
+    const setStartFinishHourTimer = async(userID: string, applianceName: string, startHour: string, finishHour: string): Promise<ResponseType> => {
+
+        const response = await supabase
+            .from('appliances')
+            .update({'start_hour': startHour, 'finish_hour': finishHour})
+            .eq('user_id', userID)
+            .eq('name', applianceName)
+            .select();
+
+        if(response.error){
+            return {
+                data: null,
+                error: new Error(`Error while trying to set start & finish hour: ${error?.message}`)
+            }
+        }
+
+        if(!response.data){
+            console.log(`Returned data is UNAVAILABLE`);
+            return {
+                data: null,
+                error: new Error(`Returned data is UNAVAILABLE`)
+            }
+        }
+
+        return {
+            data: response.data,
+            error: null
+        }
+
     }
-    const setTimerValue = (applianceID: string, value: number) => {
-        const now = new Date();
 
-        setRemaining(prev =>
-            prev.map(a =>
-                a.id === applianceID?
-                {...a, remaining: value}:
-                a
-            )
-        );
+    const lockTimerByProfileName = async(profileName: string, applianceName: string, userID: string): Promise<ResponseType> => {
+        if(!profileName){
+            return {
+                data: null,
+                error: new Error('Profile name is required')
+            }
+        }
 
-        setBaseTimerState(prev =>
-            prev.map((a) => 
-                applianceID === a.id ?
-                {...a, baseTimerState: value} :
-                a
-            )
-        );
+        const {data, error} = await supabase
+            .from('appliances')
+            .update({'locked_by': profileName})
+            .eq('user_id', userID)
+            .eq('name', applianceName)
+            .select();
 
-        updateStartFinishHour(applianceID, value);
+
+        if(error){
+            console.log(`Failed to lock appliance: ${error.message}`);
+            return {
+                data: null,
+                error: new Error(`Failed to lock appliance: ${error.message}`)
+            }
+        }
+
+        if(!data){
+            console.log(`Returned data is UNAVAILABLE`);
+            return {
+                data: null,
+                error: new Error(`Returned data is UNAVAILABLE`)
+            }
+        }
+
+        return {
+            data: data,
+            error: null,
+        }
     }
     
-    const startTimer = (applianceID: string) => {        
+    const startTimer = useCallback(async(applianceID: string) => {        
         // check if appliance exists first
-        const applianceFound = running.some(a => a.id === applianceID);
+        const applianceFound = runningState.find(a => a.id === applianceID);
 
-        const baseTimer = baseTimerState.find(a => a.id === applianceID)?.baseTimerState;
+        const baseTimer = baseTimerState.find(a => a.id === applianceID)?.baseTimer;
         
         if(!applianceFound){
             setError(new Error(`Cannot find appliance id`));
@@ -118,9 +195,30 @@ export const useRealTimeTimer = () => {
             setError(new Error(`Base timer for appliance ${applianceID} is null`));
             return;
         }
+        const applianceName = applianceFound.name;
 
-        // set appliance running state to TRUE
-        setRunning(prev => {
+        const response = await getProfileName(profileID, userID);
+
+        if(response.data && response.error){
+            setError(new Error(`Error while fetching profile name: ${response.error}`));
+        return;
+        }
+
+        const profileName = response.data;
+
+        const{data, error} = await lockTimerByProfileName(profileName, applianceName, userID);
+
+        if(error){
+            setError(error);
+            return;
+        }
+        if(!data){
+            setError(new Error(`Returned data is UNAVAILABLE`));
+            return;
+        }
+
+        // set dappliance running state to TRUE
+        setRunningState(prev => {
             return prev.map((a) => {
                 if(a.id === applianceID) {
                     return {...a, running: true};
@@ -133,9 +231,8 @@ export const useRealTimeTimer = () => {
 
         const intervalID = setInterval(() => {
             let remainingTime = calculateRemaining(startedAtSec, baseTimer);
-            console.log('Remaining: ', remainingTime);
 
-            setRemaining(prev =>
+            setRemainingState(prev =>
                 prev.map((a) =>
                     a.id === applianceID ?
                     {...a, remaining: Math.round(remainingTime)} :
@@ -145,7 +242,7 @@ export const useRealTimeTimer = () => {
 
             if(remainingTime === 0) {
                 // set appliance running state to FALSE
-                setRunning(prev => 
+                setRunningState(prev => 
                     prev.map(a =>
                         a.id === applianceID ?
                         {...a, running: false} :
@@ -162,8 +259,12 @@ export const useRealTimeTimer = () => {
         }, 1000); // update every 1 sec
 
         intervalsRef.current[applianceID] = intervalID; // store interval ID
-    }
 
+        clearError();
+    }, [runningState, baseTimerState]);
+
+
+    // clear all intervals on mount
     useEffect(() => {
         return () => {
             // clear all intervals
@@ -171,10 +272,10 @@ export const useRealTimeTimer = () => {
             // reset intervalsRef
             intervalsRef.current = {};
         }
-    }, [])
+    }, []);
 
-    const pauseTimer = (applianceID: string) => {
-        setRunning(prev => 
+    const pauseTimer = useCallback((applianceID: string) => {
+        setRunningState(prev => 
             prev.map((a) =>
                 a.id === applianceID ?
                 {...a, running: false}:
@@ -184,11 +285,12 @@ export const useRealTimeTimer = () => {
         const intervalID = intervalsRef.current[applianceID];
         if(intervalID) clearInterval(intervalID); // clear interval
         delete intervalsRef.current[applianceID]; // remove interval ID
-    }
+    }, []);
     
-    const incrementTimer = (applianceID: string, value: number) => {
+    const incrementTimer = useCallback((applianceID: string, valueSec: number) => {
         // if appliance is running set to stop
-        const isRunning = running.find(a => a.id === applianceID)?.running;
+        const isRunning = runningState.find(a => a.id === applianceID)?.running;
+
         if(isRunning){
             pauseTimer(applianceID);
         };
@@ -196,29 +298,48 @@ export const useRealTimeTimer = () => {
         setBaseTimerState(prev =>
             prev.map(a =>
                 a.id === applianceID?
-                {...a, baseTimerState: Math.max(a.baseTimerState + value, 0)}:
+                {...a, baseTimer: Math.max(a.baseTimer + (valueSec), 0)}:
                 a
             )
         );
 
         // Update to UI
-        setRemaining(prev =>
+        setRemainingState(prev =>
             prev.map(a =>
                 a.id === applianceID?
-                {...a, remaining: a.remaining + value}:
+                {...a, remaining: a.remaining + valueSec}:
                 a
             )
         );
 
-        const newRemaining = remaining.find(a => a.id === applianceID)?.remaining;
-        if(newRemaining){
-            updateStartFinishHour(applianceID, newRemaining + value);
-        }
-    }
+        const now = new Date();
 
-    const decrementTimer = (applianceID: string, value: number) => {
+        const start_hour = now.getHours();
+        const start_min = now.getMinutes();
+
+        setStartHour(prev =>
+            prev.map(a => a.id === applianceID ?
+                {...a, startHour: `${start_hour}:${start_min}`}:
+                a
+            )
+        )
+
+        const finishedAt = new Date(now.getTime() + valueSec * 60 * 1000);
+        const finish_hour = finishedAt.getHours();
+        const finish_min = finishedAt.getMinutes();
+        
+        setFinishHour(prev =>
+            prev.map((a) =>
+                a.id === applianceID ?
+                {...a, finishHour: `${finish_hour}:${finish_min}`}:
+                a
+            )
+        );
+    }, [runningState]);
+
+    const decrementTimer = useCallback((applianceID: string, value: number) => {
         // if appliance is running set to stop
-        const isRunning = running.find(a => a.id === applianceID)?.running;
+        const isRunning = runningState.find(a => a.id === applianceID)?.running;
         if(isRunning){
             pauseTimer(applianceID);
         }
@@ -226,29 +347,24 @@ export const useRealTimeTimer = () => {
         setBaseTimerState(prev =>
             prev.map(a =>
                 a.id === applianceID?
-                {...a, baseTimerState: Math.max(a.baseTimerState - value, 0)}:
+                {...a, baseTimer: Math.max(a.baseTimer - value, 0)}:
                 a
             )
         );
 
         // Update to UI
-        setRemaining(prev =>
+        setRemainingState(prev =>
             prev.map(a =>
                 a.id === applianceID?
                 {...a, remaining: Math.max(a.remaining - value, 0)}:
                 a
             )
         );
-
-        const newRemaining = remaining.find(a => a.id === applianceID)?.remaining;
-        if(newRemaining){
-            updateStartFinishHour(applianceID, newRemaining - value);
-        }
-    }
+    }, [runningState]);
 
     return {
-        running,
-        remaining,
+        running: runningState,
+        remaining: remainingState,
         startHour,
         finishHour,
         startTimer,

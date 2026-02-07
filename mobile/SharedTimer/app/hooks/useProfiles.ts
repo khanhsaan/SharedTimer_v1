@@ -1,5 +1,6 @@
 import { supabase } from "@/lib/supabase";
-import { useCallback, useEffect, useState } from "react";
+import { useState } from "react";
+import { ResponseType } from "../types";
 
 // Create an array type to make sure the consistence
 interface Profiles {
@@ -7,10 +8,10 @@ interface Profiles {
     name: string,
     created_at: string;
 }
+
 export const useProfiles = () => {
     // Create array to store the created profiles which have any type of value
     const[profilesArr, setProfilesArr] = useState<Profiles[]>([]);
-    
 
     // Create a method that listens for if the logged in user is change
     const retrieveProfiles = async(user: any) => {
@@ -108,10 +109,39 @@ export const useProfiles = () => {
 
     }
 
+    const getProfileName = async(profileID: string, userID: string): Promise<ResponseType> =>{
+        const{data, error} = await supabase
+            .from('profiles')
+            .select('name')
+            .eq('user_id', userID)
+            .eq('id', profileID)
+            .single();
+
+        if(error){
+            return {
+                data: null,
+                error: error
+            };
+        }
+        if(!data){
+            return {
+                data: null,
+                error: new Error('The returned data is null or undefined')
+            }
+        }
+        const profileName = data.name; 
+        return {
+            data: profileName,
+            error: null
+        }
+    }
+
+
     return {
         createProfiles,
         retrieveProfiles,
-        handleDeleteProfile
+        handleDeleteProfile,
+        getProfileName,
     }   
 }
 

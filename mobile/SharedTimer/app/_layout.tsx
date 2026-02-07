@@ -39,14 +39,18 @@ export default function RootLayout() {
 function AppContent({ colorScheme, loaded }: AppContentProps){
 
   // AuthContext
-  const context = useAuthContext();
+  const response = useAuthContext();
 
+  if(response.error) {
+    console.log(`Error while calling useAuthContext: ${response.error.message}`);
+  }
+  
   const {
     authSession,
     authError,
     authLoading,
     clearError
-  } = context;
+  } = response.data;
 
   const[loading, setLoading] = useState(true);
   const[healthCheck, setHealthCheck] = useState<boolean>(true);
@@ -94,7 +98,7 @@ function AppContent({ colorScheme, loaded }: AppContentProps){
   }
 
   useEffect(() => {
-    intialiseSupabase();
+    intialiseSupabase(); // Connect to supabase
   }, []);
 
   useEffect(() => {

@@ -1,6 +1,5 @@
-import { Button, Text } from "@react-navigation/elements";
-import { Modal, StyleSheet, TouchableOpacity } from "react-native";
-import { ScrollView, View } from "react-native";
+import { Text } from "@react-navigation/elements";
+import { ScrollView, View, Modal, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useAuth } from "../hooks/useAuth";
 import { ProfileBar } from "@/components/ProfilesBar";
@@ -10,6 +9,9 @@ import { washingModes } from "@/components/washingModes";
 import { appliances } from "@/components/appliances";
 import useRealTimeTimer from "../hooks/useRealTimeTimer";
 import styles from "./TimerScreen.styles";
+import useAuthContext from "../hooks/useAuthContext";
+import { router } from "expo-router";
+import { AuthContextObject } from "../types";
 
 // Create an array type to make sure the consistence
 interface Profiles {
@@ -18,7 +20,7 @@ interface Profiles {
   created_at: string;
 }
 
-export function TimerScreen({user, selectedProfileID}: {user: any, selectedProfileID: string}) {
+export function TimerScreen({selectedProfileID}: {selectedProfileID: string}) {
 
     const passedUser = {
         userEmail: "",
@@ -31,7 +33,31 @@ export function TimerScreen({user, selectedProfileID}: {user: any, selectedProfi
     const[showWashingMode, setShowWashingModes] = useState<boolean>(false);
     const[expanded, setExpanded] = useState<string | null>(null);
 
-    // Listen for the user session changed, run refresh() to retrieve the corresponding profiles
+    // use context
+    const response = useAuthContext();
+
+    if(response.error){
+      console.error("Error while trying to use Auth Context: ", response.error.message);
+      router.replace('/(auth)/AuthScreen');
+      return;
+    }
+
+    if(!response.data){
+      console.error("UNAVAILABLE data while trying to use Auth Context ");
+      router.replace('/(auth)/AuthScreen');
+      return;
+    }
+
+    const context: AuthContextObject = response.data;
+    const user = context.authSession?.user;
+
+    if(!user || !user?.id){
+      console.error("Error while trying to fetch user");
+      router.replace('/(auth)/AuthScreen');
+      return;
+    }
+
+    // Listen for the context session changed, run refresh() to retrieve the corresponding profiles
     useEffect(() => {
       if(user?.id){
           retrieveProfiles(user)
@@ -77,7 +103,8 @@ export function TimerScreen({user, selectedProfileID}: {user: any, selectedProfi
       finishHour,
       incrementTimer,
       decrementTimer,
-    } = useRealTimeTimer();
+      error,
+    } = useRealTimeTimer(selectedProfileID, user.id);
 
     return (
         <SafeAreaView style={styles.container}>
@@ -86,7 +113,7 @@ export function TimerScreen({user, selectedProfileID}: {user: any, selectedProfi
                 <View style={styles.header}>
                     <View>
                         <Text style={styles.title}>Household Timers</Text>
-                        <Text style={styles.subtitle}>Welcome, {user.email}</Text>
+                        <Text style={styles.subtitle}>Welcome, {user?.email}</Text>
                     </View>
                     {/* Sign out button */}
                     <TouchableOpacity style={styles.signOutButton}>
@@ -141,7 +168,9 @@ export function TimerScreen({user, selectedProfileID}: {user: any, selectedProfi
                             {/* Increment BUTTON */}
                             <TouchableOpacity
                               style = {styles.timerControlButton}
-                              onPress = {() => incrementTimer(a.id, 10)}>
+                              onPress = {() => {
+                                incrementTimer(a.id, 10);
+                              }}>
                               <Text style={styles.timerControlButtonText}>
                                 +
                               </Text>

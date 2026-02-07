@@ -1,35 +1,53 @@
 import React, { useEffect, useState } from 'react';
-import { useColorScheme } from '@/hooks/useColorScheme';
-import { Session } from '@supabase/supabase-js';
-import { supabase } from '@/lib/supabase';
 import ProfileGate from '../(auth)/ProfileGate';
 import TimerScreen from './TimerScreen';
+import useAuthContext from '../hooks/useAuthContext';
+import { AuthContextObject } from '../types';
+import { router, Stack } from 'expo-router';
+import { Text, View } from 'react-native';
 
 export default function RootLayout() {
-  const [session, setSession] = useState<Session | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-  const[selectedProfileID, setSelectedProfileID] = useState<string>('');
+    const[selectedProfileID, setSelectedProfileID] = useState<string>('');
 
-  // Check the for the current use session from the local storage and listen for the authentication change once on start
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data: {session} }) => {
-      setSession(session);
-      setLoading(false);
-    });
-    
-  }, []);
-  
-  if(session && !loading){
-    if(selectedProfileID === ''){
+    const {data, error} = useAuthContext();
+
+    if(error){
+      console.error(`Error while calling useAuthContext: ${error.message}`);
+      // redirect to login screen
+      router.replace('/(auth)/AuthScreen');
+      return;
+    }
+
+    const context: AuthContextObject = data;
+    const session = context.authSession;
+    const authLoading = context.authLoading;
+
+    if(authLoading){
       return (
-        <ProfileGate 
-          user={session.user} 
-          returnedSelectedProfileID={(profileID) => setSelectedProfileID(profileID)}>
-        </ProfileGate>
+        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+          <Text>Loading...</Text>
+        </View>
       )
     }
+
+    if(session && !authLoading){
+      if(selectedProfileID === ''){
+        return (
+          <ProfileGate 
+            user={session.user} 
+            returnedSelectedProfileID={(profileID) => setSelectedProfileID(profileID)}>
+          </ProfileGate>
+        )
+      }
+      return (
+        <TimerScreen selectedProfileID={selectedProfileID}></TimerScreen>
+      )
+    }
+
     return (
-      <TimerScreen user={session.user} selectedProfileID={selectedProfileID}></TimerScreen>
+      <Stack screenOptions={{headerShown: false}}>
+        <Stack.Screen name='TimerScreen'></Stack.Screen>
+      </Stack>
     )
-  }
-} 
+}
+
