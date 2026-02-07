@@ -15,12 +15,11 @@ export default function RootLayout() {
       console.error(`Error while calling useAuthContext: ${error.message}`);
       // redirect to login screen
       router.replace('/(auth)/AuthScreen');
+      return;
     }
 
     const context: AuthContextObject = data;
     const session = context.authSession;
-    const currentUser = session?.user;
-
     const authLoading = context.authLoading;
 
     if(authLoading){
@@ -41,7 +40,7 @@ export default function RootLayout() {
         )
       }
       return (
-        <TimerScreen user={currentUser} selectedProfileID={selectedProfileID}></TimerScreen>
+        <TimerScreen selectedProfileID={selectedProfileID}></TimerScreen>
       )
     }
 
