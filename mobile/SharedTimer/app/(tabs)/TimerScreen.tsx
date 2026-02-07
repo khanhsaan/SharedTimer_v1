@@ -168,7 +168,9 @@ export function TimerScreen({selectedProfileID}: {selectedProfileID: string}) {
                             {/* Increment BUTTON */}
                             <TouchableOpacity
                               style = {styles.timerControlButton}
-                              onPress = {() => incrementTimer(a.id, 10)}>
+                              onPress = {() => {
+                                incrementTimer(a.id, 10);
+                              }}>
                               <Text style={styles.timerControlButtonText}>
                                 +
                               </Text>

@@ -287,7 +287,7 @@ export const useRealTimeTimer = (profileID: string, userID: string) => {
         delete intervalsRef.current[applianceID]; // remove interval ID
     }, []);
     
-    const incrementTimer = useCallback((applianceID: string, value: number) => {
+    const incrementTimer = useCallback((applianceID: string, valueSec: number) => {
         // if appliance is running set to stop
         const isRunning = runningState.find(a => a.id === applianceID)?.running;
 
@@ -298,7 +298,7 @@ export const useRealTimeTimer = (profileID: string, userID: string) => {
         setBaseTimerState(prev =>
             prev.map(a =>
                 a.id === applianceID?
-                {...a, baseTimer: Math.max(a.baseTimer + (value), 0)}:
+                {...a, baseTimer: Math.max(a.baseTimer + (valueSec), 0)}:
                 a
             )
         );
@@ -307,7 +307,7 @@ export const useRealTimeTimer = (profileID: string, userID: string) => {
         setRemainingState(prev =>
             prev.map(a =>
                 a.id === applianceID?
-                {...a, remaining: a.remaining + value}:
+                {...a, remaining: a.remaining + valueSec}:
                 a
             )
         );
@@ -324,7 +324,7 @@ export const useRealTimeTimer = (profileID: string, userID: string) => {
             )
         )
 
-        const finishedAt = new Date(now.getTime() + value * 60 * 1000);
+        const finishedAt = new Date(now.getTime() + valueSec * 60 * 1000);
         const finish_hour = finishedAt.getHours();
         const finish_min = finishedAt.getMinutes();
         
