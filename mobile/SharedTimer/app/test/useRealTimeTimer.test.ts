@@ -1,13 +1,27 @@
+import { act, renderHook } from "@testing-library/react";
 import useRealTimeTimer from "../hooks/useRealTimeTimer"
 
-const setTimerValue = useRealTimeTimer();
+jest.mock('..hooks/useProfiles');
+jest.mock('..hooks/useAuthContext');
+jest.mock('@/lib/supabase');
 
-describe('setTimerValue', () => {
-    it('should set timer remaining, base time, start hour & finish hour with corresponding passed value in sec', () => {
-        const applianceID = 'washingMachine';
-        const value = 3000;
-        const result = setTimerValue(applianceID, value);
+describe('useRealTimeTimer', () => {
+    describe('setTimerValue', () => {
+        it('should set timer remaining, base time, start hour & finish hour', () => {
+            const {result} = renderHook(() => 
+                useRealTimeTimer('profile-123', 'user-456')
+            );
 
-        expect(result).toBe(0);
+            act(() => {
+                result.current.setTimerValue('washingMachine', 3000);
+            });
+
+            const remaining = result.current.remaining.find(
+                r => r.id === 'washingMachine'
+            );
+
+            expect(remaining?.remaining).toBe(3000);
+        })
     })
 })
+
