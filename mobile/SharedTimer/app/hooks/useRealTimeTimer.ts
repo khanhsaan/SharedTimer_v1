@@ -23,6 +23,9 @@ export const useRealTimeTimer = (profileID: string, userID: string) => {
 
     // intialise running remaining time to be all 0
     const [remainingState, setRemainingState] = useState<{id: string, remaining: number}[]>(
+        /**
+         * - Set and store remaining time in seconds
+         */
         appliances.map((a) => ({
             id: a.id,
             remaining: 0,
@@ -60,6 +63,9 @@ export const useRealTimeTimer = (profileID: string, userID: string) => {
     }, [])
 
     const calculateRemaining = (startedAt: number, baseTimer: number) => {
+        /** - Recieves start and base time in seconds
+         * - Calculate the remaining time in seconds and return
+        */
         const now = Date.now();
 
         const elapse = ((now / 1000) - startedAt);
@@ -288,12 +294,27 @@ export const useRealTimeTimer = (profileID: string, userID: string) => {
     }, []);
     
     const incrementTimer = useCallback((applianceID: string, valueSec: number) => {
+        // DEBUG
+        console.log('Appliance ID: ', applianceID);
         // if appliance is running set to stop
         const isRunning = runningState.find(a => a.id === applianceID)?.running;
 
         if(isRunning){
             pauseTimer(applianceID);
         }
+
+        const remainingTime = remainingState.find(a => a.id === applianceID)?.remaining;
+
+        if(remainingTime == null || remainingTime === undefined){
+            setError(new Error(`CANNOT find remaining time for appliance: ${applianceID}`));
+            console.error(`CANNOT find remaining time for appliance: ${applianceID}`);
+            return;
+        }
+
+        const newRemaining = Math.max(remainingTime + valueSec, 0);
+
+        // DEBUG
+        console.log(`New remaining: ${newRemaining}`);
 
         setBaseTimerState(prev =>
             prev.map(a =>
@@ -307,10 +328,11 @@ export const useRealTimeTimer = (profileID: string, userID: string) => {
         setRemainingState(prev =>
             prev.map(a =>
                 a.id === applianceID?
-                {...a, remaining: a.remaining + valueSec}:
+                {...a, remaining: newRemaining}:
                 a
             )
         );
+
 
         const now = new Date();
 
@@ -324,7 +346,7 @@ export const useRealTimeTimer = (profileID: string, userID: string) => {
             )
         )
 
-        const finishedAt = new Date(now.getTime() + valueSec * 60 * 1000);
+        const finishedAt = new Date(now.getTime() + newRemaining * 1000);
         const finish_hour = finishedAt.getHours();
         const finish_min = finishedAt.getMinutes();
         
@@ -335,7 +357,7 @@ export const useRealTimeTimer = (profileID: string, userID: string) => {
                 a
             )
         );
-    }, [runningState]);
+    }, [runningState, remainingState, baseTimerState, startHour, finishHour]);
 
     const decrementTimer = useCallback((applianceID: string, value: number) => {
         // if appliance is running set to stop
