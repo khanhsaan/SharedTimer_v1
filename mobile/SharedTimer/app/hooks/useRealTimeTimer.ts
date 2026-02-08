@@ -294,8 +294,6 @@ export const useRealTimeTimer = (profileID: string, userID: string) => {
     }, []);
     
     const incrementTimer = useCallback((applianceID: string, valueSec: number) => {
-        // DEBUG
-        console.log('Appliance ID: ', applianceID);
         // if appliance is running set to stop
         const isRunning = runningState.find(a => a.id === applianceID)?.running;
 
@@ -303,18 +301,15 @@ export const useRealTimeTimer = (profileID: string, userID: string) => {
             pauseTimer(applianceID);
         }
 
-        const remainingTime = remainingState.find(a => a.id === applianceID)?.remaining;
+        const currentRemaining = remainingState.find(a => a.id === applianceID)?.remaining;
 
-        if(remainingTime == null || remainingTime === undefined){
+        if(currentRemaining == null || currentRemaining === undefined){
             setError(new Error(`CANNOT find remaining time for appliance: ${applianceID}`));
             console.error(`CANNOT find remaining time for appliance: ${applianceID}`);
             return;
         }
 
-        const newRemaining = Math.max(remainingTime + valueSec, 0);
-
-        // DEBUG
-        console.log(`New remaining: ${newRemaining}`);
+        const newRemaining = Math.max(currentRemaining + valueSec, 0);
 
         setBaseTimerState(prev =>
             prev.map(a =>
@@ -359,17 +354,28 @@ export const useRealTimeTimer = (profileID: string, userID: string) => {
         );
     }, [runningState, remainingState, baseTimerState, startHour, finishHour]);
 
-    const decrementTimer = useCallback((applianceID: string, value: number) => {
+    const decrementTimer = useCallback((applianceID: string, valueSec: number) => {
         // if appliance is running set to stop
         const isRunning = runningState.find(a => a.id === applianceID)?.running;
+
         if(isRunning){
             pauseTimer(applianceID);
         }
 
+        const currentRemaining = remainingState.find(a => a.id === applianceID)?.remaining;
+
+        if(currentRemaining == null || currentRemaining === undefined){
+            setError(new Error(`CANNOT find remaining time for appliance: ${applianceID}`));
+            console.error(`CANNOT find remaining time for appliance: ${applianceID}`);
+            return;
+        }
+
+        const newRemaining = Math.max(currentRemaining - valueSec, 0);
+
         setBaseTimerState(prev =>
             prev.map(a =>
                 a.id === applianceID?
-                {...a, baseTimer: Math.max(a.baseTimer - value, 0)}:
+                {...a, baseTimer: Math.max(a.baseTimer - valueSec, 0)}:
                 a
             )
         );
@@ -378,11 +384,35 @@ export const useRealTimeTimer = (profileID: string, userID: string) => {
         setRemainingState(prev =>
             prev.map(a =>
                 a.id === applianceID?
-                {...a, remaining: Math.max(a.remaining - value, 0)}:
+                {...a, remaining: newRemaining}:
                 a
             )
         );
-    }, [runningState]);
+
+        const now = new Date();
+
+        const start_hour = now.getHours();
+        const start_min = now.getMinutes();
+
+        setStartHour(prev =>
+            prev.map(a => a.id === applianceID ?
+                {...a, startHour: `${start_hour}:${start_min}`}:
+                a
+            )
+        )
+
+        const finishedAt = new Date(now.getTime() + newRemaining * 1000);
+        const finish_hour = finishedAt.getHours();
+        const finish_min = finishedAt.getMinutes();
+        
+        setFinishHour(prev =>
+            prev.map((a) =>
+                a.id === applianceID ?
+                {...a, finishHour: `${finish_hour}:${finish_min}`}:
+                a
+            )
+        );
+    }, [runningState, baseTimerState, remainingState]);
 
     return {
         running: runningState,
