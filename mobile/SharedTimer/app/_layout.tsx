@@ -7,7 +7,7 @@ import 'react-native-reanimated';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { useEffect, useState } from 'react';
 import { supabaseHealthCheck } from '@/lib/supabase';
-import { ColorSchemeName, Text, View } from 'react-native';
+import { Button, ColorSchemeName, Text, TouchableOpacity, View } from 'react-native';
 import { useAuthContext } from './hooks/useAuthContext';
 import { AuthContextProvider } from './context/AuthContext';
 
@@ -126,6 +126,19 @@ function AppContent({ colorScheme, loaded }: AppContentProps){
       <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
         <Text>Unable to connect to Supabase</Text>
         <Text>{error.healthCheckError}</Text>
+        <TouchableOpacity
+          onPress={() => router.replace('/(auth)/AuthScreen')}
+          style={{
+            marginTop: 20,
+            padding: 12,
+            backgroundColor: '#007AFF',
+            borderRadius: 8
+          }}>
+            <Text style={{color: 'white', fontWeight: '600'}}>
+              Retry Login
+            </Text>
+
+        </TouchableOpacity>
       </View>
     )
   }
